@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /profile
+Disallow: /cart
+Disallow: /favorites
+Disallow: /orders
+Disallow: /support
+
+Sitemap: https://4game-blush.vercel.app/sitemap.xml
