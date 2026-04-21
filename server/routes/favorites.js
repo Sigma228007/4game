@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import pool from '../db.js';
 import { auth } from '../middleware/auth.js';
+import { checkAchievements } from '../services/achievements.js';
 
 const router = Router();
 
@@ -29,6 +30,7 @@ router.post('/:gameId', auth, async (req, res) => {
       'INSERT INTO favorites (user_id, game_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
       [req.user.id, req.params.gameId]
     );
+    checkAchievements(req.user.id).catch(() => {});
     res.json({ message: 'Добавлено в избранное' });
   } catch (err) {
     res.status(500).json({ error: 'Ошибка сервера' });

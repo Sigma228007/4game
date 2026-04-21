@@ -9,6 +9,9 @@ import cartRoutes from './routes/cart.js';
 import ordersRoutes from './routes/orders.js';
 import ticketsRoutes from './routes/tickets.js';
 import adminRoutes from './routes/admin.js';
+import reviewsRoutes from './routes/reviews.js';
+import wishlistRoutes from './routes/wishlist.js';
+import gamificationRoutes from './routes/gamification.js';
 
 dotenv.config();
 
@@ -39,6 +42,9 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/tickets', ticketsRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/reviews', reviewsRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/gamification', gamificationRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

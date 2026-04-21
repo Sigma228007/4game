@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { LogIn, UserPlus, Eye, EyeOff, Gamepad2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
@@ -9,8 +9,17 @@ import PosterAccent from '../components/PosterAccent';
 export default function Login() {
   const { login, register, isAuth } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Реф-код из URL ?ref=CODE захватываем при монтировании и применяем после рега
+  const [refCode] = useState(() => {
+    const urlRef = searchParams.get('ref');
+    if (urlRef) { try { sessionStorage.setItem('pendingRefCode', urlRef); } catch {} return urlRef; }
+    try { return sessionStorage.getItem('pendingRefCode') || ''; } catch { return ''; }
+  });
   const [mode, setMode] = useState('login');
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
@@ -20,16 +29,31 @@ export default function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault(); setError('');
-    if (!username.trim() || !password.trim()) { setError('Заполните оба поля'); return; }
+    if (!username.trim() || !password.trim()) { setError('Заполните обязательные поля'); return; }
     if (mode === 'register' && password.length < 4) { setError('Пароль минимум 4 символа'); return; }
+    if (mode === 'register' && email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Неверный формат email'); return;
+    }
 
     setLoading(true);
-    const fn = mode === 'register' ? register : login;
-    const result = await fn(username.trim(), password.trim());
+    const result = mode === 'register'
+      ? await register(username.trim(), password.trim(), email.trim() || null)
+      : await login(username.trim(), password.trim());
     setLoading(false);
 
-    if (result.success) navigate('/', { replace: true });
-    else setError(result.message);
+    if (result.success) {
+      // Если регистрация и есть реф-код — применяем
+      if (mode === 'register' && refCode) {
+        try {
+          const { api } = await import('../api');
+          await api.applyReferral(refCode);
+          sessionStorage.removeItem('pendingRefCode');
+        } catch {}
+      }
+      navigate('/', { replace: true });
+    } else {
+      setError(result.message);
+    }
   }
 
   return (
@@ -86,6 +110,15 @@ export default function Login() {
                   {error}
                 </motion.div>
               )}
+              {mode === 'register' && refCode && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="px-4 py-3 rounded-xl bg-accent/10 border border-accent/20 text-accent text-[12px] font-body text-center"
+                >
+                  Вас пригласили! Реф-код <strong className="font-display">{refCode}</strong> будет применён при регистрации.
+                </motion.div>
+              )}
             </AnimatePresence>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -100,6 +133,19 @@ export default function Login() {
                   className="input"
                 />
               </div>
+              {mode === 'register' && (
+                <div className="space-y-2">
+                  <label className="label">Email <span style={{ color: 'var(--text-faint)' }}>(для чеков и восстановления пароля)</span></label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    autoComplete="email"
+                    className="input"
+                  />
+                </div>
+              )}
               <div className="space-y-2">
                 <label className="label">Пароль</label>
                 <div className="relative">
@@ -144,6 +190,11 @@ export default function Login() {
                 {mode === 'login' ? 'Зарегистрируйтесь' : 'Войдите'}
               </button>
             </p>
+            {mode === 'login' && (
+              <p className="font-body text-[11px] text-center" style={{ color: 'var(--text-faint)' }}>
+                <Link to="/reset-password" className="hover:text-primary transition-colors">Забыли пароль?</Link>
+              </p>
+            )}
           </div>
         </div>
       </div>

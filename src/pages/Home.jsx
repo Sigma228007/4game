@@ -6,6 +6,7 @@ import GameCard from '../components/GameCard';
 import { PageTransition, Reveal, StaggerContainer, StaggerItem } from '../components/Motion';
 import { getFeaturedGames, games, GENRES, getGameById } from '../data/games';
 import { getRecentlyViewed } from '../utils/recentlyViewed';
+import { useI18n } from '../utils/i18n.jsx';
 
 // Иконки + фоновые постеры для жанров (берём из уже имеющихся артов)
 const GENRE_META = {
@@ -24,6 +25,7 @@ const HERO_POSTERS = [
 ];
 
 export default function Home() {
+  const { t } = useI18n();
   const featured = getFeaturedGames().slice(0, 8);
   const newReleases = [...games].sort((a, b) => b.year - a.year).slice(0, 4);
   const cheapest = [...games].sort((a, b) => a.price - b.price).slice(0, 4);
@@ -118,10 +120,10 @@ export default function Home() {
               transition={{ delay: 0.2, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="font-display font-black text-[clamp(2.6rem,5.5vw,5rem)] leading-[0.95] tracking-tight"
             >
-              <span style={{ color: 'var(--text)' }}>Играй больше.</span><br />
-              <span style={{ color: 'var(--text)' }}>Плати&nbsp;</span>
+              <span style={{ color: 'var(--text)' }}>{t('home.hero.title.line1')}</span><br />
+              <span style={{ color: 'var(--text)' }}>{t('home.hero.title.line2')}&nbsp;</span>
               <span className="relative inline-block">
-                <span className="bg-gradient-to-r from-accent to-accent-light bg-clip-text text-transparent">меньше</span>
+                <span className="bg-gradient-to-r from-accent to-accent-light bg-clip-text text-transparent">{t('home.hero.title.line3')}</span>
                 <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 8" fill="none">
                   <path d="M1 5.5Q50 1 100 4T199 3" stroke="#10B981" strokeWidth="2" strokeLinecap="round" opacity="0.35" />
                 </svg>
@@ -145,8 +147,8 @@ export default function Home() {
               transition={{ delay: 0.45, duration: 0.6 }}
               className="flex flex-wrap items-center gap-4 pt-2"
             >
-              <Link to="/catalog" className="btn-primary px-8 py-4 text-[15px]">Открыть каталог <ArrowRight size={18} /></Link>
-              <Link to="/about" className="btn-ghost px-6 py-4 text-[15px]">Как это работает</Link>
+              <Link to="/catalog" className="btn-primary px-8 py-4 text-[15px]">{t('home.hero.cta')} <ArrowRight size={18} /></Link>
+              <Link to="/about" className="btn-ghost px-6 py-4 text-[15px]">{t('home.hero.howItWorks')}</Link>
             </motion.div>
 
             <motion.div

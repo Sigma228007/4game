@@ -22,6 +22,8 @@ export const api = {
   changePassword: (oldPassword, newPassword) => request('/auth/password', { method: 'PUT', body: JSON.stringify({ oldPassword, newPassword }) }),
   updateAvatar: (color) => request('/auth/avatar', { method: 'PUT', body: JSON.stringify({ color }) }),
   updateEmail: (email) => request('/auth/email', { method: 'PUT', body: JSON.stringify({ email }) }),
+  forgotPassword: (email) => request('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }) }),
+  resetPassword: (token, newPassword) => request('/auth/reset-password', { method: 'POST', body: JSON.stringify({ token, newPassword }) }),
 
   // Games
   getGames: (params = {}) => { const qs = new URLSearchParams(params).toString(); return request(`/games${qs ? '?' + qs : ''}`); },
@@ -52,6 +54,35 @@ export const api = {
   getTicket: (id) => request(`/tickets/${id}`),
   sendMessage: (ticketId, message) => request(`/tickets/${ticketId}/messages`, { method: 'POST', body: JSON.stringify({ message }) }),
   closeTicket: (ticketId) => request(`/tickets/${ticketId}/close`, { method: 'PUT' }),
+
+  // Reviews
+  getReviews: (gameId, sort = 'helpful') => request(`/reviews/game/${gameId}?sort=${sort}`),
+  canReview: (gameId) => request(`/reviews/can-review/${gameId}`),
+  createReview: (gameId, rating, text) => request('/reviews', { method: 'POST', body: JSON.stringify({ gameId, rating, text }) }),
+  deleteReview: (id) => request(`/reviews/${id}`, { method: 'DELETE' }),
+  voteReviewHelpful: (id) => request(`/reviews/${id}/helpful`, { method: 'POST' }),
+  getMyReviews: () => request('/reviews/my'),
+
+  // Wishlist
+  getWishlist: () => request('/wishlist'),
+  addWishlist: (gameId) => request(`/wishlist/${gameId}`, { method: 'POST' }),
+  removeWishlist: (gameId) => request(`/wishlist/${gameId}`, { method: 'DELETE' }),
+  toggleWishlistNotify: (gameId, notify) => request(`/wishlist/${gameId}/notify`, { method: 'PUT', body: JSON.stringify({ notify }) }),
+
+  // Gamification
+  getAchievements: () => request('/gamification/achievements'),
+  getPlayerStats: () => request('/gamification/stats'),
+  getReferral: () => request('/gamification/referral'),
+  applyReferral: (code) => request('/gamification/referral/apply', { method: 'POST', body: JSON.stringify({ code }) }),
+  subscribeNewsletter: (email) => request('/gamification/subscribe', { method: 'POST', body: JSON.stringify({ email }) }),
+  getGifts: () => request('/gamification/gifts'),
+  claimGift: (id) => request(`/gamification/gifts/${id}/claim`, { method: 'POST' }),
+  exportData: () => request('/gamification/export-data'),
+  // 2FA
+  setup2FA: () => request('/gamification/2fa/setup', { method: 'POST' }),
+  verify2FA: (code) => request('/gamification/2fa/verify', { method: 'POST', body: JSON.stringify({ code }) }),
+  disable2FA: (code) => request('/gamification/2fa/disable', { method: 'POST', body: JSON.stringify({ code }) }),
+  get2FAStatus: () => request('/gamification/2fa/status'),
 
   // Admin
   getStats: () => request('/admin/stats'),

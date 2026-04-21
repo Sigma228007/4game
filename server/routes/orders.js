@@ -2,6 +2,8 @@ import { Router } from 'express';
 import pool from '../db.js';
 import { auth } from '../middleware/auth.js';
 import crypto from 'crypto';
+import emailService from '../services/email.js';
+import { checkAchievements } from '../services/achievements.js';
 
 const router = Router();
 
@@ -49,6 +51,42 @@ router.post('/checkout', auth, async (req, res) => {
 
     await client.query('DELETE FROM cart WHERE user_id = $1', [req.user.id]);
     await client.query('COMMIT');
+
+    // Отправляем чек на email асинхронно (не блокируя ответ клиенту)
+    const userResult = await pool.query('SELECT email, username FROM users WHERE id = $1', [req.user.id]);
+    const { email, username } = userResult.rows[0] || {};
+    if (email) {
+      emailService.sendOrderReceipt({
+        to: email,
+        username,
+        order: {
+          id: order.id,
+          total,
+          items: orderItems.map(i => ({ name: i.name, game_key: i.gameKey, price: i.price })),
+        },
+      }).catch(err => console.error('Receipt email failed:', err.message));
+    }
+
+    // Проверяем ачивки (асинхронно)
+    checkAchievements(req.user.id).catch(err => console.error('Achievement check failed:', err.message));
+
+    // Реферальный бонус для пригласившего (если есть)
+    const refResult = await pool.query('SELECT referred_by FROM users WHERE id = $1', [req.user.id]);
+    const referrerId = refResult.rows[0]?.referred_by;
+    if (referrerId) {
+      // Проверяем что это первая покупка
+      const ordersCount = await pool.query('SELECT COUNT(*)::int AS n FROM orders WHERE user_id = $1', [req.user.id]);
+      if (ordersCount.rows[0].n === 1) {
+        // Генерируем промо-код для пригласившего
+        const promoCode = 'REF' + crypto.randomBytes(4).toString('hex').toUpperCase();
+        await pool.query(
+          'INSERT INTO referral_rewards (referrer_id, referred_id, reward_percent, promo_code) VALUES ($1, $2, 10, $3) ON CONFLICT DO NOTHING',
+          [referrerId, req.user.id, promoCode]
+        );
+        // Проверяем ачивки пригласившего
+        checkAchievements(referrerId).catch(() => {});
+      }
+    }
 
     res.json({
       orderId: order.id,

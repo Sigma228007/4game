@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useFavorites } from '../context/FavoritesContext';
 import { useTheme } from '../context/ThemeContext';
+import { useI18n } from '../utils/i18n.jsx';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Header() {
@@ -12,6 +13,7 @@ export default function Header() {
   const { count: cartCount } = useCart();
   const { count: favCount } = useFavorites();
   const { toggle, isDark } = useTheme();
+  const { t } = useI18n();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -73,15 +75,15 @@ export default function Header() {
   useEffect(() => { setMenuOpen(false); }, [location]);
 
   const nav = [
-    { to: '/', label: 'Главная' },
-    { to: '/catalog', label: 'Каталог' },
-    { to: '/about', label: 'О нас' },
+    { to: '/', label: t('nav.home') },
+    { to: '/catalog', label: t('nav.catalog') },
+    { to: '/about', label: t('nav.about') },
   ];
   const authNav = isAuth ? [
-    { to: '/favorites', label: 'Избранное', icon: Heart,        badge: favCount,  flyTarget: 'favorites' },
-    { to: '/cart',      label: 'Корзина',    icon: ShoppingCart, badge: cartCount, flyTarget: 'cart' },
-    { to: '/support',   label: 'Поддержка',  icon: MessageCircle },
-    ...(role === 'admin' ? [{ to: '/admin', label: 'Админ', icon: ShieldCheck }] : []),
+    { to: '/favorites', label: t('nav.favorites'), icon: Heart,        badge: favCount,  flyTarget: 'favorites' },
+    { to: '/cart',      label: t('nav.cart'),      icon: ShoppingCart, badge: cartCount, flyTarget: 'cart' },
+    { to: '/support',   label: t('nav.support'),   icon: MessageCircle },
+    ...(role === 'admin' ? [{ to: '/admin', label: t('nav.admin'), icon: ShieldCheck }] : []),
   ] : [];
 
   const active = (p) => location.pathname === p || (p !== '/' && location.pathname.startsWith(p));
@@ -128,10 +130,10 @@ export default function Header() {
               whileTap={{ scale: 0.94 }}
               className="hidden lg:flex items-center gap-2 h-9 px-3 rounded-xl text-[12px] font-body"
               style={{ background: 'var(--surface)', color: 'var(--text-muted)', border: '1px solid var(--surface-border)' }}
-              title="Поиск по сайту"
+              title={t("nav.search")}
             >
               <Search size={14} />
-              <span style={{ color: 'var(--text-faint)' }}>Поиск</span>
+              <span style={{ color: 'var(--text-faint)' }}>{t("nav.search")}</span>
               <kbd className="ml-1 px-1.5 py-0.5 rounded text-[9px] font-display font-bold" style={{ background: 'var(--bg)', color: 'var(--text-faint)' }}>
                 ⌘K
               </kbd>
@@ -155,7 +157,7 @@ export default function Header() {
               </Link>
             ) : (
               <Link to="/login" className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-display font-semibold bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300">
-                <LogIn size={15} /> Войти
+                <LogIn size={15} /> {t("nav.login")}
               </Link>
             )}
           </nav>
@@ -206,10 +208,10 @@ export default function Header() {
                     </div>
                     Профиль
                   </Link>
-                  <button onClick={logout} className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[15px] font-body text-primary"><LogOut size={18} /> Выйти</button>
+                  <button onClick={logout} className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[15px] font-body text-primary"><LogOut size={18} /> {t("nav.logout")}</button>
                 </>
               ) : (
-                <Link to="/login" className="btn-primary w-full py-3.5 text-[15px] mt-2"><LogIn size={18} /> Войти</Link>
+                <Link to="/login" className="btn-primary w-full py-3.5 text-[15px] mt-2"><LogIn size={18} /> {t("nav.login")}</Link>
               )}
             </nav>
           </motion.div>

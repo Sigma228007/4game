@@ -7,6 +7,7 @@ import { useFlyTo } from './FlyToTarget';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { usePrice } from '../hooks/usePrice';
 
 export default function GameCard({ game }) {
   const { isAuth } = useAuth();
@@ -15,6 +16,7 @@ export default function GameCard({ game }) {
   const navigate = useNavigate();
   const toast = useToast();
   const flyTo = useFlyTo();
+  const { format } = usePrice();
   const [imgLoaded, setImgLoaded] = useState(false);
   const imgRef = useRef(null);
 
@@ -77,14 +79,26 @@ export default function GameCard({ game }) {
 
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden flex-none" style={{ background: 'var(--bg-secondary)' }}>
-          {!imgLoaded && <div className="absolute inset-0 skeleton" />}
+          {/* Blur-up placeholder: небольшая версия обложки с размытием, пока грузится основная */}
+          {!imgLoaded && (
+            <>
+              <div className="absolute inset-0 skeleton" />
+              <img
+                src={game.image}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 w-full h-full object-cover opacity-40"
+                style={{ filter: 'blur(20px) saturate(1.4)', transform: 'scale(1.1)' }}
+              />
+            </>
+          )}
           <img
             ref={imgRef}
             src={game.image}
             alt={game.name}
             loading="lazy"
             onLoad={() => setImgLoaded(true)}
-            className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className={`relative w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
 
@@ -127,8 +141,8 @@ export default function GameCard({ game }) {
           </div>
 
           <div className="flex items-baseline gap-2 pt-1">
-            <span className="price text-[17px]">{game.price.toLocaleString('ru-RU')}&nbsp;₽</span>
-            {game.oldPrice && <span className="text-[11px] line-through font-body" style={{ color: 'var(--text-faint)' }}>{game.oldPrice.toLocaleString('ru-RU')}&nbsp;₽</span>}
+            <span className="price text-[17px]">{format(game.price)}</span>
+            {game.oldPrice && <span className="text-[11px] line-through font-body" style={{ color: 'var(--text-faint)' }}>{format(game.oldPrice)}</span>}
           </div>
         </div>
       </article>

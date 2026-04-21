@@ -10,6 +10,7 @@ import { useToast } from '../components/Toast';
 import { useFlyTo } from '../components/FlyToTarget';
 import { PageTransition, Reveal, StaggerContainer, StaggerItem } from '../components/Motion';
 import GameCard from '../components/GameCard';
+import ReviewsBlock from '../components/ReviewsBlock';
 import { pushRecentlyViewed } from '../utils/recentlyViewed';
 import { getSystemRequirements, getLanguages, getGallery, getPlatforms } from '../utils/gameDetails';
 
@@ -341,6 +342,11 @@ export default function GameDetail() {
                     </div>
                   ))}
                 </div>
+              </Reveal>
+
+              {/* Reviews */}
+              <Reveal delay={0.25}>
+                <ReviewsBlock gameId={game.id} />
               </Reveal>
             </div>
 

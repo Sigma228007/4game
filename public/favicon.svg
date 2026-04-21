@@ -1,61 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="4Game">
-  <title>4Game</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
-    <linearGradient id="bg" x1="15%" y1="0%" x2="85%" y2="100%">
-      <stop offset="0%"   stop-color="#FF3757"/>
-      <stop offset="28%"  stop-color="#E8102E"/>
-      <stop offset="62%"  stop-color="#801140"/>
-      <stop offset="100%" stop-color="#120210"/>
-    </linearGradient>
-    <radialGradient id="shine" cx="22%" cy="12%" r="72%">
-      <stop offset="0%"  stop-color="#FFFFFF" stop-opacity="0.50"/>
-      <stop offset="28%" stop-color="#FFFFFF" stop-opacity="0.14"/>
-      <stop offset="62%" stop-color="#FFFFFF" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="depth" cx="88%" cy="93%" r="82%">
-      <stop offset="0%"  stop-color="#000000" stop-opacity="0.6"/>
-      <stop offset="70%" stop-color="#000000" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="spot" cx="50%" cy="48%" r="40%">
-      <stop offset="0%"  stop-color="#FFFFFF" stop-opacity="0.12"/>
-      <stop offset="85%" stop-color="#FFFFFF" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="digit-grad" x1="50%" y1="0%" x2="50%" y2="100%">
-      <stop offset="0%"   stop-color="#FFFFFF"/>
-      <stop offset="45%"  stop-color="#F1EBEE"/>
-      <stop offset="100%" stop-color="#C4B9BF"/>
-    </linearGradient>
-    <filter id="shadow" x="-15%" y="-10%" width="130%" height="135%">
-      <feGaussianBlur in="SourceAlpha" stdDeviation="8"/>
-      <feOffset dy="14"/>
-      <feComponentTransfer><feFuncA type="linear" slope="0.55"/></feComponentTransfer>
-      <feMerge>
-        <feMergeNode/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    <linearGradient id="bevel" x1="50%" y1="0%" x2="50%" y2="100%">
-      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.7"/>
-      <stop offset="18%"  stop-color="#FFFFFF" stop-opacity="0"/>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E8102E"/>
+      <stop offset="1" stop-color="#B00C23"/>
     </linearGradient>
   </defs>
-
-  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
-  <rect width="512" height="512" rx="116" fill="url(#spot)"/>
-  <rect width="512" height="512" rx="116" fill="url(#shine)"/>
-  <rect width="512" height="512" rx="116" fill="url(#depth)"/>
-
-  <rect x="1" y="1" width="510" height="510" rx="115.5"
-        fill="none" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="1.2"/>
-
-  <g filter="url(#shadow)">
-    <path
-      d="M 156 120 L 236 120 L 218 220 L 298 220 L 316 120 L 396 120 L 347 400 L 267 400 L 286 290 L 126 290 Z"
-      fill="url(#digit-grad)"
-    />
-    <path
-      d="M 156 120 L 236 120 L 232 142 L 161 142 Z M 316 120 L 396 120 L 391 142 L 321 142 Z"
-      fill="url(#bevel)"
-    />
-  </g>
+  <rect width="64" height="64" rx="14" fill="url(#g)"/>
+  <path d="M20 26c-3 0-6 2-6 6v6c0 3 2 6 5 6 2 0 3-1 4-2l2-3h14l2 3c1 1 2 2 4 2 3 0 5-3 5-6v-6c0-4-3-6-6-6H20z M24 34v3 M22.5 35.5h3 M40 34a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z M44 37a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="50" cy="18" r="4" fill="#10B981"/>
 </svg>

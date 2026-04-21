@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import pool from '../db.js';
 import { auth } from '../middleware/auth.js';
+import emailService from '../services/email.js';
 
 const router = Router();
 
@@ -100,6 +101,21 @@ router.post('/:id/messages', auth, async (req, res) => {
     // Обновляем статус тикета
     const newStatus = isStaff ? 'answered' : 'open';
     await pool.query('UPDATE tickets SET status = $1, updated_at = NOW() WHERE id = $2', [newStatus, req.params.id]);
+
+    // Email уведомление: staff ответил пользователю → отправляем письмо владельцу тикета
+    if (isStaff && ticket.user_id !== req.user.id) {
+      const owner = await pool.query('SELECT email, username FROM users WHERE id = $1', [ticket.user_id]);
+      if (owner.rows[0]?.email) {
+        emailService.sendTicketReply({
+          to: owner.rows[0].email,
+          username: owner.rows[0].username,
+          ticketId: ticket.id,
+          subject: ticket.subject,
+          message,
+          fromRole: req.user.role,
+        }).catch(err => console.error('Ticket reply email failed:', err.message));
+      }
+    }
 
     res.json({
       id: msgResult.rows[0].id,

@@ -43,9 +43,9 @@ export function AuthProvider({ children }) {
     }
   }
 
-  async function register(username, password) {
+  async function register(username, password, email) {
     try {
-      const data = await api.register(username, password);
+      const data = await api.register(username, password, email);
       localStorage.setItem('token', data.token);
       setUser(data.user);
       return { success: true, message: 'Аккаунт создан!' };

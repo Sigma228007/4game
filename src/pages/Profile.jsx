@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Heart, ShoppingCart, Package, Settings, LogOut, Sun, Moon, Key, Clock, CheckCircle, Palette, BarChart3, Star, ChevronRight, MessageCircle, Smile } from 'lucide-react';
+import { Heart, ShoppingCart, Package, Settings, LogOut, Sun, Moon, Key, Clock, CheckCircle, Palette, BarChart3, Star, ChevronRight, MessageCircle, Smile, Mail, Globe, Coins, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -11,6 +11,8 @@ import { PageTransition, Reveal } from '../components/Motion';
 import { api } from '../api';
 import PosterAccent from '../components/PosterAccent';
 import { GENRES } from '../data/games';
+import { useI18n } from '../utils/i18n.jsx';
+import { CURRENCIES, getCurrency, setCurrency } from '../utils/currency';
 
 // Градиенты для аватара
 const AVATAR_COLORS = [
@@ -39,9 +41,9 @@ const AVATAR_ICONS = [
   { id: '⭐',     label: 'Звезда'     },
 ];
 
-const TABS = [
-  { id: 'overview', label: 'Обзор',     icon: BarChart3 },
-  { id: 'settings', label: 'Настройки', icon: Settings },
+const TAB_KEYS = [
+  { id: 'overview', key: 'profile.overview', icon: BarChart3 },
+  { id: 'settings', key: 'profile.settings', icon: Settings },
 ];
 
 export default function Profile() {
@@ -49,6 +51,8 @@ export default function Profile() {
   const { count: cartCount } = useCart();
   const { count: favCount, favItems } = useFavorites();
   const { toggle, isDark } = useTheme();
+  const { t, lang, setLang, locales } = useI18n();
+  const [currency, setCurrencyLocal] = useState(getCurrency());
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -59,6 +63,9 @@ export default function Profile() {
   const [passMsg, setPassMsg] = useState(null);
   const [orders, setOrders] = useState([]);
   const [tickets, setTickets] = useState([]);
+  const [myReviews, setMyReviews] = useState([]);
+  const [emailInput, setEmailInput] = useState('');
+  const [emailSaving, setEmailSaving] = useState(false);
 
   const [avatarIdx, setAvatarIdx] = useState(() => parseInt(localStorage.getItem('avatarColor') || '0'));
   const [avatarIcon, setAvatarIcon] = useState(() => {
@@ -70,7 +77,27 @@ export default function Profile() {
   useEffect(() => {
     api.getOrders().then(setOrders).catch(() => {});
     api.getTickets().then(setTickets).catch(() => {});
+    api.getMyReviews().then(setMyReviews).catch(() => {});
   }, []);
+
+  // Синхронизируем input email с данными пользователя
+  useEffect(() => {
+    if (user?.email) setEmailInput(user.email);
+  }, [user?.email]);
+
+  async function handleSaveEmail(e) {
+    e.preventDefault();
+    if (emailInput && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput)) {
+      toast('Неверный формат email', 'error');
+      return;
+    }
+    setEmailSaving(true);
+    try {
+      await api.updateEmail(emailInput.trim() || null);
+      toast('Email обновлён', 'success');
+    } catch (err) { toast(err.message, 'error'); }
+    setEmailSaving(false);
+  }
 
   function pickAvatarColor(idx) {
     setAvatarIdx(idx);
@@ -168,7 +195,7 @@ export default function Profile() {
                 <div className="flex-1">
                   <h1 className="font-display text-2xl md:text-3xl font-bold" style={{ color: 'var(--text)' }}>{username}</h1>
                   <p className="font-body text-[14px] mt-1" style={{ color: 'var(--text-faint)' }}>
-                    {memberDate ? `Участник с ${memberDate}` : 'Новый игрок'}
+                    {memberDate ? `${t('profile.welcome')} ${memberDate}` : t('profile.newPlayer')}
                   </p>
                 </div>
                 <button
@@ -206,17 +233,17 @@ export default function Profile() {
           {/* Tabs */}
           <Reveal delay={0.1}>
             <div className="flex gap-1 p-1 rounded-xl mb-8" style={{ background: 'var(--surface)' }}>
-              {TABS.map(t => (
+              {TAB_KEYS.map(tab_ => (
                 <button
-                  key={t.id}
-                  onClick={() => setTab(t.id)}
+                  key={tab_.id}
+                  onClick={() => setTab(tab_.id)}
                   className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-display font-semibold transition-all"
                   style={{
-                    background: tab === t.id ? 'var(--bg-elevated)' : 'transparent',
-                    color:      tab === t.id ? 'var(--text)'        : 'var(--text-faint)',
+                    background: tab === tab_.id ? 'var(--bg-elevated)' : 'transparent',
+                    color:      tab === tab_.id ? 'var(--text)'        : 'var(--text-faint)',
                   }}
                 >
-                  <t.icon size={15} /> {t.label}
+                  <tab_.icon size={15} /> {t(tab_.key)}
                 </button>
               ))}
             </div>
@@ -279,6 +306,9 @@ export default function Profile() {
                       { icon: Package,       label: 'Мои покупки', desc: `${orders.length} заказов с ключами`,    to: '/orders' },
                       { icon: MessageCircle, label: 'Поддержка',   desc: `${tickets.length} обращений`,           to: '/support' },
                       { icon: Heart,         label: 'Избранное',   desc: `${favCount} сохранённых игр`,           to: '/favorites' },
+                      { icon: Star,          label: 'Достижения',  desc: 'Твой игровой прогресс',                 to: '/achievements' },
+                      { icon: BarChart3,     label: 'Wishlist',    desc: 'Следить за скидками',                   to: '/wishlist' },
+                      { icon: Smile,         label: 'Рефералы',    desc: 'Приглашай и получай бонусы',            to: '/referral' },
                     ].map(a => (
                       <Link
                         key={a.label}
@@ -318,6 +348,47 @@ export default function Profile() {
                             {name}
                             <span className="text-primary tabular-nums">{count}</span>
                           </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* My reviews */}
+                  {myReviews.length > 0 && (
+                    <div className="glass-static p-6 space-y-4 lg:col-span-2">
+                      <div className="flex items-center gap-2">
+                        <MessageCircle size={17} style={{ color: 'var(--text-faint)' }} />
+                        <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                          Мои отзывы ({myReviews.length})
+                        </h3>
+                      </div>
+                      <div className="space-y-3">
+                        {myReviews.slice(0, 5).map(r => (
+                          <Link
+                            key={r.id}
+                            to={`/game/${r.game_id}`}
+                            className="flex items-center gap-3 p-3 rounded-xl transition-colors hover:bg-white/[0.03]"
+                            style={{ background: 'var(--surface)', border: '1px solid var(--surface-border)' }}
+                          >
+                            <img src={r.game_image} alt="" className="w-12 h-12 rounded-lg object-cover flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-display text-[12px] font-bold truncate" style={{ color: 'var(--text-secondary)' }}>
+                                {r.game_name}
+                              </p>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star key={i} size={10} className={i < r.rating ? 'text-amber-400' : ''} style={i >= r.rating ? { color: 'var(--text-faint)' } : {}} fill="currentColor" />
+                                ))}
+                                <span className="font-body text-[10px] ml-1" style={{ color: 'var(--text-faint)' }}>
+                                  {new Date(r.created_at).toLocaleDateString('ru-RU')}
+                                </span>
+                              </div>
+                              {r.text && (
+                                <p className="font-body text-[11px] mt-1 line-clamp-1" style={{ color: 'var(--text-faint)' }}>{r.text}</p>
+                              )}
+                            </div>
+                            <ChevronRight size={14} style={{ color: 'var(--text-faint)' }} />
+                          </Link>
                         ))}
                       </div>
                     </div>
@@ -412,6 +483,104 @@ export default function Profile() {
                     </p>
                   </div>
 
+                  {/* Language & Currency */}
+                  <div className="glass-static p-6 space-y-5 lg:col-span-2">
+                    <div className="flex items-center gap-2">
+                      <Globe size={17} style={{ color: 'var(--text-faint)' }} />
+                      <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                        {t('profile.language')} / {t('profile.currency')}
+                      </h3>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Language */}
+                      <div className="space-y-2">
+                        <span className="label text-[10px] flex items-center gap-1.5">
+                          <Globe size={10} /> {t('profile.language')}
+                        </span>
+                        <div className="grid grid-cols-2 gap-2">
+                          {Object.values(locales).map(l => {
+                            const active = lang === l.code;
+                            return (
+                              <button
+                                key={l.code}
+                                onClick={() => setLang(l.code)}
+                                className="flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all hover:scale-[1.01]"
+                                style={{
+                                  background: active ? 'var(--bg-elevated)' : 'var(--surface)',
+                                  border: active ? '1px solid var(--accent)' : '1px solid var(--surface-border)',
+                                  color: active ? 'var(--text)' : 'var(--text-muted)',
+                                }}
+                              >
+                                <span className="text-[18px]">{l.flag}</span>
+                                <span className="font-body text-[13px] font-medium flex-1 text-left">{l.label}</span>
+                                {active && <Check size={13} className="text-accent" />}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Currency */}
+                      <div className="space-y-2">
+                        <span className="label text-[10px] flex items-center gap-1.5">
+                          <Coins size={10} /> {t('profile.currency')}
+                        </span>
+                        <div className="grid grid-cols-2 gap-2">
+                          {Object.values(CURRENCIES).map(c => {
+                            const active = currency === c.code;
+                            return (
+                              <button
+                                key={c.code}
+                                onClick={() => { setCurrency(c.code); setCurrencyLocal(c.code); }}
+                                className="flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all hover:scale-[1.01]"
+                                style={{
+                                  background: active ? 'var(--bg-elevated)' : 'var(--surface)',
+                                  border: active ? '1px solid var(--accent)' : '1px solid var(--surface-border)',
+                                  color: active ? 'var(--text)' : 'var(--text-muted)',
+                                }}
+                              >
+                                <span className="font-display font-bold text-[14px] w-4">{c.symbol}</span>
+                                <span className="font-body text-[13px] flex-1 text-left">{c.name}</span>
+                                {active && <Check size={13} className="text-accent" />}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Email settings */}
+                  <div className="glass-static p-6 space-y-4">
+                    <div className="flex items-center gap-2">
+                      <Mail size={17} style={{ color: 'var(--text-faint)' }} />
+                      <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                        Email для уведомлений
+                      </h3>
+                    </div>
+                    <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>
+                      На этот email будут приходить чеки с ключами и уведомления о тикетах
+                    </p>
+                    <form onSubmit={handleSaveEmail} className="flex gap-2">
+                      <input
+                        type="email"
+                        value={emailInput}
+                        onChange={e => setEmailInput(e.target.value)}
+                        placeholder="your@email.com"
+                        className="input text-[13px] py-2.5 flex-1"
+                      />
+                      <motion.button
+                        type="submit"
+                        whileTap={{ scale: 0.97 }}
+                        disabled={emailSaving}
+                        className="btn-primary px-4 py-2.5 text-[12px] disabled:opacity-50"
+                      >
+                        {emailSaving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Сохранить'}
+                      </motion.button>
+                    </form>
+                  </div>
+
                   {/* Theme */}
                   <div className="glass-static p-6">
                     <div className="flex items-center justify-between">
@@ -462,6 +631,89 @@ export default function Profile() {
                       </motion.button>
                     </form>
                   </div>
+                  {/* Security & Data */}
+                  {(user?.role === 'admin' || user?.role === 'support') && (
+                    <div className="glass-static p-6 space-y-3 lg:col-span-2">
+                      <div className="flex items-center gap-2">
+                        <BarChart3 size={17} style={{ color: 'var(--text-faint)' }} />
+                        <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                          Безопасность и данные
+                        </h3>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <Link to="/2fa" className="flex items-center gap-3 p-3 rounded-xl transition-colors hover:bg-white/[0.04]" style={{ background: 'var(--surface)', border: '1px solid var(--surface-border)' }}>
+                          <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                            <Key size={15} className="text-accent" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-display text-[12px] font-bold" style={{ color: 'var(--text-secondary)' }}>Двухфакторка</p>
+                            <p className="font-body text-[10px]" style={{ color: 'var(--text-faint)' }}>TOTP для защиты</p>
+                          </div>
+                          <ChevronRight size={14} style={{ color: 'var(--text-faint)' }} />
+                        </Link>
+                        <button
+                          onClick={async () => {
+                            try {
+                              const data = await api.exportData();
+                              const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                              const url = URL.createObjectURL(blob);
+                              const a = document.createElement('a');
+                              a.href = url;
+                              a.download = `4game-data-${Date.now()}.json`;
+                              a.click();
+                              URL.revokeObjectURL(url);
+                              toast('Данные скачаны', 'success');
+                            } catch (err) { toast(err.message, 'error'); }
+                          }}
+                          className="flex items-center gap-3 p-3 rounded-xl transition-colors hover:bg-white/[0.04] text-left"
+                          style={{ background: 'var(--surface)', border: '1px solid var(--surface-border)' }}
+                        >
+                          <div className="w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                            <Package size={15} className="text-secondary-light" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-display text-[12px] font-bold" style={{ color: 'var(--text-secondary)' }}>Выгрузка данных</p>
+                            <p className="font-body text-[10px]" style={{ color: 'var(--text-faint)' }}>GDPR-экспорт в JSON</p>
+                          </div>
+                          <ChevronRight size={14} style={{ color: 'var(--text-faint)' }} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Для обычных пользователей — только экспорт */}
+                  {user?.role === 'user' && (
+                    <div className="glass-static p-6 space-y-3 lg:col-span-2">
+                      <div className="flex items-center gap-2">
+                        <Package size={17} style={{ color: 'var(--text-faint)' }} />
+                        <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                          Мои данные
+                        </h3>
+                      </div>
+                      <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>
+                        Вы можете скачать все свои данные (заказы, отзывы, избранное, тикеты) в JSON-файле — согласно требованиям GDPR.
+                      </p>
+                      <button
+                        onClick={async () => {
+                          try {
+                            const data = await api.exportData();
+                            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `4game-data-${Date.now()}.json`;
+                            a.click();
+                            URL.revokeObjectURL(url);
+                            toast('Данные скачаны', 'success');
+                          } catch (err) { toast(err.message, 'error'); }
+                        }}
+                        className="btn-ghost text-[12px]"
+                      >
+                        <Package size={13} /> Скачать все данные
+                      </button>
+                    </div>
+                  )}
+
                 </div>
               )}
             </motion.div>

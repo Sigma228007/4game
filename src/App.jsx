@@ -5,8 +5,10 @@ import { CartProvider } from './context/CartContext';
 import { FavoritesProvider } from './context/FavoritesContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './components/Toast';
+import { I18nProvider } from './utils/i18n.jsx';
 import { FlyToProvider } from './components/FlyToTarget';
 import CommandPalette from './components/CommandPalette';
+import FAQWidget from './components/FAQWidget';
 import Preloader from './components/Preloader';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -18,6 +20,7 @@ import GameDetail from './pages/GameDetail';
 import Favorites from './pages/Favorites';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 import Success from './pages/Success';
 import About from './pages/About';
 import Profile from './pages/Profile';
@@ -25,6 +28,10 @@ import Support from './pages/Support';
 import TicketChat from './pages/TicketChat';
 import OrderHistory from './pages/OrderHistory';
 import Admin from './pages/Admin';
+import Wishlist from './pages/Wishlist';
+import Achievements from './pages/Achievements';
+import Referral from './pages/Referral';
+import TwoFactorSetup from './pages/TwoFactorSetup';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -37,12 +44,14 @@ export default function App() {
     <BrowserRouter>
       <Preloader />
       <ThemeProvider>
+        <I18nProvider>
         <AuthProvider>
           <CartProvider>
             <FavoritesProvider>
               <ToastProvider>
                 <FlyToProvider>
                 <CommandPalette />
+                <FAQWidget />
                 <div className="grain min-h-screen flex flex-col">
                   <ScrollToTop />
                   <Header />
@@ -53,6 +62,7 @@ export default function App() {
                       <Route path="/game/:id" element={<GameDetail />} />
                       <Route path="/about" element={<About />} />
                       <Route path="/login" element={<Login />} />
+                      <Route path="/reset-password" element={<ResetPassword />} />
                       <Route path="/success" element={<Success />} />
                       <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
                       <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
@@ -60,6 +70,10 @@ export default function App() {
                       <Route path="/orders" element={<ProtectedRoute><OrderHistory /></ProtectedRoute>} />
                       <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
                       <Route path="/support/:id" element={<ProtectedRoute><TicketChat /></ProtectedRoute>} />
+                      <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
+                      <Route path="/achievements" element={<ProtectedRoute><Achievements /></ProtectedRoute>} />
+                      <Route path="/referral" element={<ProtectedRoute><Referral /></ProtectedRoute>} />
+                      <Route path="/2fa" element={<ProtectedRoute><TwoFactorSetup /></ProtectedRoute>} />
                       <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
                       <Route path="*" element={
                         <div className="min-h-[65vh] flex items-center justify-center">
@@ -79,6 +93,7 @@ export default function App() {
             </FavoritesProvider>
           </CartProvider>
         </AuthProvider>
+        </I18nProvider>
       </ThemeProvider>
     </BrowserRouter>
   );
