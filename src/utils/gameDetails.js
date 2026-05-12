@@ -49,6 +49,9 @@ export function getLanguages(game) {
 }
 
 export function getGallery(game) {
+  if (game.screenshots && game.screenshots.length > 0) {
+    return [game.image, ...game.screenshots].slice(0, 4);
+  }
   return [game.image];
 }
 

@@ -36,9 +36,20 @@ export default function GameDetail() {
   const { t } = useI18n();
   const [activeShot, setActiveShot] = useState(0);
   const [tab, setTab] = useState('req');
+  const slideshowRef = useRef(null);
 
   useEffect(() => { if (game) pushRecentlyViewed(game.id); }, [game?.id]);
   useEffect(() => { setActiveShot(0); setTab('req'); }, [id]);
+
+  // Auto-slideshow every 3 seconds
+  useEffect(() => {
+    const gallery = game ? getGallery(game) : [];
+    if (gallery.length <= 1) return;
+    slideshowRef.current = setInterval(() => {
+      setActiveShot(prev => (prev + 1) % gallery.length);
+    }, 3000);
+    return () => clearInterval(slideshowRef.current);
+  }, [game?.id]);
 
   if (!game) {
     return (
@@ -150,7 +161,13 @@ export default function GameDetail() {
               {gallery.map((src, i) => (
                 <button
                   key={i}
-                  onClick={() => setActiveShot(i)}
+                  onClick={() => {
+                    setActiveShot(i);
+                    clearInterval(slideshowRef.current);
+                    slideshowRef.current = setInterval(() => {
+                      setActiveShot(prev => (prev + 1) % gallery.length);
+                    }, 3000);
+                  }}
                   className={`relative h-12 w-20 rounded-lg overflow-hidden transition-all flex-shrink-0 ${i === activeShot ? 'ring-2 ring-primary scale-105' : 'opacity-60 hover:opacity-100'}`}
                   style={{ border: '1px solid rgba(255,255,255,0.08)' }}
                   aria-label={`${t('game.screenshot')} ${i + 1}`}

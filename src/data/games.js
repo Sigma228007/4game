@@ -22,6 +22,11 @@ export const games = [
     year: 2020,
     featured: true,
     image: '/images/game-1.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2215430/ss_51eb1a47a41271abb0aa781de576f704d95b601b.600x338.jpg?t=1763409398',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2215430/ss_d60e16422fc1605181e0fedee3e2cfc1e02c750e.600x338.jpg?t=1763409398',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2215430/ss_11409331d57966ef193d66ffcded569d02a4e034.600x338.jpg?t=1763409398',
+    ],
     tags: ['Открытый мир', 'Самурай', 'Сюжет'],
   },
   {
@@ -35,6 +40,11 @@ export const games = [
     year: 2018,
     featured: true,
     image: '/images/game-2.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1174180/ss_66b553f4c209476d3e4ce25fa4714002cc914c4f.600x338.jpg?t=1759502961',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1174180/ss_bac60bacbf5da8945103648c08d27d5e202444ca.600x338.jpg?t=1759502961',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1174180/ss_668dafe477743f8b50b818d5bbfcec669e9ba93e.600x338.jpg?t=1759502961',
+    ],
     tags: ['Открытый мир', 'Вестерн', 'Сюжет'],
   },
   {
@@ -48,6 +58,11 @@ export const games = [
     year: 2020,
     featured: true,
     image: '/images/game-3.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2208920/ss_103481084a59b34837113daf27c04679caf743f3.600x338.jpg?t=1754572990',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2208920/ss_e7310b36689ec722d2ea4643efc15bd8fa720c67.600x338.jpg?t=1754572990',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2208920/ss_c3bff917ead50268eb7708ef3bf30e07b58929e9.600x338.jpg?t=1754572990',
+    ],
     tags: ['Открытый мир', 'Викинги', 'RPG'],
   },
   {
@@ -61,6 +76,11 @@ export const games = [
     year: 2024,
     featured: true,
     image: '/images/game-4.jpg',
+    screenshots: [
+      '/images/game-4.jpg',
+      '/images/game-4.jpg',
+      '/images/game-4.jpg',
+    ],
     tags: ['Открытый мир', 'Япония', 'Новинка'],
   },
   {
@@ -74,6 +94,11 @@ export const games = [
     year: 2011,
     featured: true,
     image: '/images/game-5.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/489830/ss_73c1a0bb7e1720c8a1847186c3ddd837d3ca7a8d.600x338.jpg?t=1753715778',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/489830/ss_d64b646612ab1402bdda8e400672aa0dbcb352ea.600x338.jpg?t=1753715778',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/489830/ss_b6bb6f79278505b3f48567f08c21f7a0eb171c68.600x338.jpg?t=1753715778',
+    ],
     tags: ['Открытый мир', 'Фэнтези', 'Классика'],
   },
   {
@@ -87,6 +112,11 @@ export const games = [
     year: 2013,
     featured: true,
     image: '/images/game-6.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/ss_32aa18ab3175e3002217862dd5917646d298ab6b.600x338.jpg?t=1765387725',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/ss_2744f112fa060320d191a50e8b3a92441a648a56.600x338.jpg?t=1765387725',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/ss_da39c16db175f6973770bae6b91d411251763152.600x338.jpg?t=1765387725',
+    ],
     tags: ['Открытый мир', 'Криминал', 'Онлайн'],
   },
   {
@@ -100,6 +130,11 @@ export const games = [
     year: 2020,
     featured: true,
     image: '/images/game-7.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_2f649b68d579bf87011487d29bc4ccbfdd97d34f.600x338.jpg?t=1769690377',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_0e64170751e1ae20ff8fdb7001a8892fd48260e7.600x338.jpg?t=1769690377',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_af2804aa4bf35d4251043744412ce3b359a125ef.600x338.jpg?t=1769690377',
+    ],
     tags: ['Открытый мир', 'Киберпанк', 'RPG'],
   },
 
@@ -115,6 +150,11 @@ export const games = [
     year: 2017,
     featured: true,
     image: '/images/game-8.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/460930/ss_989a4ab6b0ef9759f2aa94510b77c7669836f40e.600x338.jpg?t=1764776201',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/460930/ss_5a5afdfe87c53cae9efa3d559e588501abfe88c6.600x338.jpg?t=1764776201',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/460930/ss_378d661032be68988646914c39179cb8122940fd.600x338.jpg?t=1764776201',
+    ],
     tags: ['Тактика', 'Кооператив', 'Открытый мир'],
   },
   {
@@ -128,6 +168,11 @@ export const games = [
     year: 2021,
     featured: true,
     image: '/images/game-9.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1517290/4443207b9a21def316907bda32c5f32c7d42fcb6/ss_4443207b9a21def316907bda32c5f32c7d42fcb6.600x338.jpg?t=1777324359',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1517290/931142c4907822f144340f34cc51c64b523669ff/ss_931142c4907822f144340f34cc51c64b523669ff.600x338.jpg?t=1777324359',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1517290/cf954bff997292185b157a6024a59350544f8147/ss_cf954bff997292185b157a6024a59350544f8147.600x338.jpg?t=1777324359',
+    ],
     tags: ['Мультиплеер', 'Война', 'FPS'],
   },
   {
@@ -141,6 +186,11 @@ export const games = [
     year: 2019,
     featured: true,
     image: '/images/game-10.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/412020/ss_f0297eacbfb4266f311a8cb4137e4ef8b7cdd00b.600x338.jpg?t=1750772804',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/412020/ss_bd875dbf865e70cda73a7cd6b132cadacfdb768b.600x338.jpg?t=1750772804',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/412020/ss_7ef17676a804b0d646c38583ba0f68f33b3f3d9e.600x338.jpg?t=1750772804',
+    ],
     tags: ['Постапокалипсис', 'Атмосфера', 'Сюжет'],
   },
   {
@@ -154,6 +204,11 @@ export const games = [
     year: 2020,
     featured: true,
     image: '/images/game-11.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/782330/ss_4f93a7c5003d49cb32f6c0c6e547452b284580a0.600x338.jpg?t=1755109910',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/782330/ss_7e6a2148321c8024285e3924903d8897cac95358.600x338.jpg?t=1755109910',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/782330/ss_af3b43c4be0029b52ceefaf55ebe1918e2cb3471.600x338.jpg?t=1755109910',
+    ],
     tags: ['Хардкор', 'Демоны', 'Динамика'],
   },
   {
@@ -167,6 +222,11 @@ export const games = [
     year: 2024,
     featured: true,
     image: '/images/game-12.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2183900/ss_ee88e4cc463b7b25b0ec03930a9e58e5fba2afdf.600x338.jpg?t=1778000020',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2183900/ss_66a8bc13bf868d0e2a76e4d797e6408c271065d7.600x338.jpg?t=1778000020',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2183900/ss_20a753725a34225553c5873fbc079626451ebcf9.600x338.jpg?t=1778000020',
+    ],
     tags: ['Кооператив', 'Sci-Fi', 'Новинка'],
   },
   {
@@ -180,6 +240,11 @@ export const games = [
     year: 2018,
     featured: true,
     image: '/images/game-13.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/552520/ss_a52c732d62a26d20bcfb0525929178749392f4fc.600x338.jpg?t=1762190084',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/552520/ss_64406d71653c589377e8c589ece9e3941b6fff50.600x338.jpg?t=1762190084',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/552520/ss_5b5701cb9cc39b661d6a2903a97e0bb75eb2a6c6.600x338.jpg?t=1762190084',
+    ],
     tags: ['Открытый мир', 'Кооператив', 'Америка'],
   },
   {
@@ -193,6 +258,11 @@ export const games = [
     year: 2018,
     featured: false,
     image: '/images/game-14.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/877480/ss_490a8c19aba651219b84cc6ddb53c911667e0e96.600x338.jpg?t=1672979926',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/877480/ss_2c9b4553a717102b7a5cad41bfc206d73151c240.600x338.jpg?t=1672979926',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/877480/ss_9e4c2b81d38366cecac06240e21ef47d267e4520.600x338.jpg?t=1672979926',
+    ],
     tags: ['Мультиплеер', 'WW2', 'FPS'],
   },
 
@@ -208,6 +278,11 @@ export const games = [
     year: 2023,
     featured: true,
     image: 'https://avatars.mds.yandex.net/i?id=7dbfbaf9ed47e8ad3e94ef7d1e718b83_l-12614867-images-thumbs&n=13',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2344520/8512b560be0ddef49cb0da366b7d2ddf5df18cab/ss_8512b560be0ddef49cb0da366b7d2ddf5df18cab.600x338.jpg?t=1777501665',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2344520/24952fc1c8779c9a7a555c01489c76f9814f70a7/ss_24952fc1c8779c9a7a555c01489c76f9814f70a7.600x338.jpg?t=1777501665',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2344520/7eda1d661ffde2750d56517e1a46406f340675e5/ss_7eda1d661ffde2750d56517e1a46406f340675e5.600x338.jpg?t=1777501665',
+    ],
     tags: ['Хак-н-слэш', 'Онлайн', 'Тёмное фэнтези'],
   },
   {
@@ -221,6 +296,11 @@ export const games = [
     year: 2015,
     featured: false,
     image: '/images/game-16.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/292030/ss_5710298af2318afd9aa72449ef29ac4a2ef64d8e.600x338.jpg?t=1768303991',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/292030/ss_0901e64e9d4b8ebaea8348c194e7a3644d2d832d.600x338.jpg?t=1768303991',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/292030/ss_112b1e176c1bd271d8a565eacb6feaf90f240bb2.600x338.jpg?t=1768303991',
+    ],
     tags: ['Открытый мир', 'Фэнтези', 'Сюжет'],
   },
   {
@@ -234,6 +314,11 @@ export const games = [
     year: 2022,
     featured: false,
     image: '/images/game-17.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_943bf6fe62352757d9070c1d33e50b92fe8539f1.600x338.jpg?t=1767883716',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_dcdac9e4b26ac0ee5248bfd2967d764fd00cdb42.600x338.jpg?t=1767883716',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_3c41384a24d86dddd58a8f61db77f9dc0bfda8b5.600x338.jpg?t=1767883716',
+    ],
     tags: ['Souls-like', 'Открытый мир', 'Хардкор'],
   },
   {
@@ -247,6 +332,11 @@ export const games = [
     year: 2023,
     featured: false,
     image: '/images/game-18.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/ss_c73bc54415178c07fef85f54ee26621728c77504.600x338.jpg?t=1777363040',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/ss_73d93bea842b93914d966622104dcb8c0f42972b.600x338.jpg?t=1777363040',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/ss_cf936d31061b58e98e0c646aee00e6030c410cda.600x338.jpg?t=1777363040',
+    ],
     tags: ['Пошаговая', 'D&D', 'Кооператив'],
   },
   {
@@ -260,6 +350,11 @@ export const games = [
     year: 2016,
     featured: false,
     image: '/images/game-19.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/374320/ss_5efd318b85a3917d1c6e717f4cb813b47547cd6f.600x338.jpg?t=1748630784',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/374320/ss_1c0fa39091901496d77cf4cecfea4ffb056d6452.600x338.jpg?t=1748630784',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/374320/ss_1318a04ef11d87f38aebe6d47a96124f8f888ca8.600x338.jpg?t=1748630784',
+    ],
     tags: ['Souls-like', 'Хардкор', 'Тёмное фэнтези'],
   },
   {
@@ -273,6 +368,11 @@ export const games = [
     year: 2010,
     featured: false,
     image: '/images/game-20.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/22380/ss_62f8d0b006935ff6de7fe276f713e7d15e579bc9.600x338.jpg?t=1765992876',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/22380/ss_ec8a28942fcb5cb15718f949ab81124932a5084d.600x338.jpg?t=1765992876',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/22380/ss_f703adcb9aa1d718a39288adf7d2e1b4dc0e568a.600x338.jpg?t=1765992876',
+    ],
     tags: ['Постапокалипсис', 'Классика', 'Открытый мир'],
   },
   {
@@ -286,6 +386,11 @@ export const games = [
     year: 2019,
     featured: false,
     image: '/images/game-21.jpg',
+    screenshots: [
+      '/images/game-21.jpg',
+      '/images/game-21.jpg',
+      '/images/game-21.jpg',
+    ],
     tags: ['Сюжет', 'Уникальная', 'Кодзима'],
   },
 
@@ -301,6 +406,11 @@ export const games = [
     year: 2016,
     featured: false,
     image: '/images/game-22.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/394360/ss_242abc1c2ca21f7d8694ba8d9239d8944217b29f.600x338.jpg?t=1777568442',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/394360/ss_679ae0d56f3a3b33591262839588c4b1dc6bef12.600x338.jpg?t=1777568442',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/394360/ss_ebcec59e821aa1ee43c6d047eaef4e846af99358.600x338.jpg?t=1777568442',
+    ],
     tags: ['Глобальная', 'WW2', 'Paradox'],
   },
   {
@@ -314,6 +424,11 @@ export const games = [
     year: 2024,
     featured: false,
     image: '/images/game-23.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1904690/ss_ff36f6d2da913c355ea037b165707f08b2a88be9.600x338.jpg?t=1656583937',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1904690/ss_ae179cd84eb31219a377281a7b1e8c0330bfdece.600x338.jpg?t=1656583937',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1904690/ss_fe86b82fc454e0dd7099e1ace7aee96457a4deaf.600x338.jpg?t=1656583937',
+    ],
     tags: ['Градостроитель', 'Выживание', 'Новинка'],
   },
   {
@@ -327,6 +442,11 @@ export const games = [
     year: 2016,
     featured: false,
     image: '/images/game-24.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/289070/ss_12cc6e1f4084de5bc0f66bfdbe3aaf3e59388b53.600x338.jpg?t=1740607040',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/289070/ss_6c4a3cfb61f1a9677cf2ac549c2816a4e651f741.600x338.jpg?t=1740607040',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/289070/ss_b2bf12299c38214fe520af0f724a6349d17ed330.600x338.jpg?t=1740607040',
+    ],
     tags: ['4X', 'Пошаговая', 'Цивилизация'],
   },
   {
@@ -340,6 +460,11 @@ export const games = [
     year: 2004,
     featured: false,
     image: '/images/game-25.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4760/0000001695.600x338.jpg?t=1769188674',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4760/0000001696.600x338.jpg?t=1769188674',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4760/0000001697.600x338.jpg?t=1769188674',
+    ],
     tags: ['Тотальная война', 'Рим', 'Классика'],
   },
   {
@@ -353,6 +478,11 @@ export const games = [
     year: 2010,
     featured: false,
     image: '/images/game-26.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/8930/ss_7082faf1b0941ddbc4ba9dab5807a9b5e77d72f9.600x338.jpg?t=1724341158',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/8930/ss_e6f9ef54f06ffebc9445d8b29d8d2054fa3185d4.600x338.jpg?t=1724341158',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/8930/ss_aa383406a5f2979598b543d8f272d3ac145e357a.600x338.jpg?t=1724341158',
+    ],
     tags: ['4X', 'Пошаговая', 'Классика'],
   },
   {
@@ -366,6 +496,11 @@ export const games = [
     year: 2013,
     featured: false,
     image: '/images/game-27.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214950/ss_b4ea26bb6fbe4625119fdb1fa48fda313b700b2d.600x338.jpg?t=1768912466',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214950/ss_ee35fcc92bddeacb5c0468f1a71c6054639a6fdc.600x338.jpg?t=1768912466',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/214950/ss_824f3ec4b9655db84e018ce065c62b33df58eeca.600x338.jpg?t=1768912466',
+    ],
     tags: ['Тотальная война', 'Рим', 'Эпик'],
   },
   {
@@ -379,6 +514,11 @@ export const games = [
     year: 2022,
     featured: false,
     image: '/images/game-28.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/505460/ss_1c1d60f0dd0c75837caca2aff1babf66401e7984.600x338.jpg?t=1775152848',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/505460/ss_0f46a6eb53224036d4e67c896ee87f5e364f34a4.600x338.jpg?t=1775152848',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/505460/717ad41391b7f5aba3082c9284bd3bd14a73c1c8/ss_717ad41391b7f5aba3082c9284bd3bd14a73c1c8.600x338.jpg?t=1775152848',
+    ],
     tags: ['MMO', 'Кооператив', 'Война'],
   },
 
@@ -394,6 +534,11 @@ export const games = [
     year: 2021,
     featured: true,
     image: '/images/game-29.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1551360/ss_cf56e25a0290556ba83229eb0ab370d10be0407c.600x338.jpg?t=1746471508',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1551360/ss_00f0090174380eeaf8753bd3d1028b6772c3aebf.600x338.jpg?t=1746471508',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1551360/ss_b65236b365315ebb6da6114ce42cd74b59cab3c8.600x338.jpg?t=1746471508',
+    ],
     tags: ['Гонки', 'Открытый мир', 'Машины'],
   },
   {
@@ -407,6 +552,11 @@ export const games = [
     year: 2023,
     featured: false,
     image: '/images/game-30.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2195250/ss_f3d31c7cffc2a6ab42fb76aaac2bc9d5258bc142.600x338.jpg?t=1752167366',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2195250/ss_6c1ef918ffe94050e72dcb2cfad3a95ee3d69f08.600x338.jpg?t=1752167366',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2195250/ss_eb8f5def662f28726c875e641cd5faff75e6b16d.600x338.jpg?t=1752167366',
+    ],
     tags: ['Футбол', 'Симулятор', 'Онлайн'],
   },
   {
@@ -420,6 +570,11 @@ export const games = [
     year: 2023,
     featured: false,
     image: '/images/game-31.jpg',
+    screenshots: [
+      '/images/game-31.jpg',
+      '/images/game-31.jpg',
+      '/images/game-31.jpg',
+    ],
     tags: ['Хоккей', 'Симулятор', 'Спорт'],
   },
   {
@@ -433,6 +588,11 @@ export const games = [
     year: 2023,
     featured: false,
     image: '/images/game-32.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2338770/ss_5995ac468ec5bdc4d136a2556fa3b71e23b69842.600x338.jpg?t=1761842158',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2338770/ss_8c214bbc6c34b2d681628e94c2f3158cd9d6eb3a.600x338.jpg?t=1761842158',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2338770/ss_8484c2049f7b9ddefed2ccd83136be68cf7d44ee.600x338.jpg?t=1761842158',
+    ],
     tags: ['Баскетбол', 'Симулятор', 'Спорт'],
   },
   {
@@ -446,6 +606,11 @@ export const games = [
     year: 2023,
     featured: false,
     image: '/images/game-33.jpg',
+    screenshots: [
+      '/images/game-33.jpg',
+      '/images/game-33.jpg',
+      '/images/game-33.jpg',
+    ],
     tags: ['Файтинг', 'MMA', 'Спорт'],
   },
   {
@@ -459,6 +624,11 @@ export const games = [
     year: 2024,
     featured: false,
     image: '/images/game-34.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2108330/ss_777085a701f67a925efad99e26786760d0c6157a.600x338.jpg?t=1743526253',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2108330/ss_d79565a1996470eb4a9440f62022809aeac4e519.600x338.jpg?t=1743526253',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2108330/ss_307cba9d2e26513d9641431163214b33fd18b8e4.600x338.jpg?t=1743526253',
+    ],
     tags: ['Гонки', 'Формула-1', 'Симулятор'],
   },
   {
@@ -472,6 +642,11 @@ export const games = [
     year: 2024,
     featured: false,
     image: '/images/game-35.jpg',
+    screenshots: [
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2215270/ss_042f2aa0260cf43c98ca0763d398db57753de303.600x338.jpg?t=1773538575',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2215270/ss_dd5590bdca038c367a1697bec1de90bc38bf5e4a.600x338.jpg?t=1773538575',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2215270/ss_11be992155d9a5c3b2a88ed00adfe81c10bf3873.600x338.jpg?t=1773538575',
+    ],
     tags: ['Реслинг', 'Файтинг', 'Спорт'],
   },
 ];
