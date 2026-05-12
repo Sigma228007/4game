@@ -28,6 +28,7 @@ export default function TicketChat() {
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
   const bottomRef = useRef(null);
+  const scrollAreaRef = useRef(null);
 
   async function loadTicket() {
     try {
@@ -56,7 +57,8 @@ export default function TicketChat() {
   }, [id, messages.length, ticket?.status]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const el = scrollAreaRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages.length]);
 
   async function handleSend(e) {
@@ -95,15 +97,18 @@ export default function TicketChat() {
 
   return (
     <PageTransition>
-      <div className="relative min-h-screen flex flex-col overflow-hidden">
+      <div
+        className="relative flex flex-col overflow-hidden"
+        style={{ height: 'calc(100vh - 72px)' }}
+      >
 
         {/* Атмосфера по краям */}
-        <PosterAccent src="/images/game-21.jpg" side="left"  top={120} height={700} opacity={0.35} objectPosition="32% 35%" />
-        <PosterAccent src="/images/game-16.jpg" side="right" top={120} height={700} opacity={0.35} objectPosition="50% 25%" />
+        <PosterAccent src="/images/game-21.jpg" side="left"  top={0} height={700} opacity={0.35} objectPosition="32% 35%" />
+        <PosterAccent src="/images/game-16.jpg" side="right" top={0} height={700} opacity={0.35} objectPosition="50% 25%" />
         <div className="absolute top-[10%] left-[40%] w-[500px] h-[300px] bg-primary/[0.04] rounded-full blur-[140px] pointer-events-none" />
 
         {/* Header тикета */}
-        <div className="relative sticky top-[72px] z-40 backdrop-blur-xl border-b" style={{ background: 'rgba(7,7,14,0.85)', borderColor: 'var(--surface-border)' }}>
+        <div className="relative flex-shrink-0 z-40 backdrop-blur-xl border-b" style={{ background: 'rgba(7,7,14,0.85)', borderColor: 'var(--surface-border)' }}>
           <div className="max-w-4xl mx-auto px-5 py-4 flex items-center gap-3">
             <button
               onClick={() => navigate('/support')}
@@ -144,7 +149,7 @@ export default function TicketChat() {
         </div>
 
         {/* Messages */}
-        <div className="relative flex-1 max-w-4xl mx-auto w-full px-5 py-6 space-y-4 z-10">
+        <div ref={scrollAreaRef} className="relative flex-1 overflow-y-auto max-w-4xl mx-auto w-full px-5 py-6 space-y-4 z-10">
           {messages.map((msg, i) => {
             const isMe = msg.sender_id === user?.id || msg.senderid === user?.id;
             const role = msg.sender_role || msg.senderRole || 'user';
@@ -181,7 +186,7 @@ export default function TicketChat() {
                     )}
                   </div>
                   <div
-                    className={`px-4 py-3 rounded-2xl text-[14px] font-body leading-relaxed ${
+                    className={`px-4 py-3 rounded-2xl text-[14px] font-body leading-relaxed break-words ${
                       isMe
                         ? 'bg-gradient-to-br from-primary/20 to-primary/10 text-white rounded-br-md border border-primary/15'
                         : 'rounded-bl-md'
@@ -209,7 +214,7 @@ export default function TicketChat() {
 
         {/* Input */}
         {!isClosed ? (
-          <div className="relative sticky bottom-0 backdrop-blur-xl border-t z-10" style={{ background: 'rgba(7,7,14,0.85)', borderColor: 'var(--surface-border)' }}>
+          <div className="relative flex-shrink-0 backdrop-blur-xl border-t z-10" style={{ background: 'rgba(7,7,14,0.85)', borderColor: 'var(--surface-border)' }}>
             <form onSubmit={handleSend} className="max-w-4xl mx-auto px-5 py-4 flex gap-3">
               <input
                 value={newMsg}

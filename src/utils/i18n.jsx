@@ -119,6 +119,10 @@ const TRANSLATIONS = {
     'profile.myReviews': 'Мои отзывы',
 
     // Login / Register
+    'login.title': 'Войти в 4Game',
+    'login.titleRegister': 'Создать аккаунт',
+    'login.tabLogin': 'Вход',
+    'login.tabRegister': 'Регистрация',
     'login.welcome': 'С возвращением',
     'login.welcomeDesc': 'Войдите, чтобы продолжить',
     'login.registerTitle': 'Создать аккаунт',
@@ -129,11 +133,19 @@ const TRANSLATIONS = {
     'login.passwordPlaceholder': 'Ваш пароль',
     'login.passwordPlaceholderNew': 'Минимум 4 символа',
     'login.submit': 'Войти',
-    'login.submitRegister': 'Зарегистрироваться',
+    'login.submitRegister': 'Создать аккаунт',
     'login.noAccount': 'Нет аккаунта?',
     'login.haveAccount': 'Уже есть аккаунт?',
+    'login.switchToRegister': 'Зарегистрируйтесь',
+    'login.switchToLogin': 'Войдите',
     'login.forgotPassword': 'Забыли пароль?',
     'login.refBanner': 'Вас пригласили! Реф-код',
+    'login.refBannerSuffix': 'будет применён при регистрации.',
+    'login.error.requiredFields': 'Заполните обязательные поля',
+    'login.error.shortPassword': 'Пароль минимум 4 символа',
+    'login.error.badEmail': 'Неверный формат email',
+    'login.showPassword': 'Показать пароль',
+    'login.hidePassword': 'Скрыть пароль',
 
     // Order / Checkout
     'order.history': 'История заказов',
@@ -275,6 +287,10 @@ const TRANSLATIONS = {
     'profile.myReviews': 'My reviews',
 
     // Login / Register
+    'login.title': 'Log in to 4Game',
+    'login.titleRegister': 'Create account',
+    'login.tabLogin': 'Log in',
+    'login.tabRegister': 'Sign up',
     'login.welcome': 'Welcome back',
     'login.welcomeDesc': 'Log in to continue',
     'login.registerTitle': 'Create account',
@@ -285,11 +301,19 @@ const TRANSLATIONS = {
     'login.passwordPlaceholder': 'Your password',
     'login.passwordPlaceholderNew': 'At least 4 characters',
     'login.submit': 'Log in',
-    'login.submitRegister': 'Sign up',
+    'login.submitRegister': 'Create account',
     'login.noAccount': "Don't have an account?",
     'login.haveAccount': 'Already have an account?',
+    'login.switchToRegister': 'Sign up',
+    'login.switchToLogin': 'Log in',
     'login.forgotPassword': 'Forgot password?',
     'login.refBanner': 'You were invited! Referral code',
+    'login.refBannerSuffix': 'will be applied on registration.',
+    'login.error.requiredFields': 'Fill in all required fields',
+    'login.error.shortPassword': 'Password must be at least 4 characters',
+    'login.error.badEmail': 'Invalid email format',
+    'login.showPassword': 'Show password',
+    'login.hidePassword': 'Hide password',
 
     // Order / Checkout
     'order.history': 'Order history',

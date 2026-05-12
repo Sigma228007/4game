@@ -89,8 +89,18 @@ export default function Header() {
   const active = (p) => location.pathname === p || (p !== '/' && location.pathname.startsWith(p));
 
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-500 ${scrolled ? 'backdrop-blur-2xl shadow-lg border-b' : 'bg-transparent'}`}
-      style={{ backgroundColor: scrolled ? (isDark ? 'rgba(7,7,14,0.9)' : 'rgba(240,240,245,0.9)') : 'transparent', borderColor: scrolled ? 'var(--surface-border)' : 'transparent' }}>
+    <header
+      className="sticky top-0 z-50 transition-all duration-500 backdrop-blur-2xl"
+      style={{
+        paddingTop: 'env(safe-area-inset-top)',
+        backgroundColor: scrolled
+          ? (isDark ? 'rgba(7,7,14,0.92)' : 'rgba(240,240,245,0.92)')
+          : (isDark ? 'rgba(7,7,14,0.4)'  : 'rgba(240,240,245,0.4)'),
+        borderBottom: scrolled ? '1px solid var(--surface-border)' : '1px solid transparent',
+        boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.15)' : 'none',
+        willChange: 'transform',
+      }}
+    >
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[72px]">
           {/* Logo */}
@@ -206,7 +216,7 @@ export default function Header() {
                         : <span className="text-white text-[10px] font-display font-bold">{username?.[0]?.toUpperCase()}</span>
                       }
                     </div>
-                    Профиль
+                    {t('nav.profile')}
                   </Link>
                   <button onClick={logout} className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-[15px] font-body text-primary"><LogOut size={18} /> {t("nav.logout")}</button>
                 </>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Users, Copy, Check, Gift, Share2, UserPlus } from 'lucide-react';
+import { Users, Copy, Check, Gift, Share2, UserPlus, Ticket } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { api } from '../api';
 import { useToast } from '../components/Toast';
@@ -11,6 +11,9 @@ export default function Referral() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copiedField, setCopiedField] = useState(null);
+  const [applyCode, setApplyCode] = useState('');
+  const [applyLoading, setApplyLoading] = useState(false);
+  const [applyDone, setApplyDone] = useState(false);
 
   useEffect(() => {
     api.getReferral()
@@ -25,6 +28,21 @@ export default function Referral() {
       toast('Скопировано в буфер', 'success');
       setTimeout(() => setCopiedField(null), 2000);
     }).catch(() => toast('Не удалось скопировать', 'error'));
+  }
+
+  async function handleApply(e) {
+    e.preventDefault();
+    const code = applyCode.trim().toUpperCase();
+    if (!code) return;
+    setApplyLoading(true);
+    try {
+      const result = await api.applyReferral(code);
+      toast(result.message || 'Реф-код применён!', 'success');
+      setApplyDone(true);
+    } catch (err) {
+      toast(err.message || 'Ошибка при применении кода', 'error');
+    }
+    setApplyLoading(false);
   }
 
   async function share() {
@@ -118,6 +136,44 @@ export default function Referral() {
               </div>
             </div>
           </Reveal>
+
+          {/* Apply friend's referral code */}
+          {!applyDone && (
+            <Reveal delay={0.08}>
+              <div className="glass-static p-6 md:p-7 mb-6">
+                <div className="flex items-center gap-2 mb-1">
+                  <Ticket size={15} className="text-accent" />
+                  <h3 className="font-display text-[14px] font-bold" style={{ color: 'var(--text)' }}>
+                    Ввести код друга
+                  </h3>
+                </div>
+                <p className="font-body text-[12px] mb-4" style={{ color: 'var(--text-faint)' }}>
+                  Если друг прислал вам код вручную — вставьте его сюда. После вашей первой покупки он получит бонус.
+                </p>
+                <form onSubmit={handleApply} className="flex gap-3">
+                  <input
+                    value={applyCode}
+                    onChange={e => setApplyCode(e.target.value.toUpperCase())}
+                    placeholder="Например: A1B2C3D4"
+                    className="input flex-1 font-mono tracking-widest text-[15px]"
+                    maxLength={8}
+                    spellCheck={false}
+                  />
+                  <motion.button
+                    type="submit"
+                    disabled={applyLoading || !applyCode.trim()}
+                    whileTap={{ scale: 0.95 }}
+                    className="btn-primary px-5 disabled:opacity-40"
+                  >
+                    {applyLoading
+                      ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      : 'Применить'
+                    }
+                  </motion.button>
+                </form>
+              </div>
+            </Reveal>
+          )}
 
           {/* Stats */}
           <Reveal delay={0.1}>
