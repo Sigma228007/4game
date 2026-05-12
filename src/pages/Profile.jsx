@@ -122,7 +122,7 @@ export default function Profile() {
     if (!raw) return null;
     const d = new Date(raw);
     if (isNaN(d.getTime())) return null;
-    return d.toLocaleDateString('ru-RU', { year: 'numeric', month: 'long' });
+    return d.toLocaleDateString(lang === 'en' ? 'en-US' : 'ru-RU', { year: 'numeric', month: 'long' });
   }, [user]);
 
   const favGenres = useMemo(() => {
@@ -543,7 +543,7 @@ export default function Profile() {
                                 }}
                               >
                                 <span className="font-display font-bold text-[14px] w-4">{c.symbol}</span>
-                                <span className="font-body text-[13px] flex-1 text-left">{c.name}</span>
+                                <span className="font-body text-[13px] flex-1 text-left">{lang === 'en' ? c.nameEn : c.name}</span>
                                 {active && <Check size={13} className="text-accent" />}
                               </button>
                             );

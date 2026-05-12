@@ -2,11 +2,11 @@
 // Цены в БД хранятся в рублях, конвертируются на фронте при отображении.
 
 export const CURRENCIES = {
-  RUB: { code: 'RUB', symbol: '₽',  name: 'Рубли',         rate: 1       },
-  USD: { code: 'USD', symbol: '$',  name: 'Доллары',        rate: 0.011   },
-  EUR: { code: 'EUR', symbol: '€',  name: 'Евро',           rate: 0.010   },
-  KZT: { code: 'KZT', symbol: '₸',  name: 'Тенге',          rate: 5.4     },
-  BYN: { code: 'BYN', symbol: 'Br', name: 'Бел. рубли',     rate: 0.036   },
+  RUB: { code: 'RUB', symbol: '₽',  name: 'Рубли',         nameEn: 'Rubles',          rate: 1       },
+  USD: { code: 'USD', symbol: '$',  name: 'Доллары',        nameEn: 'Dollars',         rate: 0.011   },
+  EUR: { code: 'EUR', symbol: '€',  name: 'Евро',           nameEn: 'Euro',            rate: 0.010   },
+  KZT: { code: 'KZT', symbol: '₸',  name: 'Тенге',          nameEn: 'Tenge',           rate: 5.4     },
+  BYN: { code: 'BYN', symbol: 'Br', name: 'Бел. рубли',     nameEn: 'Belarusian ruble',rate: 0.036   },
 };
 
 const STORAGE_KEY = 'currency';
