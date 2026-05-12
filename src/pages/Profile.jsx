@@ -13,6 +13,7 @@ import PosterAccent from '../components/PosterAccent';
 import { GENRES } from '../data/games';
 import { useI18n } from '../utils/i18n.jsx';
 import { CURRENCIES, getCurrency, setCurrency } from '../utils/currency';
+import { usePrice } from '../hooks/usePrice';
 
 // Градиенты для аватара
 const AVATAR_COLORS = [
@@ -52,6 +53,7 @@ export default function Profile() {
   const { count: favCount, favItems } = useFavorites();
   const { toggle, isDark } = useTheme();
   const { t, lang, setLang, locales } = useI18n();
+  const { format } = usePrice();
   const [currency, setCurrencyLocal] = useState(getCurrency());
   const toast = useToast();
   const navigate = useNavigate();
@@ -286,7 +288,7 @@ export default function Profile() {
                             {new Date(o.created_at).toLocaleDateString('ru-RU')}
                           </p>
                         </div>
-                        <span className="price text-[13px]">{o.total?.toLocaleString('ru-RU')}&nbsp;₽</span>
+                        <span className="price text-[13px]">{format(o.total)}</span>
                       </Link>
                     )) : (
                       <div className="text-center py-6">

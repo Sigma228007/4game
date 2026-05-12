@@ -299,4 +299,3 @@ router.get('/export-data', auth, async (req, res) => {
 });
 
 export default router;
-export { checkAchievements };

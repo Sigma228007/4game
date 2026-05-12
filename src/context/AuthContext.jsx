@@ -7,13 +7,20 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  function syncAvatarFromUser(data) {
+    if (data.avatarColor !== undefined && data.avatarColor !== null) {
+      localStorage.setItem('avatarColor', String(data.avatarColor));
+      window.dispatchEvent(new Event('avatar-change'));
+    }
+  }
+
   // При загрузке проверяем токен
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) { setLoading(false); return; }
 
     api.getMe()
-      .then(data => setUser(data))
+      .then(data => { syncAvatarFromUser(data); setUser(data); })
       .catch(() => {
         // Токен протух или сервер не запущен — пробуем localStorage fallback
         const saved = localStorage.getItem('currentUser');
@@ -32,12 +39,13 @@ export function AuthProvider({ children }) {
     try {
       const data = await api.login(username, password);
       localStorage.setItem('token', data.token);
+      syncAvatarFromUser(data.user);
       setUser(data.user);
       return { success: true, message: 'Добро пожаловать!' };
     } catch (err) {
       // Если сервер не запущен — fallback на localStorage
       if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-        return loginOffline(username, password);
+        return loginOffline(username);
       }
       return { success: false, message: err.message };
     }
@@ -47,29 +55,30 @@ export function AuthProvider({ children }) {
     try {
       const data = await api.register(username, password, email);
       localStorage.setItem('token', data.token);
+      syncAvatarFromUser(data.user);
       setUser(data.user);
       return { success: true, message: 'Аккаунт создан!' };
     } catch (err) {
       if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-        return loginOffline(username, password);
+        return loginOffline(username);
       }
       return { success: false, message: err.message };
     }
   }
 
-  // Fallback для работы без бэкенда
-  function loginOffline(username, password) {
+  // Fallback для работы без бэкенда (пароль не хранится)
+  function loginOffline(username) {
     const accRaw = localStorage.getItem('userAccount');
     if (!accRaw) {
       const createdAt = new Date().toISOString();
-      localStorage.setItem('userAccount', JSON.stringify({ login: username, password, createdAt }));
+      localStorage.setItem('userAccount', JSON.stringify({ login: username, createdAt }));
       localStorage.setItem('currentUser', username);
       setUser({ username, id: null, offline: true, createdAt });
       return { success: true, message: 'Аккаунт создан (offline)' };
     }
     try {
       const acc = JSON.parse(accRaw);
-      if (username === acc.login && password === acc.password) {
+      if (username === acc.login) {
         localStorage.setItem('currentUser', username);
         setUser({ username, id: null, offline: true, createdAt: acc.createdAt });
         return { success: true, message: 'Вход выполнен (offline)' };

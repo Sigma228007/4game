@@ -8,6 +8,7 @@ import { useCart } from '../context/CartContext';
 import { useFavorites } from '../context/FavoritesContext';
 import { useToast } from '../components/Toast';
 import { useFlyTo } from '../components/FlyToTarget';
+import { usePrice } from '../hooks/usePrice';
 import { PageTransition, Reveal, StaggerContainer, StaggerItem } from '../components/Motion';
 import GameCard from '../components/GameCard';
 import ReviewsBlock from '../components/ReviewsBlock';
@@ -30,6 +31,7 @@ export default function GameDetail() {
   const flyTo = useFlyTo();
   const heroImgRef = useRef(null);
 
+  const { format } = usePrice();
   const [activeShot, setActiveShot] = useState(0);
   const [tab, setTab] = useState('req');
 
@@ -83,7 +85,7 @@ export default function GameDetail() {
 
   async function handleShare() {
     const url = window.location.href;
-    const shareData = { title: game.name, text: `${game.name} — ${game.price.toLocaleString('ru-RU')} ₽ на 4Game`, url };
+    const shareData = { title: game.name, text: `${game.name} — ${format(game.price)} на 4Game`, url };
     if (navigator.share) {
       try { await navigator.share(shareData); } catch {}
     } else {
@@ -356,16 +358,16 @@ export default function GameDetail() {
                 <div className="glass p-6 space-y-6 sticky top-24">
                   <div className="space-y-2">
                     <div className="flex items-baseline gap-3">
-                      <span className="price text-[32px]">{game.price.toLocaleString('ru-RU')}&nbsp;₽</span>
+                      <span className="price text-[32px]">{format(game.price)}</span>
                       {game.oldPrice && (
                         <span className="text-[16px] line-through font-body" style={{ color: 'var(--text-faint)' }}>
-                          {game.oldPrice.toLocaleString('ru-RU')}&nbsp;₽
+                          {format(game.oldPrice)}
                         </span>
                       )}
                     </div>
                     {discount && (
                       <p className="font-body text-[13px] text-accent/70">
-                        Вы экономите {(game.oldPrice - game.price).toLocaleString('ru-RU')} ₽
+                        Вы экономите {format(game.oldPrice - game.price)}
                       </p>
                     )}
                   </div>

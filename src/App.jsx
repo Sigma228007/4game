@@ -13,6 +13,7 @@ import Preloader from './components/Preloader';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import Home from './pages/Home';
 import Catalog from './pages/Catalog';
@@ -41,6 +42,7 @@ function ScrollToTop() {
 
 export default function App() {
   return (
+    <ErrorBoundary>
     <BrowserRouter>
       <Preloader />
       <ThemeProvider>
@@ -74,7 +76,7 @@ export default function App() {
                       <Route path="/achievements" element={<ProtectedRoute><Achievements /></ProtectedRoute>} />
                       <Route path="/referral" element={<ProtectedRoute><Referral /></ProtectedRoute>} />
                       <Route path="/2fa" element={<ProtectedRoute><TwoFactorSetup /></ProtectedRoute>} />
-                      <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+                      <Route path="/admin" element={<ProtectedRoute role="admin"><Admin /></ProtectedRoute>} />
                       <Route path="*" element={
                         <div className="min-h-[65vh] flex items-center justify-center">
                           <div className="text-center space-y-4">
@@ -96,5 +98,6 @@ export default function App() {
         </I18nProvider>
       </ThemeProvider>
     </BrowserRouter>
+    </ErrorBoundary>
   );
 }

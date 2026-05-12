@@ -8,9 +8,11 @@ import PosterAccent from '../components/PosterAccent';
 import { api } from '../api';
 import { useState } from 'react';
 import { applyPromo } from '../utils/promoCodes';
+import { usePrice } from '../hooks/usePrice';
 
 export default function Cart() {
   const { cartItems, total, removeFromCart, clearCart, reload } = useCart();
+  const { format } = usePrice();
   const navigate = useNavigate();
   const toast = useToast();
   const [checking, setChecking] = useState(false);
@@ -27,7 +29,7 @@ export default function Cart() {
       setPromoApplied({ code: result.code, discount: result.discount, promo: result.promo });
       setPromoError('');
       setPromoInput('');
-      toast(`Промокод применён: −${result.discount.toLocaleString('ru-RU')} ₽`, 'success');
+      toast(`Промокод применён: −${format(result.discount)}`, 'success');
     } else {
       setPromoError(result.error);
       setPromoApplied(null);
@@ -127,8 +129,8 @@ export default function Cart() {
                   </div>
                   <div className="flex items-center gap-4 flex-shrink-0">
                     <div className="text-right">
-                      <span className="price text-[15px]">{game.price.toLocaleString('ru-RU')}&nbsp;₽</span>
-                      {game.oldPrice && <span className="block text-[10px] line-through" style={{ color: 'var(--text-faint)' }}>{game.oldPrice.toLocaleString('ru-RU')}&nbsp;₽</span>}
+                      <span className="price text-[15px]">{format(game.price)}</span>
+                      {game.oldPrice && <span className="block text-[10px] line-through" style={{ color: 'var(--text-faint)' }}>{format(game.oldPrice)}</span>}
                     </div>
                     <button
                       onClick={() => { removeFromCart(game.id); toast('Удалено из корзины', 'cart'); }}
@@ -153,14 +155,14 @@ export default function Cart() {
                       {cartItems.map(g => (
                         <div key={g.id} className="flex justify-between text-[13px]">
                           <span className="font-body truncate mr-3" style={{ color: 'var(--text-muted)' }}>{g.name}</span>
-                          <span className="font-display font-semibold flex-shrink-0 tabular-nums" style={{ color: 'var(--text-secondary)' }}>{g.price.toLocaleString('ru-RU')}&nbsp;₽</span>
+                          <span className="font-display font-semibold flex-shrink-0 tabular-nums" style={{ color: 'var(--text-secondary)' }}>{format(g.price)}</span>
                         </div>
                       ))}
                     </div>
                     {savings > 0 && (
                       <div className="flex justify-between text-[13px] py-3 mt-3" style={{ borderTop: '1px solid var(--surface-border)' }}>
                         <span className="font-body text-accent/70">Экономия</span>
-                        <span className="font-display font-semibold text-accent">−{savings.toLocaleString('ru-RU')}&nbsp;₽</span>
+                        <span className="font-display font-semibold text-accent">−{format(savings)}</span>
                       </div>
                     )}
 
@@ -240,14 +242,14 @@ export default function Cart() {
                     {promoApplied && (
                       <div className="flex justify-between text-[13px] py-2 mt-3">
                         <span className="font-body" style={{ color: 'var(--text-muted)' }}>Промокод</span>
-                        <span className="font-display font-semibold text-accent">−{promoDiscount.toLocaleString('ru-RU')}&nbsp;₽</span>
+                        <span className="font-display font-semibold text-accent">−{format(promoDiscount)}</span>
                       </div>
                     )}
 
                     <div className="pt-3 mt-3" style={{ borderTop: '1px solid var(--surface-border)' }}>
                       <div className="flex justify-between items-baseline">
                         <span className="font-display text-[13px] font-semibold" style={{ color: 'var(--text-secondary)' }}>К оплате</span>
-                        <span className="price text-[28px]">{finalTotal.toLocaleString('ru-RU')}&nbsp;₽</span>
+                        <span className="price text-[28px]">{format(finalTotal)}</span>
                       </div>
                     </div>
                     <motion.button

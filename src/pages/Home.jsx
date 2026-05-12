@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { ArrowRight, Shield, Zap, Headphones, ChevronRight, Star, Swords, Target, Sparkles, Crown, Trophy, Flame, TrendingUp, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import GameCard from '../components/GameCard';
+import { usePrice } from '../hooks/usePrice';
 import { PageTransition, Reveal, StaggerContainer, StaggerItem } from '../components/Motion';
 import { getFeaturedGames, games, GENRES, getGameById } from '../data/games';
 import { getRecentlyViewed } from '../utils/recentlyViewed';
@@ -26,6 +27,7 @@ const HERO_POSTERS = [
 
 export default function Home() {
   const { t } = useI18n();
+  const { format } = usePrice();
   const featured = getFeaturedGames().slice(0, 8);
   const newReleases = [...games].sort((a, b) => b.year - a.year).slice(0, 4);
   const cheapest = [...games].sort((a, b) => a.price - b.price).slice(0, 4);
@@ -109,7 +111,7 @@ export default function Home() {
                 <span className="font-body text-[13px]" style={{ color: 'var(--text-muted)' }}>
                   <span className="font-semibold" style={{ color: 'var(--text-secondary)' }}>{topDeal.name}</span>
                   <span className="mx-1.5" style={{ color: 'var(--text-faint)' }}>·</span>
-                  <span className="price text-[13px]">{topDeal.price.toLocaleString('ru-RU')}&nbsp;₽</span>
+                  <span className="price text-[13px]">{format(topDeal.price)}</span>
                 </span>
               </motion.div>
             )}
@@ -336,8 +338,8 @@ export default function Home() {
                           }
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <span className="price text-[14px]">{g.price.toLocaleString('ru-RU')}&nbsp;₽</span>
-                          {g.oldPrice && <span className="block text-[10px] line-through" style={{ color: 'var(--text-faint)' }}>{g.oldPrice.toLocaleString('ru-RU')}&nbsp;₽</span>}
+                          <span className="price text-[14px]">{format(g.price)}</span>
+                          {g.oldPrice && <span className="block text-[10px] line-through" style={{ color: 'var(--text-faint)' }}>{format(g.oldPrice)}</span>}
                         </div>
                       </Link>
                     ))}

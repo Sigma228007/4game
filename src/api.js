@@ -1,4 +1,4 @@
-const API_URL = 'https://fourgame-api.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://fourgame-api.onrender.com/api';
 
 function getToken() { return localStorage.getItem('token'); }
 

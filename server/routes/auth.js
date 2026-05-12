@@ -2,9 +2,26 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import rateLimit from 'express-rate-limit';
 import pool from '../db.js';
 import { auth } from '../middleware/auth.js';
 import emailService from '../services/email.js';
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { error: 'Слишком много попыток. Повторите через 15 минут.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const forgotLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  message: { error: 'Слишком много запросов сброса пароля. Повторите через час.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 const router = Router();
 
@@ -13,7 +30,7 @@ function createToken(user) {
 }
 
 // POST /api/auth/register
-router.post('/register', async (req, res) => {
+router.post('/register', authLimiter, async (req, res) => {
   try {
     const { username, password, email } = req.body;
     if (!username || !password) return res.status(400).json({ error: 'Введите логин и пароль' });
@@ -45,7 +62,7 @@ router.post('/register', async (req, res) => {
 });
 
 // POST /api/auth/login
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) return res.status(400).json({ error: 'Введите логин и пароль' });
@@ -105,7 +122,7 @@ router.put('/email', auth, async (req, res) => {
 // ═══════════ ВОССТАНОВЛЕНИЕ ПАРОЛЯ ═══════════
 
 // POST /api/auth/forgot-password
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password', forgotLimiter, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Введите email' });

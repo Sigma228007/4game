@@ -15,7 +15,7 @@ const STATUS = {
 };
 
 export default function Support() {
-  const { isAuth, user } = useAuth();
+  const { user } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
@@ -28,9 +28,8 @@ export default function Support() {
   const isStaff = user?.role === 'admin' || user?.role === 'support';
 
   useEffect(() => {
-    if (!isAuth) return;
     api.getTickets().then(setTickets).catch(() => {}).finally(() => setLoading(false));
-  }, [isAuth]);
+  }, []);
 
   async function handleCreate(e) {
     e.preventDefault();
@@ -45,8 +44,6 @@ export default function Support() {
     } catch (err) { toast(err.message, 'error'); }
     setSending(false);
   }
-
-  if (!isAuth) { navigate('/login'); return null; }
 
   // Счётчики по статусам
   const openCount = tickets.filter(t => t.status === 'open').length;
