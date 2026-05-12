@@ -113,9 +113,9 @@ export const games = [
     featured: true,
     image: '/images/game-6.jpg',
     screenshots: [
-      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/ss_32aa18ab3175e3002217862dd5917646d298ab6b.600x338.jpg?t=1765387725',
-      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/ss_2744f112fa060320d191a50e8b3a92441a648a56.600x338.jpg?t=1765387725',
-      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/ss_da39c16db175f6973770bae6b91d411251763152.600x338.jpg?t=1765387725',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/ss_bd5db78286be0a7c6b2c62519099a9e27e6b06f3.600x338.jpg?t=1765387725',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/ss_b1a1cb7959d6a0e6fcb2d06ebf97a66c9055cef3.600x338.jpg?t=1765387725',
+      'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/ss_bc5fc79d3366c837372327717249a4887aa46d63.600x338.jpg?t=1765387725',
     ],
     tags: ['Открытый мир', 'Криминал', 'Онлайн'],
   },
@@ -277,7 +277,7 @@ export const games = [
     rating: 4.4,
     year: 2023,
     featured: true,
-    image: 'https://www.gematsu.com/wp-content/uploads/2024/06/Diablo-IV_2024_06-09-24_015.jpg',
+    image: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2344520/2953f199b4c075b22c0cf8ff03d88b0b1c267823/header_alt_assets_11.jpg?t=1777501665',
     screenshots: [
       'https://www.gematsu.com/wp-content/uploads/2026/02/Diablo-IV_2026_02-11-26_004.jpg',
       'https://www.gematsu.com/wp-content/uploads/2025/12/Diablo-IV_2025_12-11-25_016.jpg',
