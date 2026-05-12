@@ -277,7 +277,7 @@ export const games = [
     rating: 4.4,
     year: 2023,
     featured: true,
-    image: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2344520/library_600x900.jpg',
+    image: 'https://i.playground.ru/e/ukCxTW-oecluKTYugdf9hA.webp',
     screenshots: [
       'https://www.gematsu.com/wp-content/uploads/2026/02/Diablo-IV_2026_02-11-26_004.jpg',
       'https://www.gematsu.com/wp-content/uploads/2025/12/Diablo-IV_2025_12-11-25_016.jpg',
