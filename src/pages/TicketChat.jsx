@@ -30,6 +30,14 @@ export default function TicketChat() {
   const bottomRef = useRef(null);
   const scrollAreaRef = useRef(null);
 
+  const AVATAR_PALETTE = [
+    ['#E8102E','#B50D24'], ['#9333EA','#6B21A8'], ['#10B981','#047857'],
+    ['#F59E0B','#D97706'], ['#3B82F6','#1D4ED8'], ['#EC4899','#BE185D'],
+    ['#06B6D4','#0891B2'], ['#8B5CF6','#7C3AED'],
+  ];
+  const myAvatarIcon = (() => { try { const v = localStorage.getItem('avatarIcon'); return v && v !== 'null' ? v : null; } catch { return null; } })();
+  const myAvatarGrad = AVATAR_PALETTE[parseInt(localStorage.getItem('avatarColor') || '0')] || AVATAR_PALETTE[0];
+
   async function loadTicket() {
     try {
       const data = await api.getTicket(id);
@@ -202,8 +210,14 @@ export default function TicketChat() {
 
                 {/* Аватар меня (справа) */}
                 {isMe && (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/40 to-primary/15 flex items-center justify-center flex-shrink-0 border border-primary/20 order-3">
-                    <span className="text-white font-display text-[11px] font-bold">{(user?.username || '?')[0].toUpperCase()}</span>
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 border border-white/10 order-3"
+                    style={{ background: `linear-gradient(135deg, ${myAvatarGrad[0]}, ${myAvatarGrad[1]})` }}
+                  >
+                    {myAvatarIcon
+                      ? <span className="leading-none" style={{ fontSize: '14px' }}>{myAvatarIcon}</span>
+                      : <span className="text-white font-display text-[11px] font-bold">{(user?.username || '?')[0].toUpperCase()}</span>
+                    }
                   </div>
                 )}
               </motion.div>

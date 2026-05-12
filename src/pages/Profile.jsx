@@ -204,7 +204,7 @@ export default function Profile() {
                   onClick={() => { logout(); navigate('/'); }}
                   className="btn-ghost text-[12px] gap-2"
                 >
-                  <LogOut size={15} /> Выйти
+                  <LogOut size={15} /> {t('profile.logout')}
                 </button>
               </div>
             </div>
@@ -214,10 +214,10 @@ export default function Profile() {
           <Reveal delay={0.05}>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
               {[
-                { icon: Package,       label: 'Покупок',    value: orders.length,  to: '/orders',    color: 'text-accent bg-accent/10' },
-                { icon: Heart,         label: 'Избранное',  value: favCount,        to: '/favorites', color: 'text-pink-400 bg-pink-400/10' },
-                { icon: ShoppingCart,  label: 'В корзине',  value: cartCount,       to: '/cart',      color: 'text-blue-400 bg-blue-400/10' },
-                { icon: MessageCircle, label: 'Обращений',  value: tickets.length,  to: '/support',   color: 'text-amber-400 bg-amber-400/10' },
+                { icon: Package,       label: t('profile.stats.purchases'), value: orders.length,  to: '/orders',    color: 'text-accent bg-accent/10' },
+                { icon: Heart,         label: t('profile.stats.favorites'), value: favCount,        to: '/favorites', color: 'text-pink-400 bg-pink-400/10' },
+                { icon: ShoppingCart,  label: t('profile.stats.inCart'),    value: cartCount,       to: '/cart',      color: 'text-blue-400 bg-blue-400/10' },
+                { icon: MessageCircle, label: t('profile.stats.tickets'),   value: tickets.length,  to: '/support',   color: 'text-amber-400 bg-amber-400/10' },
               ].map(s => (
                 <Link key={s.label} to={s.to} className="glass p-4 flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${s.color}`}>
@@ -265,9 +265,9 @@ export default function Profile() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Package size={17} style={{ color: 'var(--text-faint)' }} />
-                        <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>Последние покупки</h3>
+                        <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>{t('profile.recentPurchases')}</h3>
                       </div>
-                      <Link to="/orders" className="font-body text-[12px] text-primary hover:underline">Все →</Link>
+                      <Link to="/orders" className="font-body text-[12px] text-primary hover:underline">{t('profile.viewAll')}</Link>
                     </div>
                     {orders.length > 0 ? orders.slice(0, 3).map(o => (
                       <Link
@@ -282,7 +282,7 @@ export default function Profile() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-display text-[12px] font-bold truncate" style={{ color: 'var(--text-secondary)' }}>
-                            Заказ #{o.id} · {o.items?.length} игр
+                            {t('profile.orderLabel')} #{o.id} · {o.items?.length} {t('profile.gamesLabel')}
                           </p>
                           <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>
                             {new Date(o.created_at).toLocaleDateString('ru-RU')}
@@ -292,8 +292,8 @@ export default function Profile() {
                       </Link>
                     )) : (
                       <div className="text-center py-6">
-                        <p className="font-body text-[13px]" style={{ color: 'var(--text-faint)' }}>Нет покупок</p>
-                        <Link to="/catalog" className="font-body text-[12px] text-primary hover:underline">В каталог →</Link>
+                        <p className="font-body text-[13px]" style={{ color: 'var(--text-faint)' }}>{t('profile.noOrders')}</p>
+                        <Link to="/catalog" className="font-body text-[12px] text-primary hover:underline">{t('profile.toCatalog')}</Link>
                       </div>
                     )}
                   </div>
@@ -301,16 +301,16 @@ export default function Profile() {
                   <div className="glass-static p-6 space-y-4">
                     <div className="flex items-center gap-2">
                       <Star size={17} style={{ color: 'var(--text-faint)' }} />
-                      <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>Быстрые действия</h3>
+                      <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>{t('profile.quickActions')}</h3>
                     </div>
                     {[
-                      { icon: ShoppingCart,  label: 'Каталог игр', desc: 'Найти новые игры',                      to: '/catalog' },
-                      { icon: Package,       label: 'Мои покупки', desc: `${orders.length} заказов с ключами`,    to: '/orders' },
-                      { icon: MessageCircle, label: 'Поддержка',   desc: `${tickets.length} обращений`,           to: '/support' },
-                      { icon: Heart,         label: 'Избранное',   desc: `${favCount} сохранённых игр`,           to: '/favorites' },
-                      { icon: Star,          label: 'Достижения',  desc: 'Твой игровой прогресс',                 to: '/achievements' },
-                      { icon: BarChart3,     label: 'Wishlist',    desc: 'Следить за скидками',                   to: '/wishlist' },
-                      { icon: Smile,         label: 'Рефералы',    desc: 'Приглашай и получай бонусы',            to: '/referral' },
+                      { icon: ShoppingCart,  label: t('profile.action.catalog'),      desc: t('profile.action.catalogDesc'),                                     to: '/catalog' },
+                      { icon: Package,       label: t('profile.action.orders'),       desc: `${orders.length} ${t('profile.action.ordersDesc')}`,                to: '/orders' },
+                      { icon: MessageCircle, label: t('profile.action.support'),      desc: `${tickets.length} ${t('profile.action.supportDesc')}`,              to: '/support' },
+                      { icon: Heart,         label: t('profile.action.favorites'),    desc: `${favCount} ${t('profile.action.favDesc')}`,                        to: '/favorites' },
+                      { icon: Star,          label: t('profile.action.achievements'), desc: t('profile.action.achievementsDesc'),                                to: '/achievements' },
+                      { icon: BarChart3,     label: 'Wishlist',                       desc: t('profile.action.wishlistDesc'),                                    to: '/wishlist' },
+                      { icon: Smile,         label: t('profile.action.referrals'),    desc: t('profile.action.referralsDesc'),                                   to: '/referral' },
                     ].map(a => (
                       <Link
                         key={a.label}
@@ -337,7 +337,7 @@ export default function Profile() {
                       <div className="flex items-center gap-2">
                         <Heart size={17} style={{ color: 'var(--text-faint)' }} />
                         <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                          Твои любимые жанры
+                          {t('profile.favGenres')}
                         </h3>
                       </div>
                       <div className="flex flex-wrap gap-2">
@@ -361,7 +361,7 @@ export default function Profile() {
                       <div className="flex items-center gap-2">
                         <MessageCircle size={17} style={{ color: 'var(--text-faint)' }} />
                         <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                          Мои отзывы ({myReviews.length})
+                          {t('profile.myReviews')} ({myReviews.length})
                         </h3>
                       </div>
                       <div className="space-y-3">
@@ -405,7 +405,7 @@ export default function Profile() {
                     <div className="flex items-center gap-2">
                       <Smile size={17} style={{ color: 'var(--text-faint)' }} />
                       <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                        Мой аватар
+                        {t('profile.myAvatarTitle')}
                       </h3>
                     </div>
                     <div className="flex items-center gap-5 flex-wrap">
@@ -413,7 +413,7 @@ export default function Profile() {
                       <div>
                         <p className="font-display text-[16px] font-bold" style={{ color: 'var(--text)' }}>{username}</p>
                         <p className="font-body text-[12px] mt-0.5" style={{ color: 'var(--text-faint)' }}>
-                          Это то, что видят другие в чате поддержки и профиле
+                          {t('profile.avatarVisibility')}
                         </p>
                       </div>
                     </div>
@@ -424,7 +424,7 @@ export default function Profile() {
                     <div className="flex items-center gap-2">
                       <Palette size={17} style={{ color: 'var(--text-faint)' }} />
                       <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                        Цвет
+                        {t('profile.colorTitle')}
                       </h3>
                     </div>
                     <div className="flex gap-3 flex-wrap">
@@ -451,7 +451,7 @@ export default function Profile() {
                     <div className="flex items-center gap-2">
                       <Smile size={17} style={{ color: 'var(--text-faint)' }} />
                       <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                        Иконка
+                        {t('profile.iconTitle')}
                       </h3>
                     </div>
                     <div className="grid grid-cols-8 gap-2">
@@ -481,7 +481,7 @@ export default function Profile() {
                       })}
                     </div>
                     <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>
-                      «Aa» — первая буква твоего логина
+                      {t('profile.letterHint')}
                     </p>
                   </div>
 
@@ -558,11 +558,11 @@ export default function Profile() {
                     <div className="flex items-center gap-2">
                       <Mail size={17} style={{ color: 'var(--text-faint)' }} />
                       <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                        Email для уведомлений
+                        {t('profile.emailHeader')}
                       </h3>
                     </div>
                     <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>
-                      На этот email будут приходить чеки с ключами и уведомления о тикетах
+                      {t('profile.emailDesc')}
                     </p>
                     <form onSubmit={handleSaveEmail} className="flex gap-2">
                       <input
@@ -578,7 +578,7 @@ export default function Profile() {
                         disabled={emailSaving}
                         className="btn-primary px-4 py-2.5 text-[12px] disabled:opacity-50"
                       >
-                        {emailSaving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Сохранить'}
+                        {emailSaving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : t('common.save')}
                       </motion.button>
                     </form>
                   </div>
@@ -589,8 +589,8 @@ export default function Profile() {
                       <div className="flex items-center gap-3">
                         {isDark ? <Moon size={17} style={{ color: 'var(--text-muted)' }} /> : <Sun size={17} style={{ color: 'var(--text-muted)' }} />}
                         <div>
-                          <p className="font-body text-[14px] font-medium" style={{ color: 'var(--text-secondary)' }}>Тема</p>
-                          <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>{isDark ? 'Тёмная' : 'Светлая'}</p>
+                          <p className="font-body text-[14px] font-medium" style={{ color: 'var(--text-secondary)' }}>{t('profile.theme')}</p>
+                          <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>{isDark ? t('profile.themeDark') : t('profile.themeLight')}</p>
                         </div>
                       </div>
                       <motion.button
@@ -616,7 +616,7 @@ export default function Profile() {
                     <div className="flex items-center gap-2">
                       <Key size={17} style={{ color: 'var(--text-faint)' }} />
                       <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                        Сменить пароль
+                        {t('profile.changePassword')}
                       </h3>
                     </div>
                     {passMsg && (
@@ -625,11 +625,11 @@ export default function Profile() {
                       </div>
                     )}
                     <form onSubmit={handleChangePassword} className="space-y-3">
-                      <input type="password" value={oldPass}     onChange={e => setOldPass(e.target.value)}     placeholder="Текущий пароль"  className="input text-[13px] py-2.5" />
-                      <input type="password" value={newPass}     onChange={e => setNewPass(e.target.value)}     placeholder="Новый пароль"    className="input text-[13px] py-2.5" />
-                      <input type="password" value={confirmPass} onChange={e => setConfirmPass(e.target.value)} placeholder="Повторите пароль" className="input text-[13px] py-2.5" />
+                      <input type="password" value={oldPass}     onChange={e => setOldPass(e.target.value)}     placeholder={t('profile.oldPassword')}     className="input text-[13px] py-2.5" />
+                      <input type="password" value={newPass}     onChange={e => setNewPass(e.target.value)}     placeholder={t('profile.newPassword')}     className="input text-[13px] py-2.5" />
+                      <input type="password" value={confirmPass} onChange={e => setConfirmPass(e.target.value)} placeholder={t('profile.confirmPassword')}  className="input text-[13px] py-2.5" />
                       <motion.button type="submit" whileTap={{ scale: 0.97 }} className="btn-primary w-full py-2.5 text-[12px]">
-                        Обновить пароль
+                        {t('profile.updatePassword')}
                       </motion.button>
                     </form>
                   </div>
@@ -639,7 +639,7 @@ export default function Profile() {
                       <div className="flex items-center gap-2">
                         <BarChart3 size={17} style={{ color: 'var(--text-faint)' }} />
                         <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                          Безопасность и данные
+                          {t('profile.security')}
                         </h3>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -648,8 +648,8 @@ export default function Profile() {
                             <Key size={15} className="text-accent" />
                           </div>
                           <div className="flex-1">
-                            <p className="font-display text-[12px] font-bold" style={{ color: 'var(--text-secondary)' }}>Двухфакторка</p>
-                            <p className="font-body text-[10px]" style={{ color: 'var(--text-faint)' }}>TOTP для защиты</p>
+                            <p className="font-display text-[12px] font-bold" style={{ color: 'var(--text-secondary)' }}>{t('profile.twoFA')}</p>
+                            <p className="font-body text-[10px]" style={{ color: 'var(--text-faint)' }}>{t('profile.twoFADesc')}</p>
                           </div>
                           <ChevronRight size={14} style={{ color: 'var(--text-faint)' }} />
                         </Link>
@@ -674,8 +674,8 @@ export default function Profile() {
                             <Package size={15} className="text-secondary-light" />
                           </div>
                           <div className="flex-1">
-                            <p className="font-display text-[12px] font-bold" style={{ color: 'var(--text-secondary)' }}>Выгрузка данных</p>
-                            <p className="font-body text-[10px]" style={{ color: 'var(--text-faint)' }}>GDPR-экспорт в JSON</p>
+                            <p className="font-display text-[12px] font-bold" style={{ color: 'var(--text-secondary)' }}>{t('profile.export')}</p>
+                            <p className="font-body text-[10px]" style={{ color: 'var(--text-faint)' }}>{t('profile.exportDesc')}</p>
                           </div>
                           <ChevronRight size={14} style={{ color: 'var(--text-faint)' }} />
                         </button>
@@ -689,11 +689,11 @@ export default function Profile() {
                       <div className="flex items-center gap-2">
                         <Package size={17} style={{ color: 'var(--text-faint)' }} />
                         <h3 className="font-display text-[13px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                          Мои данные
+                          {t('profile.myData')}
                         </h3>
                       </div>
                       <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>
-                        Вы можете скачать все свои данные (заказы, отзывы, избранное, тикеты) в JSON-файле — согласно требованиям GDPR.
+                        {t('profile.gdprDesc')}
                       </p>
                       <button
                         onClick={async () => {
@@ -711,7 +711,7 @@ export default function Profile() {
                         }}
                         className="btn-ghost text-[12px]"
                       >
-                        <Package size={13} /> Скачать все данные
+                        <Package size={13} /> {t('profile.downloadData')}
                       </button>
                     </div>
                   )}

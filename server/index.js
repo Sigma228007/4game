@@ -12,6 +12,7 @@ import adminRoutes from './routes/admin.js';
 import reviewsRoutes from './routes/reviews.js';
 import wishlistRoutes from './routes/wishlist.js';
 import gamificationRoutes from './routes/gamification.js';
+import pool from './db.js';
 
 dotenv.config();
 
@@ -54,6 +55,30 @@ app.use('/api/*', (req, res) => {
   res.status(404).json({ error: 'Маршрут не найден' });
 });
 
+async function ensureRoles() {
+  try {
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const supportEmail = process.env.SUPPORT_EMAIL;
+    if (adminEmail) {
+      const r = await pool.query(
+        "UPDATE users SET role = 'admin' WHERE email = $1 AND role != 'admin' RETURNING username",
+        [adminEmail]
+      );
+      if (r.rows.length) console.log(`✅ Auto-promoted ${r.rows[0].username} → admin`);
+    }
+    if (supportEmail) {
+      const r = await pool.query(
+        "UPDATE users SET role = 'support' WHERE email = $1 AND role != 'admin' AND role != 'support' RETURNING username",
+        [supportEmail]
+      );
+      if (r.rows.length) console.log(`✅ Auto-promoted ${r.rows[0].username} → support`);
+    }
+  } catch (e) {
+    console.error('Role auto-promote failed:', e.message);
+  }
+}
+
 app.listen(PORT, () => {
   console.log(`\n🚀 4Game API на http://localhost:${PORT}\n`);
+  ensureRoles();
 });
