@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import bcrypt from 'bcryptjs';
 
 import authRoutes from './routes/auth.js';
 import gamesRoutes from './routes/games.js';
@@ -49,6 +50,43 @@ app.use('/api/gamification', gamificationRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// One-time setup: creates admin/support accounts and promotes ADMIN_EMAIL
+// Protected by SETUP_SECRET env var: GET /api/setup?secret=YOUR_SECRET
+app.get('/api/setup', async (req, res) => {
+  const secret = process.env.SETUP_SECRET;
+  if (!secret || req.query.secret !== secret) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  const results = [];
+  try {
+    const accounts = [
+      { username: 'admin',   password: 'admin123',   email: 'admin@4game.com',   role: 'admin'   },
+      { username: 'support', password: 'support123',  email: 'support@4game.com', role: 'support' },
+    ];
+    for (const acc of accounts) {
+      const hash = await bcrypt.hash(acc.password, 10);
+      await pool.query(
+        'INSERT INTO users (username, password, email, role) VALUES ($1,$2,$3,$4) ON CONFLICT (username) DO UPDATE SET password=$2, role=$4',
+        [acc.username, hash, acc.email, acc.role]
+      );
+      results.push(`✅ ${acc.role}: ${acc.username} / ${acc.password}`);
+    }
+    // promote ADMIN_EMAIL user
+    const adminEmail = process.env.ADMIN_EMAIL;
+    if (adminEmail) {
+      const r = await pool.query(
+        "UPDATE users SET role='admin' WHERE email=$1 RETURNING username",
+        [adminEmail]
+      );
+      if (r.rows.length) results.push(`✅ promoted ${r.rows[0].username} (${adminEmail}) → admin`);
+      else results.push(`⚠️  no user with email ${adminEmail} found`);
+    }
+    res.json({ ok: true, results });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.use('/api/*', (req, res) => {
