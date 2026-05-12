@@ -15,14 +15,14 @@ export default function Footer() {
     e.preventDefault();
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       setStatus('error');
-      setMsg('Введите корректный email');
+      setMsg(t('footer.promoEmailError'));
       return;
     }
     setStatus('loading');
     try {
       await api.subscribeNewsletter(email.trim());
       setStatus('done');
-      setMsg('Готово! Промокод WELCOME10 на почте.');
+      setMsg(t('footer.promoSuccess'));
       setEmail('');
     } catch (err) {
       setStatus('error');
@@ -88,7 +88,7 @@ export default function Footer() {
               <span className="font-display font-black text-lg"><span className="text-primary">4</span><span style={{ color: 'var(--text)' }}>Game</span></span>
             </Link>
             <p className="font-body text-[13px] leading-relaxed max-w-[240px]" style={{ color: 'var(--text-faint)' }}>
-              Магазин лицензионных ключей. Честные цены, мгновенная доставка.
+              {t('footer.desc')}
             </p>
           </div>
           <div className="space-y-4">
@@ -104,7 +104,7 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="label">{t('footer.genres')}</h4>
             <nav className="flex flex-col gap-2">
-              {[['action','Экшен'],['shooter','Шутеры'],['rpg','RPG'],['strategy','Стратегии'],['sport','Спорт']].map(([id, name]) => (
+              {[['action', t('genre.action')],['shooter', t('genre.shooter')],['rpg', t('genre.rpg')],['strategy', t('genre.strategy')],['sport', t('genre.sport')]].map(([id, name]) => (
                 <Link key={id} to={`/catalog?genre=${id}`} className="font-body text-[13px] hover:text-primary transition-colors w-fit" style={{ color: 'var(--text-faint)' }}>{name}</Link>
               ))}
             </nav>
@@ -114,13 +114,13 @@ export default function Footer() {
             <div className="space-y-2.5">
               <a href="mailto:support@4game.com" className="flex items-center gap-2 font-body text-[13px] hover:text-primary transition-colors" style={{ color: 'var(--text-faint)' }}><Mail size={13} />support@4game.com</a>
               <a href="tel:+79242485393" className="flex items-center gap-2 font-body text-[13px] hover:text-primary transition-colors" style={{ color: 'var(--text-faint)' }}><Phone size={13} />+7 (924) 248-53-93</a>
-              <div className="flex items-center gap-2 font-body text-[13px]" style={{ color: 'var(--text-faint)' }}><MapPin size={13} />Владивосток, Россия</div>
+              <div className="flex items-center gap-2 font-body text-[13px]" style={{ color: 'var(--text-faint)' }}><MapPin size={13} />{t('footer.cityAddress')}</div>
             </div>
           </div>
         </div>
         <div className="mt-12 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3" style={{ borderTop: '1px solid var(--surface-border)' }}>
-          <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>© {new Date().getFullYear()} 4Game. Дипломный проект.</p>
-          <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>ВСКК • 09.02.07</p>
+          <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>© {new Date().getFullYear()} 4Game. {t('footer.diploma')}</p>
+          <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>{t('footer.school')}</p>
         </div>
       </div>
     </footer>

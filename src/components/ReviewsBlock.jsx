@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from './Toast';
+import { useI18n } from '../utils/i18n.jsx';
 
 /**
  * Блок отзывов на странице игры. Показывает рейтинг с распределением, список отзывов и форму.
@@ -12,6 +13,7 @@ import { useToast } from './Toast';
 export default function ReviewsBlock({ gameId }) {
   const { user, isAuth } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
 
   const [reviews, setReviews] = useState([]);
   const [stats, setStats] = useState(null);
@@ -57,7 +59,7 @@ export default function ReviewsBlock({ gameId }) {
     setSubmitting(true);
     try {
       const saved = await api.createReview(gameId, rating, text.trim());
-      toast(myReview ? 'Отзыв обновлён' : 'Отзыв опубликован', 'success');
+      toast(myReview ? t('reviews.updated') : t('reviews.published'), 'success');
       setMyReview(saved);
       setShowForm(false);
       // Перезагружаем список
@@ -70,10 +72,10 @@ export default function ReviewsBlock({ gameId }) {
 
   async function handleDelete() {
     if (!myReview) return;
-    if (!confirm('Удалить свой отзыв?')) return;
+    if (!confirm(t('reviews.confirmDelete'))) return;
     try {
       await api.deleteReview(myReview.id);
-      toast('Отзыв удалён', 'success');
+      toast(t('reviews.deleted'), 'success');
       setMyReview(null);
       setRating(5);
       setText('');
@@ -84,7 +86,7 @@ export default function ReviewsBlock({ gameId }) {
   }
 
   async function handleVoteHelpful(reviewId) {
-    if (!isAuth) { toast('Войдите, чтобы голосовать', 'error'); return; }
+    if (!isAuth) { toast(t('reviews.loginFirst'), 'error'); return; }
     try {
       const res = await api.voteReviewHelpful(reviewId);
       setReviews(prev => prev.map(r => r.id === reviewId ? { ...r, helpful: r.helpful + (res.helpful ? 1 : -1) } : r));
@@ -100,7 +102,7 @@ export default function ReviewsBlock({ gameId }) {
         <div className="flex items-center gap-3">
           <MessageSquare size={20} style={{ color: 'var(--text-muted)' }} />
           <h2 className="font-display text-xl font-bold" style={{ color: 'var(--text)' }}>
-            Отзывы {total > 0 && <span style={{ color: 'var(--text-faint)' }}>({total})</span>}
+            {t('reviews.title')} {total > 0 && <span style={{ color: 'var(--text-faint)' }}>({total})</span>}
           </h2>
         </div>
         {total > 0 && (
@@ -145,11 +147,11 @@ export default function ReviewsBlock({ gameId }) {
                         <Star key={i} size={13} className={i < myReview.rating ? 'text-amber-400' : ''} style={i >= myReview.rating ? { color: 'var(--text-faint)' } : {}} fill="currentColor" />
                       ))}
                     </div>
-                    <span className="font-body text-[13px]" style={{ color: 'var(--text-muted)' }}>Ваш отзыв</span>
+                    <span className="font-body text-[13px]" style={{ color: 'var(--text-muted)' }}>{t('reviews.yourReview')}</span>
                   </div>
                   <div className="flex gap-2">
                     <button onClick={() => setShowForm(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-display font-semibold uppercase tracking-wider transition-colors hover:bg-white/[0.05]" style={{ background: 'var(--bg-elevated)', color: 'var(--text-secondary)' }}>
-                      <Edit3 size={11} /> Изменить
+                      <Edit3 size={11} /> {t('reviews.edit')}
                     </button>
                     <button onClick={handleDelete} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-display font-semibold uppercase tracking-wider transition-colors text-primary hover:bg-primary/10" style={{ background: 'var(--bg-elevated)' }}>
                       <Trash2 size={11} />
@@ -158,13 +160,13 @@ export default function ReviewsBlock({ gameId }) {
                 </div>
               ) : (
                 <button onClick={() => setShowForm(true)} className="w-full py-3 rounded-xl font-display text-[13px] font-semibold uppercase tracking-wider transition-colors hover:bg-white/[0.05]" style={{ background: 'var(--surface)', color: 'var(--text-secondary)', border: '1px solid var(--surface-border)' }}>
-                  Написать отзыв
+                  {t('reviews.write')}
                 </button>
               )
             ) : (
               <motion.form initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} onSubmit={handleSubmit} className="space-y-4 p-5 rounded-xl overflow-hidden" style={{ background: 'var(--surface)', border: '1px solid var(--surface-border)' }}>
                 <div className="flex items-center justify-between">
-                  <h3 className="font-display font-bold text-[14px]" style={{ color: 'var(--text)' }}>{myReview ? 'Изменить отзыв' : 'Ваш отзыв'}</h3>
+                  <h3 className="font-display font-bold text-[14px]" style={{ color: 'var(--text)' }}>{myReview ? t('reviews.edit') : t('reviews.yourReview')}</h3>
                   <button type="button" onClick={() => setShowForm(false)} className="p-1 rounded hover:bg-white/5" style={{ color: 'var(--text-faint)' }}>
                     <X size={14} />
                   </button>
@@ -180,10 +182,10 @@ export default function ReviewsBlock({ gameId }) {
                   })}
                   <span className="font-display font-bold ml-2 text-[14px]" style={{ color: 'var(--text-secondary)' }}>{rating}/5</span>
                 </div>
-                <textarea value={text} onChange={e => setText(e.target.value)} placeholder="Поделитесь впечатлениями от игры (необязательно)..." rows={4} className="input resize-none" maxLength={2000} />
+                <textarea value={text} onChange={e => setText(e.target.value)} placeholder={t('reviews.placeholder')} rows={4} className="input resize-none" maxLength={2000} />
                 <div className="flex items-center gap-3">
                   <motion.button type="submit" whileTap={{ scale: 0.97 }} disabled={submitting} className="btn-primary py-2.5 text-[12px] disabled:opacity-50">
-                    {submitting ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Send size={14} /> {myReview ? 'Сохранить' : 'Опубликовать'}</>}
+                    {submitting ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Send size={14} /> {myReview ? t('reviews.save') : t('reviews.publish')}</>}
                   </motion.button>
                   <span className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>{text.length}/2000</span>
                 </div>
@@ -192,13 +194,13 @@ export default function ReviewsBlock({ gameId }) {
           </div>
         ) : (
           <div className="p-4 rounded-xl text-center" style={{ background: 'var(--surface)', border: '1px solid var(--surface-border)' }}>
-            <p className="font-body text-[13px]" style={{ color: 'var(--text-faint)' }}>Оставлять отзывы могут только покупатели этой игры</p>
+            <p className="font-body text-[13px]" style={{ color: 'var(--text-faint)' }}>{t('reviews.buyersOnly')}</p>
           </div>
         )
       ) : (
         <div className="p-4 rounded-xl text-center" style={{ background: 'var(--surface)', border: '1px solid var(--surface-border)' }}>
           <Link to="/login" className="font-body text-[13px] text-primary hover:underline">
-            Войдите, чтобы оставить отзыв
+            {t('reviews.loginFirst')}
           </Link>
         </div>
       )}
@@ -206,8 +208,8 @@ export default function ReviewsBlock({ gameId }) {
       {/* Sort controls */}
       {reviews.length > 0 && (
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>Сортировка:</span>
-          {[{ v: 'helpful', l: 'Полезные' }, { v: 'newest', l: 'Свежие' }, { v: 'worst', l: 'Худшие' }].map(opt => (
+          <span className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>{t('reviews.sort')}</span>
+          {[{ v: 'helpful', l: t('reviews.sortUseful') }, { v: 'newest', l: t('reviews.sortNew') }, { v: 'worst', l: t('reviews.sortWorst') }].map(opt => (
             <button
               key={opt.v}
               onClick={() => setSort(opt.v)}
@@ -228,7 +230,7 @@ export default function ReviewsBlock({ gameId }) {
         <div className="space-y-3">{[1, 2].map(i => <div key={i} className="skeleton h-24 rounded-xl" />)}</div>
       ) : reviews.length === 0 ? (
         <div className="text-center py-6">
-          <p className="font-body text-[14px]" style={{ color: 'var(--text-faint)' }}>Пока нет отзывов. Будьте первым!</p>
+          <p className="font-body text-[14px]" style={{ color: 'var(--text-faint)' }}>{t('reviews.empty')}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -255,7 +257,7 @@ export default function ReviewsBlock({ gameId }) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-display font-bold text-[13px]" style={{ color: 'var(--text-secondary)' }}>{r.username}</span>
-                        {isMyReview && <span className="badge text-[8px] bg-primary/15 text-primary">вы</span>}
+                        {isMyReview && <span className="badge text-[8px] bg-primary/15 text-primary">{t('reviews.you')}</span>}
                         <div className="flex items-center gap-0.5">
                           {[...Array(5)].map((_, i) => (
                             <Star key={i} size={11} className={i < r.rating ? 'text-amber-400' : ''} style={i >= r.rating ? { color: 'var(--text-faint)' } : {}} fill="currentColor" />
@@ -276,7 +278,7 @@ export default function ReviewsBlock({ gameId }) {
                           className="mt-3 flex items-center gap-1.5 text-[11px] font-body transition-colors hover:text-accent"
                           style={{ color: 'var(--text-faint)' }}
                         >
-                          <ThumbsUp size={12} /> Полезно ({r.helpful})
+                          <ThumbsUp size={12} /> {t('reviews.helpful')} ({r.helpful})
                         </button>
                       )}
                     </div>

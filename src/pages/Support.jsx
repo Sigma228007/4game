@@ -7,16 +7,18 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 import { PageTransition, Reveal } from '../components/Motion';
 import PosterAccent from '../components/PosterAccent';
-
-const STATUS = {
-  open:     { label: 'Открыт',   color: 'text-amber-400 bg-amber-400/10', icon: AlertCircle },
-  answered: { label: 'Отвечен',  color: 'text-accent bg-accent/10',        icon: CheckCircle },
-  closed:   { label: 'Закрыт',   color: 'bg-white/5',                       icon: Clock, textColor: 'var(--text-faint)' },
-};
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function Support() {
   const { user } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
+
+  const STATUS = {
+    open:     { label: t('ticket.open'),     color: 'text-amber-400 bg-amber-400/10', icon: AlertCircle },
+    answered: { label: t('ticket.answered'), color: 'text-accent bg-accent/10',        icon: CheckCircle },
+    closed:   { label: t('ticket.closed'),   color: 'bg-white/5',                       icon: Clock, textColor: 'var(--text-faint)' },
+  };
   const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -72,14 +74,14 @@ export default function Support() {
                     <Headphones size={24} className="text-primary" />
                   </div>
                   <div>
-                    <span className="label block mb-2">{isStaff ? 'Панель поддержки' : 'Центр помощи'}</span>
-                    <h1 className="section-title text-4xl">Поддержка</h1>
+                    <span className="label block mb-2">{isStaff ? t('support.panel') : t('support.center')}</span>
+                    <h1 className="section-title text-4xl">{t('support.title')}</h1>
                   </div>
                 </div>
                 {!isStaff && (
                   <button onClick={() => setShowForm(!showForm)} className="btn-primary text-[13px]">
                     {showForm ? <X size={16} /> : <Plus size={16} />}
-                    {showForm ? 'Отмена' : 'Новое обращение'}
+                    {showForm ? t('support.cancel') : t('support.new')}
                   </button>
                 )}
               </div>
@@ -88,9 +90,9 @@ export default function Support() {
               {tickets.length > 0 && (
                 <div className="grid grid-cols-3 gap-3 mt-8">
                   {[
-                    { icon: AlertCircle, label: 'В работе',   count: openCount,     color: 'text-amber-400', bg: 'rgba(245,158,11,0.08)' },
-                    { icon: CheckCircle, label: 'Отвечено',   count: answeredCount, color: 'text-accent',    bg: 'rgba(16,185,129,0.08)' },
-                    { icon: Clock,       label: 'Закрыто',    count: closedCount,   color: 'text-faint',     bg: 'rgba(255,255,255,0.02)' },
+                    { icon: AlertCircle, label: t('support.inWork'),    count: openCount,     color: 'text-amber-400', bg: 'rgba(245,158,11,0.08)' },
+                    { icon: CheckCircle, label: t('support.answered'),  count: answeredCount, color: 'text-accent',    bg: 'rgba(16,185,129,0.08)' },
+                    { icon: Clock,       label: t('support.closed'),    count: closedCount,   color: 'text-faint',     bg: 'rgba(255,255,255,0.02)' },
                   ].map(s => (
                     <div key={s.label} className="glass-static p-4 flex items-center gap-3">
                       <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: s.bg }}>
@@ -115,15 +117,15 @@ export default function Support() {
                 <form onSubmit={handleCreate} className="glass-static p-6 space-y-4">
                   <div className="flex items-center gap-2 mb-1">
                     <Shield size={15} className="text-primary" />
-                    <h3 className="font-display text-[15px] font-bold" style={{ color: 'var(--text)' }}>Новое обращение</h3>
+                    <h3 className="font-display text-[15px] font-bold" style={{ color: 'var(--text)' }}>{t('support.new')}</h3>
                   </div>
                   <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>
-                    Опишите проблему — обычно отвечаем за 10–30 минут.
+                    {t('support.msgPlaceholder')}
                   </p>
-                  <input value={subject} onChange={e => setSubject(e.target.value)} placeholder="Тема обращения" required className="input" />
-                  <textarea value={message} onChange={e => setMessage(e.target.value)} placeholder="Опишите вашу проблему подробно..." rows={4} required className="input resize-none" />
+                  <input value={subject} onChange={e => setSubject(e.target.value)} placeholder={t('support.subject')} required className="input" />
+                  <textarea value={message} onChange={e => setMessage(e.target.value)} placeholder={t('support.detailPlaceholder')} rows={4} required className="input resize-none" />
                   <motion.button type="submit" disabled={sending} whileTap={{ scale: 0.97 }} className="btn-primary py-3 text-[13px]">
-                    {sending ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Send size={15} /> Отправить</>}
+                    {sending ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Send size={15} /> {t('support.send')}</>}
                   </motion.button>
                 </form>
               </motion.div>
@@ -139,37 +141,37 @@ export default function Support() {
                 <MessageCircle size={28} className="text-primary" />
               </div>
               <h3 className="font-display text-lg font-bold mb-2" style={{ color: 'var(--text-muted)' }}>
-                {isStaff ? 'Пока тихо' : 'Обращений пока нет'}
+                {isStaff ? t('support.empty') : t('support.noTickets')}
               </h3>
               <p className="font-body text-[14px] max-w-sm mx-auto" style={{ color: 'var(--text-faint)' }}>
-                {isStaff ? 'Как только кто-то напишет — тикет появится здесь' : 'Нажмите «Новое обращение», если нужна помощь'}
+                {isStaff ? t('support.noTicketsHint') : t('support.newHint')}
               </p>
             </div>
           ) : (
             <div className="space-y-3">
-              {tickets.map((t, i) => {
-                const s = STATUS[t.status] || STATUS.open;
+              {tickets.map((ticket, i) => {
+                const s = STATUS[ticket.status] || STATUS.open;
                 const SIcon = s.icon;
                 return (
                   <motion.div
-                    key={t.id}
+                    key={ticket.id}
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.04 }}
                   >
-                    <Link to={`/support/${t.id}`} className="glass flex items-center gap-4 p-5 group">
+                    <Link to={`/support/${ticket.id}`} className="glass flex items-center gap-4 p-5 group">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${s.color}`}>
                         <SIcon size={18} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <h3 className="font-display text-[13px] font-bold truncate group-hover:text-white transition-colors" style={{ color: 'var(--text-secondary)' }}>
-                            {isStaff && t.username && <span className="text-primary mr-2">@{t.username}</span>}
-                            {t.subject}
+                            {isStaff && ticket.username && <span className="text-primary mr-2">@{ticket.username}</span>}
+                            {ticket.subject}
                           </h3>
                         </div>
                         <p className="font-body text-[12px] mt-1" style={{ color: 'var(--text-faint)' }}>
-                          #{t.id} · {t.message_count} сообщ. · {new Date(t.created_at).toLocaleDateString('ru-RU')}
+                          #{ticket.id} · {ticket.message_count} {t('support.msgs')} · {new Date(ticket.created_at).toLocaleDateString('ru-RU')}
                         </p>
                       </div>
                       <span className={`badge text-[10px] ${s.color}`} style={s.textColor ? { color: s.textColor } : {}}>

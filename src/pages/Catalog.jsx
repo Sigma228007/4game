@@ -7,14 +7,7 @@ import { PageTransition, Reveal, StaggerContainer, StaggerItem } from '../compon
 import Select from '../components/Select';
 import PosterAccent from '../components/PosterAccent';
 import { games, GENRES, searchGames } from '../data/games';
-
-const SORT_OPTIONS = [
-  { value: 'default',    label: 'По умолчанию' },
-  { value: 'price-asc',  label: 'Сначала дешёвые' },
-  { value: 'price-desc', label: 'Сначала дорогие' },
-  { value: 'rating',     label: 'По рейтингу' },
-  { value: 'year',       label: 'По новизне' },
-];
+import { useI18n } from '../utils/i18n.jsx';
 
 // Вычисляем границы цен/годов по данным
 const PRICE_MIN = Math.min(...games.map(g => g.price));
@@ -23,6 +16,16 @@ const YEAR_MIN  = Math.min(...games.map(g => g.year));
 const YEAR_MAX  = Math.max(...games.map(g => g.year));
 
 export default function Catalog() {
+  const { t } = useI18n();
+
+  const SORT_OPTIONS = [
+    { value: 'default',    label: t('catalog.sort.default') },
+    { value: 'price-asc',  label: t('catalog.sort.priceAsc') },
+    { value: 'price-desc', label: t('catalog.sort.priceDesc') },
+    { value: 'rating',     label: t('catalog.sort.rating') },
+    { value: 'year',       label: t('catalog.sort.year') },
+  ];
+
   const [searchParams, setSearchParams] = useSearchParams();
   const initialGenre = searchParams.get('genre');
   const [selectedGenres, setSelectedGenres] = useState(initialGenre ? [initialGenre] : []);
@@ -111,8 +114,8 @@ export default function Catalog() {
           <Reveal>
             <div className="mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               <div>
-                <span className="label block mb-3">Библиотека</span>
-                <h1 className="section-title text-4xl md:text-5xl">Каталог игр</h1>
+                <span className="label block mb-3">{t('catalog.library')}</span>
+                <h1 className="section-title text-4xl md:text-5xl">{t('catalog.title')}</h1>
               </div>
               <div
                 className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full self-start sm:self-auto"
@@ -139,6 +142,7 @@ export default function Catalog() {
                   placeholder="Найти игру, жанр, тег..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
+                  placeholder={t('catalog.search.placeholder')}
                   className="input pl-11 pr-10"
                 />
                 {searchQuery && (
@@ -152,7 +156,7 @@ export default function Catalog() {
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-display font-semibold transition-colors ${filterOpen ? 'bg-primary text-white' : ''}`}
                 style={!filterOpen ? { background: 'var(--surface)', color: 'var(--text-secondary)', border: '1px solid var(--surface-border)' } : {}}
               >
-                <Filter size={14} /> Фильтр {hasActiveFilters && <span className="w-2 h-2 bg-accent rounded-full" />}
+                <Filter size={14} /> {t('catalog.filter')} {hasActiveFilters && <span className="w-2 h-2 bg-accent rounded-full" />}
               </button>
               <div className="min-w-[200px]">
                 <Select value={sortBy} onChange={setSortBy} options={SORT_OPTIONS} icon={SlidersHorizontal} />
@@ -175,14 +179,14 @@ export default function Catalog() {
                   <div>
                     <div className="flex items-center gap-2 mb-3">
                       <Wallet size={14} style={{ color: 'var(--text-faint)' }} />
-                      <span className="label text-[10px]">Цена</span>
+                      <span className="label text-[10px]">{t('catalog.price')}</span>
                       <span className="font-body text-[12px] ml-auto" style={{ color: 'var(--text-secondary)' }}>
                         {priceRange[0].toLocaleString('ru-RU')} — {priceRange[1].toLocaleString('ru-RU')} ₽
                       </span>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>От</label>
+                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>{t('catalog.from')}</label>
                         <input
                           type="range"
                           min={PRICE_MIN}
@@ -194,7 +198,7 @@ export default function Catalog() {
                         />
                       </div>
                       <div>
-                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>До</label>
+                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>{t('catalog.to')}</label>
                         <input
                           type="range"
                           min={PRICE_MIN}
@@ -212,14 +216,14 @@ export default function Catalog() {
                   <div>
                     <div className="flex items-center gap-2 mb-3">
                       <Calendar size={14} style={{ color: 'var(--text-faint)' }} />
-                      <span className="label text-[10px]">Год выпуска</span>
+                      <span className="label text-[10px]">{t('catalog.year')}</span>
                       <span className="font-body text-[12px] ml-auto" style={{ color: 'var(--text-secondary)' }}>
                         {yearRange[0]} — {yearRange[1]}
                       </span>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>От</label>
+                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>{t('catalog.from')}</label>
                         <input
                           type="range"
                           min={YEAR_MIN}
@@ -230,7 +234,7 @@ export default function Catalog() {
                         />
                       </div>
                       <div>
-                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>До</label>
+                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>{t('catalog.to')}</label>
                         <input
                           type="range"
                           min={YEAR_MIN}
@@ -253,7 +257,7 @@ export default function Catalog() {
                         className="w-4 h-4 accent-primary cursor-pointer"
                       />
                       <Percent size={14} className="text-amber-400" />
-                      <span className="font-body text-[13px]" style={{ color: 'var(--text-secondary)' }}>Только со скидкой</span>
+                      <span className="font-body text-[13px]" style={{ color: 'var(--text-secondary)' }}>{t('catalog.onSale')}</span>
                     </label>
                     {hasActiveFilters && (
                       <button
@@ -261,7 +265,7 @@ export default function Catalog() {
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-display font-semibold uppercase tracking-wider transition-colors hover:bg-white/[0.05]"
                         style={{ color: 'var(--text-faint)' }}
                       >
-                        <RotateCcw size={11} /> Сбросить всё
+                        <RotateCcw size={11} /> {t('catalog.resetAll')}
                       </button>
                     )}
                   </div>
@@ -286,7 +290,7 @@ export default function Catalog() {
                   border: '1px solid var(--surface-border)',
                 }}
               >
-                <LayoutGrid size={13} /> Все
+                <LayoutGrid size={13} /> {t('catalog.all')}
               </button>
               {GENRES.map(g => {
                 const active = selectedGenres.includes(g.id);
@@ -320,10 +324,10 @@ export default function Catalog() {
             </StaggerContainer>
           ) : (
             <div className="text-center py-24">
-              <p className="font-display text-3xl mb-3" style={{ color: 'var(--text-faint)' }}>Ничего не нашлось</p>
-              <p className="font-body mb-6" style={{ color: 'var(--text-muted)' }}>Попробуйте изменить фильтры или поиск</p>
+              <p className="font-display text-3xl mb-3" style={{ color: 'var(--text-faint)' }}>{t('catalog.empty')}</p>
+              <p className="font-body mb-6" style={{ color: 'var(--text-muted)' }}>{t('catalog.emptyDesc')}</p>
               <button onClick={resetAll} className="btn-ghost">
-                <RotateCcw size={14} /> Сбросить фильтры
+                <RotateCcw size={14} /> {t('catalog.resetFilters')}
               </button>
             </div>
           )}

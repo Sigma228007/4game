@@ -4,17 +4,19 @@ import { motion } from 'framer-motion';
 import { api } from '../api';
 import { PageTransition, Reveal, StaggerContainer, StaggerItem } from '../components/Motion';
 import PosterAccent from '../components/PosterAccent';
-
-const TIER_STYLES = {
-  bronze:   { bg: 'from-amber-700/20 to-amber-900/10',    border: 'border-amber-700/30',    text: 'text-amber-500',    label: 'Бронза'   },
-  silver:   { bg: 'from-slate-400/20 to-slate-600/10',    border: 'border-slate-400/30',    text: 'text-slate-300',    label: 'Серебро'  },
-  gold:     { bg: 'from-amber-400/25 to-yellow-600/10',   border: 'border-amber-400/30',    text: 'text-amber-300',    label: 'Золото'   },
-  platinum: { bg: 'from-cyan-300/20 to-blue-500/10',      border: 'border-cyan-300/30',     text: 'text-cyan-300',     label: 'Платина'  },
-};
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function Achievements() {
+  const { t } = useI18n();
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const TIER_STYLES = {
+    bronze:   { bg: 'from-amber-700/20 to-amber-900/10',    border: 'border-amber-700/30',    text: 'text-amber-500',    label: t('ach.bronze')   },
+    silver:   { bg: 'from-slate-400/20 to-slate-600/10',    border: 'border-slate-400/30',    text: 'text-slate-300',    label: t('ach.silver')  },
+    gold:     { bg: 'from-amber-400/25 to-yellow-600/10',   border: 'border-amber-400/30',    text: 'text-amber-300',    label: t('ach.gold')   },
+    platinum: { bg: 'from-cyan-300/20 to-blue-500/10',      border: 'border-cyan-300/30',     text: 'text-cyan-300',     label: t('ach.platinum')  },
+  };
 
   useEffect(() => {
     api.getAchievements()
@@ -44,14 +46,14 @@ export default function Achievements() {
                   <Trophy size={24} className="text-amber-400" />
                 </div>
                 <div className="flex-1">
-                  <span className="label block mb-2">Игровой прогресс</span>
-                  <h1 className="section-title text-4xl">Достижения</h1>
+                  <span className="label block mb-2">{t('ach.badge')}</span>
+                  <h1 className="section-title text-4xl">{t('ach.title')}</h1>
                 </div>
               </div>
 
               <div className="mt-8 glass-static p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="font-body text-[13px]" style={{ color: 'var(--text-muted)' }}>Открыто</span>
+                  <span className="font-body text-[13px]" style={{ color: 'var(--text-muted)' }}>{t('ach.unlocked')}</span>
                   <span className="font-display font-bold text-[15px]" style={{ color: 'var(--text)' }}>
                     {earned.length} / {list.length} <span className="text-accent">({percent}%)</span>
                   </span>
@@ -71,7 +73,7 @@ export default function Achievements() {
           {earned.length > 0 && (
             <div className="mb-12">
               <h2 className="font-display text-[12px] font-bold uppercase tracking-wider mb-4" style={{ color: 'var(--text-faint)' }}>
-                Открытые ({earned.length})
+                {t('ach.tabAll')} ({earned.length})
               </h2>
               <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {earned.map(a => {
@@ -92,7 +94,7 @@ export default function Achievements() {
                           <p className="font-body text-[12px] mt-1" style={{ color: 'var(--text-muted)' }}>{a.description}</p>
                           {a.earned_at && (
                             <p className="font-body text-[10px] mt-2" style={{ color: 'var(--text-faint)' }}>
-                              Получено {new Date(a.earned_at).toLocaleDateString('ru-RU')}
+                              {t('ach.received')} {new Date(a.earned_at).toLocaleDateString('ru-RU')}
                             </p>
                           )}
                         </div>
@@ -107,7 +109,7 @@ export default function Achievements() {
           {locked.length > 0 && (
             <div>
               <h2 className="font-display text-[12px] font-bold uppercase tracking-wider mb-4" style={{ color: 'var(--text-faint)' }}>
-                Закрытые ({locked.length})
+                {t('ach.tabLocked')} ({locked.length})
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {locked.map(a => (

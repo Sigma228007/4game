@@ -5,18 +5,20 @@ import { PageTransition } from '../components/Motion';
 import { useState } from 'react';
 import { useToast } from '../components/Toast';
 import { usePrice } from '../hooks/usePrice';
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function Success() {
   const location = useLocation();
   const orderData = location.state; // { orderId, total, items, createdAt }
   const toast = useToast();
   const { format } = usePrice();
+  const { t } = useI18n();
   const [copiedKey, setCopiedKey] = useState(null);
 
   function copyKey(key) {
     navigator.clipboard.writeText(key);
     setCopiedKey(key);
-    toast('Ключ скопирован', 'success');
+    toast(t('order.keyCopied'), 'success');
     setTimeout(() => setCopiedKey(null), 2000);
   }
 
@@ -33,10 +35,10 @@ export default function Success() {
 
         {/* Text */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-center space-y-3">
-          <h1 className="font-display text-3xl font-black" style={{ color: 'var(--text)' }}>Оплата прошла!</h1>
+          <h1 className="font-display text-3xl font-black" style={{ color: 'var(--text)' }}>{t('success.title')}</h1>
           {orderData && (
             <p className="font-body text-[15px]" style={{ color: 'var(--text-muted)' }}>
-              Заказ #{orderData.orderId} · {format(orderData.total)}
+              {t('success.order')} #{orderData.orderId} · {format(orderData.total)}
             </p>
           )}
         </motion.div>
@@ -47,7 +49,7 @@ export default function Success() {
             className="glass-static overflow-hidden">
             <div className="px-5 py-3 border-b flex items-center gap-2" style={{ borderColor: 'var(--surface-border)' }}>
               <Key size={15} className="text-accent" />
-              <span className="font-display text-[12px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>Ваши ключи активации</span>
+              <span className="font-display text-[12px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>{t('success.keys')}</span>
             </div>
             <div className="divide-y" style={{ borderColor: 'var(--surface-border)' }}>
               {orderData.items.map((item, i) => (
@@ -73,8 +75,8 @@ export default function Success() {
 
         {/* Actions */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="flex flex-wrap justify-center gap-4">
-          <Link to="/orders" className="btn-ghost text-[13px]"><Package size={16} /> Мои покупки</Link>
-          <Link to="/catalog" className="btn-primary text-[13px]">Ещё игры <ArrowRight size={16} /></Link>
+          <Link to="/orders" className="btn-ghost text-[13px]"><Package size={16} /> {t('success.myPurchases')}</Link>
+          <Link to="/catalog" className="btn-primary text-[13px]">{t('success.moreGames')} <ArrowRight size={16} /></Link>
         </motion.div>
       </div>
     </div></PageTransition>

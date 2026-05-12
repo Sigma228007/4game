@@ -9,10 +9,12 @@ import { api } from '../api';
 import { useState } from 'react';
 import { applyPromo } from '../utils/promoCodes';
 import { usePrice } from '../hooks/usePrice';
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function Cart() {
   const { cartItems, total, removeFromCart, clearCart, reload } = useCart();
   const { format } = usePrice();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const toast = useToast();
   const [checking, setChecking] = useState(false);
@@ -69,8 +71,8 @@ export default function Cart() {
             <div className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center" style={{ background: 'var(--surface)', border: '1px solid var(--surface-border)' }}>
               <ShoppingCart size={32} style={{ color: 'var(--text-faint)' }} />
             </div>
-            <h2 className="font-display text-2xl font-bold" style={{ color: 'var(--text-muted)' }}>Корзина пуста</h2>
-            <p className="font-body text-[15px]" style={{ color: 'var(--text-faint)' }}>Самое время выбрать что-нибудь из каталога</p>
+            <h2 className="font-display text-2xl font-bold" style={{ color: 'var(--text-muted)' }}>{t('cart.empty')}</h2>
+            <p className="font-body text-[15px]" style={{ color: 'var(--text-faint)' }}>{t('cart.emptyLong')}</p>
             <Link to="/catalog" className="btn-primary inline-flex">В каталог <ArrowRight size={16} /></Link>
           </div>
         </div>
@@ -93,9 +95,9 @@ export default function Cart() {
           <Reveal>
             <div className="mb-10">
               <span className="label block mb-3">Оформление</span>
-              <h1 className="section-title text-4xl">Корзина</h1>
+              <h1 className="section-title text-4xl">{t('cart.title')}</h1>
               <p className="font-body mt-3 text-[14px]" style={{ color: 'var(--text-faint)' }}>
-                {cartItems.length} {cartItems.length === 1 ? 'товар' : cartItems.length < 5 ? 'товара' : 'товаров'}
+                {cartItems.length} {cartItems.length === 1 ? t('cart.items1') : cartItems.length < 5 ? t('cart.items2') : t('cart.itemsN')}
               </p>
             </div>
           </Reveal>
@@ -161,7 +163,7 @@ export default function Cart() {
                     </div>
                     {savings > 0 && (
                       <div className="flex justify-between text-[13px] py-3 mt-3" style={{ borderTop: '1px solid var(--surface-border)' }}>
-                        <span className="font-body text-accent/70">Экономия</span>
+                        <span className="font-body text-accent/70">{t('cart.savings')}</span>
                         <span className="font-display font-semibold text-accent">−{format(savings)}</span>
                       </div>
                     )}
@@ -190,7 +192,7 @@ export default function Cart() {
                               onClick={handleRemovePromo}
                               className="p-1 rounded-lg hover:bg-white/[0.05] transition"
                               style={{ color: 'var(--text-faint)' }}
-                              aria-label="Убрать промокод"
+                              aria-label={t('cart.removePromo')}
                             >
                               <X size={14} />
                             </button>
@@ -204,7 +206,7 @@ export default function Cart() {
                           >
                             <div className="flex items-center gap-2 mb-2">
                               <Tag size={12} style={{ color: 'var(--text-faint)' }} />
-                              <span className="label text-[10px]">Промокод</span>
+                              <span className="label text-[10px]">{t('cart.promoCode')}</span>
                             </div>
                             <div className="flex gap-2">
                               <input
@@ -231,7 +233,7 @@ export default function Cart() {
                               <p className="font-body text-[11px] text-primary mt-2">{promoError}</p>
                             )}
                             <p className="font-body text-[10px] mt-2" style={{ color: 'var(--text-faint)' }}>
-                              Попробуйте: WELCOME10, NEWBIE500, GAMER25
+                              {t('cart.tryPromo')}
                             </p>
                           </motion.div>
                         )}
@@ -248,7 +250,7 @@ export default function Cart() {
 
                     <div className="pt-3 mt-3" style={{ borderTop: '1px solid var(--surface-border)' }}>
                       <div className="flex justify-between items-baseline">
-                        <span className="font-display text-[13px] font-semibold" style={{ color: 'var(--text-secondary)' }}>К оплате</span>
+                        <span className="font-display text-[13px] font-semibold" style={{ color: 'var(--text-secondary)' }}>{t('cart.checkout2')}</span>
                         <span className="price text-[28px]">{format(finalTotal)}</span>
                       </div>
                     </div>
@@ -258,10 +260,10 @@ export default function Cart() {
                       disabled={checking}
                       className="btn-primary w-full py-4 text-[15px] disabled:opacity-50 mt-5"
                     >
-                      {checking ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><CreditCard size={18} /> Оплатить</>}
+                      {checking ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><CreditCard size={18} /> {t('cart.checkout')}</>}
                     </motion.button>
                     <div className="flex items-center justify-center gap-2 text-[11px] font-body mt-3" style={{ color: 'var(--text-faint)' }}>
-                      <Shield size={11} /> Безопасная оплата
+                      <Shield size={11} /> {t('cart.secure')}
                     </div>
                   </div>
                 </div>

@@ -6,11 +6,13 @@ import { useToast } from '../components/Toast';
 import { PageTransition, Reveal, StaggerContainer, StaggerItem } from '../components/Motion';
 import PosterAccent from '../components/PosterAccent';
 import { usePrice } from '../hooks/usePrice';
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function Favorites() {
   const { favItems, removeFromFavorites } = useFavorites();
   const { addToCart, isInCart } = useCart();
   const { format } = usePrice();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -26,9 +28,9 @@ export default function Favorites() {
             <div className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center" style={{ background: 'var(--surface)', border: '1px solid var(--surface-border)' }}>
               <Heart size={32} style={{ color: 'var(--text-faint)' }} />
             </div>
-            <h2 className="font-display text-2xl font-bold" style={{ color: 'var(--text-muted)' }}>Список пуст</h2>
-            <p className="font-body text-[15px]" style={{ color: 'var(--text-faint)' }}>Нажимайте ♥ на карточках, чтобы сохранить</p>
-            <Link to="/catalog" className="btn-primary inline-flex">В каталог <ArrowRight size={16} /></Link>
+            <h2 className="font-display text-2xl font-bold" style={{ color: 'var(--text-muted)' }}>{t('fav.empty')}</h2>
+            <p className="font-body text-[15px]" style={{ color: 'var(--text-faint)' }}>{t('fav.emptyHint')}</p>
+            <Link to="/catalog" className="btn-primary inline-flex">{t('cart.browse')} <ArrowRight size={16} /></Link>
           </div>
         </div>
       </PageTransition>
@@ -48,10 +50,10 @@ export default function Favorites() {
         <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-10 md:py-14 z-10">
           <Reveal>
             <div className="mb-10">
-              <span className="label block mb-3">Сохранённое</span>
-              <h1 className="section-title text-4xl">Избранное</h1>
+              <span className="label block mb-3">{t('fav.saved')}</span>
+              <h1 className="section-title text-4xl">{t('fav.title')}</h1>
               <p className="font-body mt-3 text-[14px]" style={{ color: 'var(--text-faint)' }}>
-                {favItems.length} {favItems.length === 1 ? 'игра' : favItems.length < 5 ? 'игры' : 'игр'}
+                {favItems.length} {favItems.length === 1 ? t('home.genres.game1') : favItems.length < 5 ? t('home.genres.game2') : t('home.genres.gameN')}
               </p>
             </div>
           </Reveal>
@@ -89,7 +91,7 @@ export default function Favorites() {
                             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-display font-semibold uppercase tracking-wider transition-all ${inCart ? 'bg-accent/15 text-accent border border-accent/20' : 'bg-primary text-white hover:shadow-glow-sm'}`}
                           >
                             {inCart ? <Check size={13} /> : <ShoppingCart size={13} />}
-                            {inCart ? 'В корзине' : 'Купить'}
+                            {inCart ? t('fav.inCart') : t('fav.buy')}
                           </button>
                         </div>
                       </div>

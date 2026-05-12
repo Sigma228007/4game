@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { games, searchGames, GENRES } from '../data/games';
 import { usePrice } from '../hooks/usePrice';
+import { useI18n } from '../utils/i18n.jsx';
 
 /**
  * Глобальный поиск: Ctrl/Cmd+K → overlay → ищет по играм и жанрам.
@@ -17,6 +18,7 @@ export default function CommandPalette() {
   const listRef = useRef(null);
   const navigate = useNavigate();
   const { format } = usePrice();
+  const { t } = useI18n();
 
   // Ctrl/Cmd+K
   useEffect(() => {
@@ -114,7 +116,7 @@ export default function CommandPalette() {
                   ref={inputRef}
                   value={query}
                   onChange={e => { setQuery(e.target.value); setActive(0); }}
-                  placeholder="Найти игру или жанр..."
+                  placeholder={t('cmd.placeholder')}
                   className="flex-1 bg-transparent outline-none font-body text-[15px]"
                   style={{ color: 'var(--text)' }}
                 />
@@ -131,7 +133,7 @@ export default function CommandPalette() {
                 {totalCount === 0 ? (
                   <div className="py-12 text-center">
                     <p className="font-body text-[14px]" style={{ color: 'var(--text-faint)' }}>
-                      Ничего не нашлось по запросу «{query}»
+                      {t('cmd.empty')} «{query}»
                     </p>
                   </div>
                 ) : (
@@ -139,7 +141,7 @@ export default function CommandPalette() {
                     {matchedGames.length > 0 && (
                       <div>
                         <div className="px-3 py-2 text-[10px] font-display font-bold uppercase tracking-wider" style={{ color: 'var(--text-faint)' }}>
-                          {query ? 'Игры' : 'Популярное'}
+                          {query ? t('cmd.games') : t('cmd.popular')}
                         </div>
                         {matchedGames.map((g, i) => {
                           const idx = i;
@@ -173,7 +175,7 @@ export default function CommandPalette() {
                     {matchedGenres.length > 0 && (
                       <div className="mt-2">
                         <div className="px-3 py-2 text-[10px] font-display font-bold uppercase tracking-wider" style={{ color: 'var(--text-faint)' }}>
-                          Жанры
+                          {t('cmd.genres')}
                         </div>
                         {matchedGenres.map((g, i) => {
                           const idx = matchedGames.length + i;
@@ -195,7 +197,7 @@ export default function CommandPalette() {
                                 <p className="font-display text-[13px] font-bold" style={{ color: 'var(--text-secondary)' }}>
                                   {g.name}
                                 </p>
-                                <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>Перейти в раздел</p>
+                                <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>{t('cmd.goto')}</p>
                               </div>
                               {isActive && <ArrowRight size={14} style={{ color: 'var(--text-muted)' }} />}
                             </Link>
@@ -210,8 +212,8 @@ export default function CommandPalette() {
               {/* Footer hints */}
               <div className="flex items-center justify-between px-5 py-3 border-t text-[10px] font-body" style={{ borderColor: 'var(--surface-border)', color: 'var(--text-faint)' }}>
                 <div className="flex items-center gap-3">
-                  <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded text-[9px]" style={{ background: 'var(--surface)' }}>↑</kbd><kbd className="px-1.5 py-0.5 rounded text-[9px]" style={{ background: 'var(--surface)' }}>↓</kbd> навигация</span>
-                  <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded text-[9px]" style={{ background: 'var(--surface)' }}>Enter</kbd> открыть</span>
+                  <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded text-[9px]" style={{ background: 'var(--surface)' }}>↑</kbd><kbd className="px-1.5 py-0.5 rounded text-[9px]" style={{ background: 'var(--surface)' }}>↓</kbd> {t('cmd.nav')}</span>
+                  <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded text-[9px]" style={{ background: 'var(--surface)' }}>Enter</kbd> {t('cmd.enter')}</span>
                 </div>
                 <span>4Game Search</span>
               </div>

@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { usePrice } from '../hooks/usePrice';
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function GameCard({ game }) {
   const { isAuth } = useAuth();
@@ -17,6 +18,7 @@ export default function GameCard({ game }) {
   const toast = useToast();
   const flyTo = useFlyTo();
   const { format } = usePrice();
+  const { t } = useI18n();
   const [imgLoaded, setImgLoaded] = useState(false);
   const imgRef = useRef(null);
 
@@ -37,7 +39,7 @@ export default function GameCard({ game }) {
         target: 'favorites',
       });
     }
-    toast(added ? 'Добавлено в избранное' : 'Убрано из избранного', 'fav');
+    toast(added ? t('card.addedFav') : t('card.removedFav'), 'fav');
   }
 
   function handleCart(e) {
@@ -53,7 +55,7 @@ export default function GameCard({ game }) {
         target: 'cart',
       });
     }
-    toast(`${game.name} в корзине`, 'cart');
+    toast(`${game.name} ${t('card.alreadyCart')}`, 'cart');
   }
 
   return (
@@ -72,7 +74,7 @@ export default function GameCard({ game }) {
               : 'backdrop-blur text-white/40 opacity-0 group-hover:opacity-100 hover:text-primary'
           }`}
           style={{ background: fav ? undefined : 'rgba(0,0,0,0.4)' }}
-          aria-label={fav ? 'Убрать из избранного' : 'Добавить в избранное'}
+          aria-label={fav ? t('card.removedFav') : t('card.addFav')}
         >
           <Heart size={14} fill={fav ? 'currentColor' : 'none'} strokeWidth={2.5} />
         </motion.button>
@@ -111,7 +113,7 @@ export default function GameCard({ game }) {
               }`}
             >
               {inCart ? <Check size={13} /> : <ShoppingCart size={13} />}
-              {inCart ? 'В корзине' : 'В корзину'}
+              {inCart ? t('card.alreadyCart') : t('card.inCart')}
             </motion.button>
           </div>
         </div>

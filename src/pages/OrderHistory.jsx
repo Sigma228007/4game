@@ -7,6 +7,7 @@ import { useToast } from '../components/Toast';
 import { PageTransition, Reveal } from '../components/Motion';
 import { generateReceipt } from '../utils/pdfReceipt';
 import { usePrice } from '../hooks/usePrice';
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function OrderHistory() {
   const [orders, setOrders] = useState([]);
@@ -14,6 +15,7 @@ export default function OrderHistory() {
   const [copiedKey, setCopiedKey] = useState(null);
   const toast = useToast();
   const { format } = usePrice();
+  const { t } = useI18n();
 
   useEffect(() => {
     api.getOrders().then(setOrders).catch(() => {}).finally(() => setLoading(false));
@@ -22,7 +24,7 @@ export default function OrderHistory() {
   function copyKey(key) {
     navigator.clipboard.writeText(key);
     setCopiedKey(key);
-    toast('Ключ скопирован', 'success');
+    toast(t('order.keyCopied'), 'success');
     setTimeout(() => setCopiedKey(null), 2000);
   }
 
@@ -31,17 +33,17 @@ export default function OrderHistory() {
   return (
     <PageTransition><div className="min-h-screen"><div className="max-w-4xl mx-auto px-5 sm:px-6 lg:px-8 py-10 md:py-14">
       <Reveal><div className="mb-10">
-        <span className="label block mb-3">Ваши покупки</span>
-        <h1 className="section-title text-4xl">История заказов</h1>
-        <p className="font-body mt-2" style={{ color: 'var(--text-faint)' }}>{orders.length} {orders.length === 1 ? 'заказ' : orders.length < 5 ? 'заказа' : 'заказов'}</p>
+        <span className="label block mb-3">{t('order.purchases')}</span>
+        <h1 className="section-title text-4xl">{t('order.history')}</h1>
+        <p className="font-body mt-2" style={{ color: 'var(--text-faint)' }}>{orders.length} {orders.length === 1 ? t('order.count1') : orders.length < 5 ? t('order.count2') : t('order.countN')}</p>
       </div></Reveal>
 
       {orders.length === 0 ? (
         <div className="glass-static p-12 text-center">
           <ShoppingCart size={36} style={{ color: 'var(--text-faint)' }} className="mx-auto mb-4" />
-          <h3 className="font-display text-lg font-bold mb-2" style={{ color: 'var(--text-muted)' }}>Нет покупок</h3>
-          <p className="font-body text-[14px] mb-6" style={{ color: 'var(--text-faint)' }}>Ваши заказы с ключами активации появятся здесь</p>
-          <Link to="/catalog" className="btn-primary text-[13px]">В каталог <ArrowRight size={16} /></Link>
+          <h3 className="font-display text-lg font-bold mb-2" style={{ color: 'var(--text-muted)' }}>{t('order.noOrders')}</h3>
+          <p className="font-body text-[14px] mb-6" style={{ color: 'var(--text-faint)' }}>{t('order.noOrdersDesc')}</p>
+          <Link to="/catalog" className="btn-primary text-[13px]">{t('cart.browse')} <ArrowRight size={16} /></Link>
         </div>
       ) : (
         <div className="space-y-5">
@@ -56,7 +58,7 @@ export default function OrderHistory() {
                   </div>
                   <div>
                     <p className="font-display text-[13px] font-bold" style={{ color: 'var(--text)' }}>
-                      Заказ #{order.id}
+                      {t('order.number')} #{order.id}
                     </p>
                     <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>
                       {new Date(order.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
@@ -67,18 +69,18 @@ export default function OrderHistory() {
                   <motion.button
                     whileTap={{ scale: 0.94 }}
                     onClick={async () => {
-                      try { await generateReceipt(order); toast('Чек скачан', 'success'); }
-                      catch { toast('Не удалось создать PDF', 'error'); }
+                      try { await generateReceipt(order); toast(t('order.pdfDone'), 'success'); }
+                      catch { toast(t('order.pdfError'), 'error'); }
                     }}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg text-[11px] font-display font-semibold uppercase tracking-wider transition-colors hover:bg-white/[0.05]"
                     style={{ background: 'var(--surface)', color: 'var(--text-muted)', border: '1px solid var(--surface-border)' }}
-                    title="Скачать PDF-чек"
+                    title={t('order.pdfDownload')}
                   >
-                    <Download size={12} /> PDF
+                    <Download size={12} /> {t('order.pdf')}
                   </motion.button>
                   <div className="text-right">
                     <p className="price text-[18px]">{format(order.total)}</p>
-                    <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>{order.items?.length} {order.items?.length === 1 ? 'игра' : 'игр'}</p>
+                    <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>{order.items?.length} {t('order.games')}</p>
                   </div>
                 </div>
               </div>

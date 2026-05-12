@@ -3,47 +3,28 @@ import { MessageCircle, X, HelpCircle, ChevronRight, ArrowLeft, Headphones } fro
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useI18n } from '../utils/i18n.jsx';
 
 /**
  * FAQ-виджет в правом нижнем углу. Простые правила, без AI.
  * Показывает типовые вопросы, разворачивает ответы, предлагает создать тикет.
  */
 
-const FAQ = [
-  {
-    q: 'Как активировать ключ?',
-    a: 'Откройте клиент Steam / Epic / GOG → «Активировать продукт» → вставьте ключ из письма. Ключ можно также найти в разделе «История заказов» в вашем профиле.',
-  },
-  {
-    q: 'Что делать, если ключ не работает?',
-    a: 'Напишите нам в поддержку. Если ключ действительно нерабочий — мы заменим его в течение 24 часов. Укажите номер заказа и скриншот ошибки.',
-  },
-  {
-    q: 'Какие способы оплаты?',
-    a: 'Банковские карты (Visa, Mastercard, МИР), СБП, электронные кошельки. Оплата проходит через ЮKassa — полностью безопасно, мы не получаем данные вашей карты.',
-  },
-  {
-    q: 'Сколько ждать ключ после оплаты?',
-    a: 'Обычно 30 секунд. Ключ приходит на email (если указан) и появляется в разделе «История заказов» в вашем профиле.',
-  },
-  {
-    q: 'Можно ли вернуть деньги?',
-    a: 'Да, в течение 24 часов после покупки — если ключ ещё не был активирован. После активации возврат невозможен (это правило всех цифровых магазинов).',
-  },
-  {
-    q: 'Как работают промокоды?',
-    a: 'Промокод вводится в корзине перед оплатой. Доступные: WELCOME10 (−10%), NEWBIE500 (−500 ₽), GAMER25 (−25% от 3000 ₽), SUMMER2026 (−15% на лето).',
-  },
-  {
-    q: 'Что делать, если забыл пароль?',
-    a: 'На странице входа есть ссылка «Забыли пароль?». Введите email — мы отправим ссылку для сброса. Ссылка действует 30 минут.',
-  },
-];
-
 export default function FAQWidget() {
   const [open, setOpen] = useState(false);
   const [activeQ, setActiveQ] = useState(null);
   const { isAuth } = useAuth();
+  const { t } = useI18n();
+
+  const FAQ = [
+    { q: t('faq.q1'), a: t('faq.a1') },
+    { q: t('faq.q2'), a: t('faq.a2') },
+    { q: t('faq.q3'), a: t('faq.a3') },
+    { q: t('faq.q4'), a: t('faq.a4') },
+    { q: t('faq.q5'), a: t('faq.a5') },
+    { q: t('faq.q6'), a: t('faq.a6') },
+    { q: t('faq.q7'), a: t('faq.a7') },
+  ];
 
   return (
     <>
@@ -63,7 +44,7 @@ export default function FAQWidget() {
               background: 'linear-gradient(135deg, #E8102E, #B50D24)',
               boxShadow: '0 10px 40px rgba(232,16,46,0.4)',
             }}
-            aria-label="Открыть помощь"
+            aria-label={t('faq.title')}
           >
             <MessageCircle size={22} className="text-white" />
             <span className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full ring-2" style={{ ringColor: '#07070E' }} />
@@ -94,15 +75,15 @@ export default function FAQWidget() {
                   <HelpCircle size={18} className="text-primary" />
                 </div>
                 <div>
-                  <p className="font-display text-[13px] font-bold" style={{ color: 'var(--text)' }}>Помощь 4Game</p>
-                  <p className="font-body text-[10px]" style={{ color: 'var(--text-faint)' }}>Быстрые ответы</p>
+                  <p className="font-display text-[13px] font-bold" style={{ color: 'var(--text)' }}>{t('faq.title')}</p>
+                  <p className="font-body text-[10px]" style={{ color: 'var(--text-faint)' }}>{t('faq.subtitle')}</p>
                 </div>
               </div>
               <button
                 onClick={() => { setOpen(false); setActiveQ(null); }}
                 className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-white/5"
                 style={{ color: 'var(--text-muted)' }}
-                aria-label="Закрыть"
+                aria-label={t('common.close')}
               >
                 <X size={16} />
               </button>
@@ -113,7 +94,7 @@ export default function FAQWidget() {
               {activeQ === null ? (
                 <div className="p-3">
                   <p className="font-body text-[12px] px-2 py-2 mb-1" style={{ color: 'var(--text-faint)' }}>
-                    Выберите вопрос:
+                    {t('faq.choose')}
                   </p>
                   {FAQ.map((item, i) => (
                     <button
@@ -140,7 +121,7 @@ export default function FAQWidget() {
                     className="flex items-center gap-1.5 text-[11px] font-display font-semibold mb-4 transition-colors hover:text-white"
                     style={{ color: 'var(--text-faint)' }}
                   >
-                    <ArrowLeft size={12} /> К списку
+                    <ArrowLeft size={12} /> {t('faq.back')}
                   </button>
                   <h3 className="font-display font-bold text-[14px] mb-3" style={{ color: 'var(--text)' }}>
                     {FAQ[activeQ].q}
@@ -160,7 +141,7 @@ export default function FAQWidget() {
                 className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-[12px] font-display font-semibold uppercase tracking-wider transition-all hover:bg-primary hover:text-white"
                 style={{ background: 'var(--bg-elevated)', color: 'var(--text-secondary)', border: '1px solid var(--surface-border)' }}
               >
-                <Headphones size={13} /> {isAuth ? 'Написать в поддержку' : 'Войти для поддержки'}
+                <Headphones size={13} /> {isAuth ? t('faq.support') : t('faq.login')}
               </Link>
             </div>
           </motion.div>

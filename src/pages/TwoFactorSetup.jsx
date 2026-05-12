@@ -6,10 +6,12 @@ import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 import { PageTransition, Reveal } from '../components/Motion';
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function TwoFactorSetup() {
   const { user } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
 
   const [status, setStatus] = useState(null);  // { enabled }
   const [step, setStep] = useState('status');  // status | setup | verify | disable
@@ -41,11 +43,11 @@ export default function TwoFactorSetup() {
 
   async function handleVerify(e) {
     e.preventDefault();
-    if (code.length !== 6) { toast('Код должен быть из 6 цифр', 'error'); return; }
+    if (code.length !== 6) { toast(t('2fa.errShort'), 'error'); return; }
     setSubmitting(true);
     try {
       await api.verify2FA(code);
-      toast('2FA включена. Отныне при входе запрашивается код.', 'success');
+      toast(t('2fa.successOn'), 'success');
       setStatus({ enabled: true });
       setStep('status');
       setCode('');
@@ -58,7 +60,7 @@ export default function TwoFactorSetup() {
     setSubmitting(true);
     try {
       await api.disable2FA(code);
-      toast('2FA отключена', 'success');
+      toast(t('2fa.successOff'), 'success');
       setStatus({ enabled: false });
       setStep('status');
       setCode('');
@@ -79,8 +81,8 @@ export default function TwoFactorSetup() {
                   <Shield size={24} className="text-accent" />
                 </div>
                 <div className="flex-1">
-                  <span className="label block mb-2">Безопасность аккаунта</span>
-                  <h1 className="section-title text-3xl">Двухфакторная аутентификация</h1>
+                  <span className="label block mb-2">{t('2fa.title')}</span>
+                  <h1 className="section-title text-3xl">{t('2fa.badge')}</h1>
                 </div>
               </div>
             </div>
@@ -95,16 +97,16 @@ export default function TwoFactorSetup() {
                     <div className="flex items-center gap-3 p-4 rounded-xl bg-accent/10 border border-accent/20">
                       <Check size={20} className="text-accent flex-shrink-0" />
                       <div>
-                        <p className="font-display font-bold text-[13px] text-accent">2FA включена</p>
+                        <p className="font-display font-bold text-[13px] text-accent">{t('2fa.enabled')}</p>
                         <p className="font-body text-[12px]" style={{ color: 'var(--text-muted)' }}>
-                          Аккаунт защищён кодом из приложения Google Authenticator / Authy
+                          {t('2fa.enabledDesc')}
                         </p>
                       </div>
                     </div>
                     <div className="pt-4 border-t" style={{ borderColor: 'var(--surface-border)' }}>
-                      <h3 className="font-display font-bold text-[14px] mb-3" style={{ color: 'var(--text)' }}>Отключить 2FA</h3>
+                      <h3 className="font-display font-bold text-[14px] mb-3" style={{ color: 'var(--text)' }}>{t('2fa.disable')}</h3>
                       <p className="font-body text-[13px] mb-4" style={{ color: 'var(--text-muted)' }}>
-                        Введите текущий код из приложения, чтобы отключить двухфакторку
+                        {t('2fa.disableDesc')}
                       </p>
                       <form onSubmit={handleDisable} className="flex gap-2">
                         <input
@@ -115,7 +117,7 @@ export default function TwoFactorSetup() {
                           className="input flex-1 font-mono text-center tracking-[0.5em] text-lg"
                         />
                         <button type="submit" disabled={submitting || code.length !== 6} className="btn-primary px-4 disabled:opacity-50">
-                          {submitting ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Отключить'}
+                          {submitting ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : t('2fa.disableBtn')}
                         </button>
                       </form>
                     </div>
@@ -125,18 +127,18 @@ export default function TwoFactorSetup() {
                     <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-400/10 border border-amber-400/20">
                       <AlertCircle size={20} className="text-amber-400 flex-shrink-0" />
                       <div>
-                        <p className="font-display font-bold text-[13px] text-amber-400">2FA не активирована</p>
+                        <p className="font-display font-bold text-[13px] text-amber-400">{t('2fa.disabled')}</p>
                         <p className="font-body text-[12px]" style={{ color: 'var(--text-muted)' }}>
-                          Рекомендуем включить для защиты админ-доступа
+                          {t('2fa.disabledHint')}
                         </p>
                       </div>
                     </div>
                     <div className="pt-2">
-                      <h3 className="font-display font-bold text-[14px] mb-2" style={{ color: 'var(--text)' }}>Как это работает</h3>
+                      <h3 className="font-display font-bold text-[14px] mb-2" style={{ color: 'var(--text)' }}>{t('2fa.how')}</h3>
                       <ol className="space-y-2 font-body text-[13px]" style={{ color: 'var(--text-muted)' }}>
-                        <li>1. Установите приложение <strong>Google Authenticator</strong> или <strong>Authy</strong> на телефон</li>
-                        <li>2. Отсканируйте QR-код или введите секрет вручную</li>
-                        <li>3. Введите 6-значный код из приложения для подтверждения</li>
+                        <li>{t('2fa.step1')}</li>
+                        <li>{t('2fa.step2')}</li>
+                        <li>{t('2fa.step3')}</li>
                       </ol>
                       <motion.button
                         whileTap={{ scale: 0.97 }}
@@ -144,7 +146,7 @@ export default function TwoFactorSetup() {
                         disabled={submitting}
                         className="btn-primary mt-5 text-[13px] disabled:opacity-50"
                       >
-                        {submitting ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Shield size={14} /> Включить 2FA</>}
+                        {submitting ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Shield size={14} /> {t('2fa.enable')}</>}
                       </motion.button>
                     </div>
                   </>
@@ -159,7 +161,7 @@ export default function TwoFactorSetup() {
               <div className="glass-static p-6 md:p-8 space-y-5">
                 <div className="flex items-center gap-3">
                   <Smartphone size={20} className="text-accent" />
-                  <h3 className="font-display font-bold text-[14px]" style={{ color: 'var(--text)' }}>Настройка приложения</h3>
+                  <h3 className="font-display font-bold text-[14px]" style={{ color: 'var(--text)' }}>{t('2fa.setup')}</h3>
                 </div>
 
                 {/* QR через встроенный генератор */}
@@ -173,16 +175,16 @@ export default function TwoFactorSetup() {
                   </div>
                   <div className="flex-1 space-y-3">
                     <p className="font-body text-[13px]" style={{ color: 'var(--text-muted)' }}>
-                      Отсканируй QR-код в приложении Google Authenticator или Authy
+                      {t('2fa.setupDesc')}
                     </p>
                     <div>
-                      <span className="label block mb-2">Или введи секрет вручную:</span>
+                      <span className="label block mb-2">{t('2fa.orSecret')}</span>
                       <div className="flex items-center gap-2">
                         <code className="flex-1 px-3 py-2 rounded-lg font-mono text-[12px] break-all" style={{ background: 'var(--surface)', color: 'var(--text-secondary)' }}>
                           {secret}
                         </code>
                         <button
-                          onClick={() => { navigator.clipboard.writeText(secret); toast('Скопировано', 'success'); }}
+                          onClick={() => { navigator.clipboard.writeText(secret); toast(t('2fa.copied'), 'success'); }}
                           className="p-2 rounded-lg hover:bg-white/5"
                           style={{ color: 'var(--text-faint)' }}
                         >
@@ -194,7 +196,7 @@ export default function TwoFactorSetup() {
                 </div>
 
                 <form onSubmit={handleVerify} className="pt-5 border-t space-y-3" style={{ borderColor: 'var(--surface-border)' }}>
-                  <label className="label block">Код из приложения</label>
+                  <label className="label block">{t('2fa.codeLabel')}</label>
                   <input
                     value={code}
                     onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
@@ -205,10 +207,10 @@ export default function TwoFactorSetup() {
                   />
                   <div className="flex gap-2">
                     <button type="button" onClick={() => { setStep('status'); setCode(''); }} className="btn-ghost flex-1">
-                      Отмена
+                      {t('2fa.cancel')}
                     </button>
                     <button type="submit" disabled={submitting || code.length !== 6} className="btn-primary flex-1 disabled:opacity-50">
-                      {submitting ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Check size={14} /> Подтвердить</>}
+                      {submitting ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Check size={14} /> {t('2fa.confirm')}</>}
                     </button>
                   </div>
                 </form>

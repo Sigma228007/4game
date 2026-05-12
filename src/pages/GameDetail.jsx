@@ -14,6 +14,7 @@ import GameCard from '../components/GameCard';
 import ReviewsBlock from '../components/ReviewsBlock';
 import { pushRecentlyViewed } from '../utils/recentlyViewed';
 import { getSystemRequirements, getLanguages, getGallery, getPlatforms } from '../utils/gameDetails';
+import { useI18n } from '../utils/i18n.jsx';
 
 const LANG_CELL = {
   full: { symbol: '✓', color: 'text-accent',      bg: 'bg-accent/10' },
@@ -32,6 +33,7 @@ export default function GameDetail() {
   const heroImgRef = useRef(null);
 
   const { format } = usePrice();
+  const { t } = useI18n();
   const [activeShot, setActiveShot] = useState(0);
   const [tab, setTab] = useState('req');
 
@@ -43,7 +45,7 @@ export default function GameDetail() {
       <PageTransition>
         <div className="min-h-[65vh] flex items-center justify-center">
           <div className="text-center space-y-4">
-            <p className="font-display text-2xl" style={{ color: 'var(--text-muted)' }}>Игра не найдена</p>
+            <p className="font-display text-2xl" style={{ color: 'var(--text-muted)' }}>{t('game.notFound')}</p>
             <Link to="/catalog" className="btn-primary inline-flex">В каталог</Link>
           </div>
         </div>
@@ -121,7 +123,7 @@ export default function GameDetail() {
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl backdrop-blur-lg text-[13px] font-body transition-all hover:scale-[1.02]"
               style={{ background: 'rgba(7,7,14,0.5)', border: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.65)' }}
             >
-              <ArrowLeft size={16} /> Назад
+              <ArrowLeft size={16} /> {t('game.back')}
             </button>
           </div>
 
@@ -130,14 +132,14 @@ export default function GameDetail() {
               onClick={handleShare}
               className="w-10 h-10 rounded-xl backdrop-blur-lg flex items-center justify-center transition-all hover:scale-105"
               style={{ background: 'rgba(7,7,14,0.5)', border: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.65)' }}
-              title="Поделиться"
-              aria-label="Поделиться"
+              title={t('game.share')}
+              aria-label={t('game.share')}
             >
               <Share2 size={16} />
             </button>
             {discount && (
               <span className="badge bg-primary text-white text-[12px] px-3 py-1.5 shadow-glow-sm">
-                −{discount}% скидка
+                −{discount}% {t('game.discount')}
               </span>
             )}
           </div>
@@ -151,7 +153,7 @@ export default function GameDetail() {
                   onClick={() => setActiveShot(i)}
                   className={`relative h-12 w-20 rounded-lg overflow-hidden transition-all flex-shrink-0 ${i === activeShot ? 'ring-2 ring-primary scale-105' : 'opacity-60 hover:opacity-100'}`}
                   style={{ border: '1px solid rgba(255,255,255,0.08)' }}
-                  aria-label={`Скриншот ${i + 1}`}
+                  aria-label={`${t('game.screenshot')} ${i + 1}`}
                 >
                   <img src={src} alt="" className="w-full h-full object-cover" />
                 </button>
@@ -197,7 +199,7 @@ export default function GameDetail() {
 
               <Reveal delay={0.1}>
                 <div className="glass p-6 md:p-8 space-y-5">
-                  <h2 className="font-display text-[14px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>Об игре</h2>
+                  <h2 className="font-display text-[14px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>{t('game.about')}</h2>
                   <p className="font-body text-[16px] leading-relaxed" style={{ color: 'var(--text-muted)' }}>
                     {game.description}
                   </p>
@@ -220,19 +222,19 @@ export default function GameDetail() {
                 <div className="glass-static overflow-hidden">
                   <div className="flex gap-1 p-1.5" style={{ background: 'var(--surface)', borderBottom: '1px solid var(--surface-border)' }}>
                     {[
-                      { id: 'req',  label: 'Системные требования', icon: Monitor },
-                      { id: 'lang', label: 'Языки',                icon: Globe   },
-                    ].map(t => (
+                      { id: 'req',  label: t('game.sysreq'), icon: Monitor },
+                      { id: 'lang', label: t('game.languages'), icon: Globe   },
+                    ].map(item => (
                       <button
-                        key={t.id}
-                        onClick={() => setTab(t.id)}
+                        key={item.id}
+                        onClick={() => setTab(item.id)}
                         className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[12px] font-display font-semibold transition-all"
                         style={{
-                          background: tab === t.id ? 'var(--bg-elevated)' : 'transparent',
-                          color:      tab === t.id ? 'var(--text)'        : 'var(--text-faint)',
+                          background: tab === item.id ? 'var(--bg-elevated)' : 'transparent',
+                          color:      tab === item.id ? 'var(--text)'        : 'var(--text-faint)',
                         }}
                       >
-                        <t.icon size={13} /> {t.label}
+                        <item.icon size={13} /> {item.label}
                       </button>
                     ))}
                   </div>
@@ -248,8 +250,8 @@ export default function GameDetail() {
                         className="p-6 grid grid-cols-1 md:grid-cols-2 gap-5"
                       >
                         {[
-                          { title: 'Минимальные',     specs: requirements.min, accent: 'var(--text-muted)' },
-                          { title: 'Рекомендуемые',   specs: requirements.rec, accent: '#10B981' },
+                          { title: t('game.min'), specs: requirements.min, accent: 'var(--text-muted)' },
+                          { title: t('game.rec'), specs: requirements.rec, accent: '#10B981' },
                         ].map((block) => (
                           <div key={block.title} className="space-y-3">
                             <h4 className="font-display text-[12px] font-bold uppercase tracking-wider" style={{ color: block.accent }}>
@@ -257,12 +259,12 @@ export default function GameDetail() {
                             </h4>
                             <div className="space-y-2">
                               {[
-                                { icon: Monitor,   label: 'ОС',          value: block.specs.os      },
-                                { icon: Cpu,       label: 'Процессор',   value: block.specs.cpu     },
-                                { icon: HardDrive, label: 'Память',      value: block.specs.ram     },
-                                { icon: Gamepad2,  label: 'Видеокарта',  value: block.specs.gpu     },
-                                { icon: HardDrive, label: 'Диск',        value: block.specs.storage },
-                                { icon: Zap,       label: 'DirectX',     value: block.specs.directx },
+                                { icon: Monitor,   label: t('game.os'),   value: block.specs.os      },
+                                { icon: Cpu,       label: t('game.cpu'),  value: block.specs.cpu     },
+                                { icon: HardDrive, label: t('game.ram'),  value: block.specs.ram     },
+                                { icon: Gamepad2,  label: t('game.gpu'),  value: block.specs.gpu     },
+                                { icon: HardDrive, label: t('game.hdd'),  value: block.specs.storage },
+                                { icon: Zap,       label: t('game.dx'),   value: block.specs.directx },
                               ].map((row) => (
                                 <div key={row.label} className="flex items-start gap-3 text-[12px]">
                                   <row.icon size={13} className="mt-0.5 flex-shrink-0" style={{ color: 'var(--text-faint)' }} />
@@ -289,10 +291,10 @@ export default function GameDetail() {
                           <table className="w-full text-[12px]">
                             <thead>
                               <tr style={{ borderBottom: '1px solid var(--surface-border)' }}>
-                                <th className="text-left pb-3 font-display uppercase tracking-wider text-[10px]"   style={{ color: 'var(--text-faint)' }}>Язык</th>
-                                <th className="text-center pb-3 font-display uppercase tracking-wider text-[10px]" style={{ color: 'var(--text-faint)' }}>Интерфейс</th>
-                                <th className="text-center pb-3 font-display uppercase tracking-wider text-[10px]" style={{ color: 'var(--text-faint)' }}>Озвучка</th>
-                                <th className="text-center pb-3 font-display uppercase tracking-wider text-[10px]" style={{ color: 'var(--text-faint)' }}>Субтитры</th>
+                                <th className="text-left pb-3 font-display uppercase tracking-wider text-[10px]"   style={{ color: 'var(--text-faint)' }}>{t('game.languages')}</th>
+                                <th className="text-center pb-3 font-display uppercase tracking-wider text-[10px]" style={{ color: 'var(--text-faint)' }}>{t('game.full')}</th>
+                                <th className="text-center pb-3 font-display uppercase tracking-wider text-[10px]" style={{ color: 'var(--text-faint)' }}>{t('game.full')}</th>
+                                <th className="text-center pb-3 font-display uppercase tracking-wider text-[10px]" style={{ color: 'var(--text-faint)' }}>{t('game.subs')}</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -315,8 +317,8 @@ export default function GameDetail() {
                             </tbody>
                           </table>
                           <div className="flex items-center gap-4 mt-5 text-[11px]" style={{ color: 'var(--text-faint)' }}>
-                            <span><span className="inline-flex w-5 h-5 rounded bg-accent/10 text-accent items-center justify-center text-[10px] font-bold mr-1">✓</span> Полная</span>
-                            <span><span className="inline-flex w-5 h-5 rounded bg-amber-400/10 text-amber-400 items-center justify-center text-[10px] font-bold mr-1">~</span> Субтитры</span>
+                            <span><span className="inline-flex w-5 h-5 rounded bg-accent/10 text-accent items-center justify-center text-[10px] font-bold mr-1">✓</span> {t('game.full')}</span>
+                            <span><span className="inline-flex w-5 h-5 rounded bg-amber-400/10 text-amber-400 items-center justify-center text-[10px] font-bold mr-1">~</span> {t('game.subs')}</span>
                           </div>
                         </div>
                       </motion.div>
@@ -329,9 +331,9 @@ export default function GameDetail() {
               <Reveal delay={0.2}>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {[
-                    { icon: Shield, label: 'Лицензионный ключ',  desc: 'Проверен вручную' },
-                    { icon: Zap,    label: 'Мгновенная доставка', desc: 'На почту за 30 сек' },
-                    { icon: Clock,  label: 'Гарантия возврата',   desc: 'В течение 24 часов' },
+                    { icon: Shield, label: t('game.licKey'),   desc: t('game.verified') },
+                    { icon: Zap,    label: t('game.instant'),  desc: t('game.email30') },
+                    { icon: Clock,  label: t('game.guarantee'), desc: t('game.guarantee24') },
                   ].map(f => (
                     <div key={f.label} className="glass p-4 flex items-start gap-3">
                       <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
@@ -367,14 +369,14 @@ export default function GameDetail() {
                     </div>
                     {discount && (
                       <p className="font-body text-[13px] text-accent/70">
-                        Вы экономите {format(game.oldPrice - game.price)}
+                        {t('game.youSave')} {format(game.oldPrice - game.price)}
                       </p>
                     )}
                   </div>
 
                   {/* Platforms */}
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>Активация:</span>
+                    <span className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>{t('game.activation')}</span>
                     {platforms.map(p => (
                       <span
                         key={p}
@@ -396,7 +398,7 @@ export default function GameDetail() {
                     }`}
                   >
                     {inCart ? <Check size={18} /> : <ShoppingCart size={18} />}
-                    {inCart ? 'Уже в корзине' : 'Добавить в корзину'}
+                    {inCart ? t('game.inCart') : t('cart.checkout')}
                   </motion.button>
 
                   <motion.button
@@ -410,15 +412,15 @@ export default function GameDetail() {
                     style={!fav ? { background: 'var(--surface)', color: 'var(--text-muted)', border: '1px solid var(--surface-border)' } : {}}
                   >
                     <Heart size={16} fill={fav ? 'currentColor' : 'none'} />
-                    {fav ? 'В избранном' : 'В избранное'}
+                    {fav ? t('game.inFav') : t('game.toFav')}
                   </motion.button>
 
                   {/* Trust list */}
                   <div className="pt-2 space-y-2.5">
                     {[
-                      'Активация в ' + platforms.join(' / '),
-                      'Мгновенная доставка на email',
-                      'Поддержка 24/7 при проблемах',
+                      t('game.activateIn') + ' ' + platforms.join(' / '),
+                      t('game.emailDelivery'),
+                      t('game.support247'),
                     ].map(text => (
                       <div key={text} className="flex items-center gap-2.5" style={{ color: 'var(--text-faint)' }}>
                         <Check size={12} className="text-accent/70 flex-shrink-0" />
@@ -437,8 +439,8 @@ export default function GameDetail() {
               <Reveal>
                 <div className="flex items-end justify-between mb-8">
                   <div>
-                    <span className="label block mb-2">Похожие игры</span>
-                    <h2 className="font-display text-2xl font-bold" style={{ color: 'var(--text)' }}>Вам может понравиться</h2>
+                    <span className="label block mb-2">{t('game.similar')}</span>
+                    <h2 className="font-display text-2xl font-bold" style={{ color: 'var(--text)' }}>{t('game.youMayLike')}</h2>
                   </div>
                 </div>
               </Reveal>

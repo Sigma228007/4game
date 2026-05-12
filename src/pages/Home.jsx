@@ -140,7 +140,7 @@ export default function Home() {
               className="font-body text-[clamp(1rem,2vw,1.2rem)] max-w-xl leading-relaxed"
               style={{ color: 'var(--text-muted)' }}
             >
-              Лицензионные ключи Steam, Epic и GOG напрямую от дистрибьюторов. Оплатил — получил код на почту. Без ожидания и скрытых наценок.
+              {t('home.hero.desc')}
             </motion.p>
 
             <motion.div
@@ -160,9 +160,9 @@ export default function Home() {
               className="flex flex-wrap items-center gap-6 pt-4 font-body text-[13px]"
               style={{ color: 'var(--text-faint)' }}
             >
-              <div className="flex items-center gap-2"><Shield size={14} className="text-accent/50" /> Лицензионные ключи</div>
-              <div className="flex items-center gap-2"><Zap size={14} className="text-amber-400/50" /> Доставка за 30 сек</div>
-              <div className="flex items-center gap-2"><Headphones size={14} className="text-secondary/50" /> Поддержка 24/7</div>
+              <div className="flex items-center gap-2"><Shield size={14} className="text-accent/50" /> {t('home.trust.keys')}</div>
+              <div className="flex items-center gap-2"><Zap size={14} className="text-amber-400/50" /> {t('home.trust.delivery')}</div>
+              <div className="flex items-center gap-2"><Headphones size={14} className="text-secondary/50" /> {t('home.trust.support')}</div>
             </motion.div>
           </div>
         </div>
@@ -174,9 +174,9 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-8">
             <div className="grid grid-cols-3 gap-8">
               {[
-                { value: `${games.length}+`, label: 'Игр в каталоге' },
-                { value: '30 сек', label: 'Выдача ключа' },
-                { value: '24/7', label: 'Поддержка' },
+                { value: `${games.length}+`, label: t('home.stats.games') },
+                { value: t('home.stats.deliveryVal'), label: t('home.stats.delivery') },
+                { value: t('home.stats.supportVal'), label: t('home.stats.support') },
               ].map(s => (
                 <div key={s.label} className="text-center">
                   <div className="font-display font-black text-2xl md:text-3xl" style={{ color: 'var(--text)' }}>{s.value}</div>
@@ -196,9 +196,9 @@ export default function Home() {
               <div className="flex items-end justify-between mb-8 md:mb-10">
                 <div>
                   <span className="label block mb-3 flex items-center gap-2">
-                    <Clock size={11} /> История просмотров
+                    <Clock size={11} /> {t('home.recent.label')}
                   </span>
-                  <h2 className="section-title text-2xl md:text-3xl">Недавно смотрели</h2>
+                  <h2 className="section-title text-2xl md:text-3xl">{t('home.recent.title')}</h2>
                 </div>
               </div>
             </Reveal>
@@ -215,11 +215,11 @@ export default function Home() {
           <Reveal>
             <div className="flex items-end justify-between mb-10 md:mb-14">
               <div>
-                <span className="label block mb-3">Хиты сезона</span>
-                <h2 className="section-title text-3xl md:text-[2.75rem]">Лидеры продаж</h2>
+                <span className="label block mb-3">{t('home.featured.badge')}</span>
+                <h2 className="section-title text-3xl md:text-[2.75rem]">{t('home.featured.title')}</h2>
               </div>
               <Link to="/catalog" className="hidden sm:flex items-center gap-1.5 font-body text-[13px] hover:text-primary transition-colors" style={{ color: 'var(--text-faint)' }}>
-                Все игры <ChevronRight size={16} />
+                {t('home.featured.all')} <ChevronRight size={16} />
               </Link>
             </div>
           </Reveal>
@@ -234,8 +234,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <Reveal>
             <div className="text-center mb-12">
-              <span className="label block mb-3">Подборки</span>
-              <h2 className="section-title text-3xl md:text-[2.75rem]">Выбери свой жанр</h2>
+              <span className="label block mb-3">{t('home.genres.badge')}</span>
+              <h2 className="section-title text-3xl md:text-[2.75rem]">{t('home.genres.title')}</h2>
             </div>
           </Reveal>
           <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -291,7 +291,7 @@ export default function Home() {
                           {genre.name}
                         </h3>
                         <p className="font-body text-[12px] text-white/55">
-                          {count} {count === 1 ? 'игра' : count >= 2 && count <= 4 ? 'игры' : 'игр'}
+                          {count} {count === 1 ? t('home.genres.game1') : count >= 2 && count <= 4 ? t('home.genres.game2') : t('home.genres.gameN')}
                         </p>
                       </div>
                     </div>
@@ -308,8 +308,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {[
-              { title: `Новинки ${new Date().getFullYear()}`, badge: 'Свежие', badgeColor: 'bg-secondary/15 text-secondary-light', icon: TrendingUp, iconColor: 'text-secondary/30', items: newReleases },
-              { title: 'Лучшая цена',                         badge: 'Скидки',  badgeColor: 'bg-accent/15 text-accent-light',       icon: Zap,         iconColor: 'text-accent/30',    items: cheapest    },
+              { title: `${t('home.new.title')} ${new Date().getFullYear()}`, badge: t('home.new.badge'), badgeColor: 'bg-secondary/15 text-secondary-light', icon: TrendingUp, iconColor: 'text-secondary/30', items: newReleases },
+              { title: t('home.deals.title'),                                badge: t('home.deals.badge'),  badgeColor: 'bg-accent/15 text-accent-light',       icon: Zap,         iconColor: 'text-accent/30',    items: cheapest    },
             ].map((section, si) => (
               <Reveal key={section.title} delay={si * 0.1}>
                 <div className="glass-static p-6 md:p-8 space-y-6">
@@ -356,15 +356,15 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <Reveal>
             <div className="text-center mb-14">
-              <span className="label block mb-3">Отзывы</span>
-              <h2 className="section-title text-3xl md:text-[2.75rem]">Что говорят покупатели</h2>
+              <span className="label block mb-3">{t('home.reviews.badge')}</span>
+              <h2 className="section-title text-3xl md:text-[2.75rem]">{t('home.reviews.title')}</h2>
             </div>
           </Reveal>
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
-              { text: 'Заказал Elden Ring — ключ пришёл на почту минуты через две. Активировал в Steam, всё чисто. Беру уже третью игру тут.', author: 'Алексей К.', since: 'Покупатель с 2024', av: 'А' },
-              { text: 'Цены реально ниже Steam. Один раз был вопрос по активации — написал в поддержку, ответили в течение получаса, помогли разобраться.', author: 'Мария С.', since: 'Покупатель с 2025', av: 'М' },
-              { text: 'Взял BG3 со скидкой — сэкономил прилично. Ключ рабочий, претензий нет. Сайт удобный, всё понятно.',                                           author: 'Игорь В.', since: 'Покупатель с 2024', av: 'И' },
+              { text: t('home.reviews.r1'), author: t('home.reviews.a1'), since: t('home.reviews.s1'), av: t('home.reviews.a1')[0] },
+              { text: t('home.reviews.r2'), author: t('home.reviews.a2'), since: t('home.reviews.s2'), av: t('home.reviews.a2')[0] },
+              { text: t('home.reviews.r3'), author: t('home.reviews.a3'), since: t('home.reviews.s3'), av: t('home.reviews.a3')[0] },
             ].map((r, i) => (
               <StaggerItem key={i}>
                 <div className="glass-static p-6 md:p-7 space-y-5">
@@ -393,12 +393,12 @@ export default function Home() {
             <div className="relative glass-static p-10 md:p-16 text-center overflow-hidden">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[250px] bg-primary/[0.06] rounded-full blur-[100px]" />
               <div className="relative space-y-6">
-                <h2 className="font-display text-3xl md:text-4xl font-black" style={{ color: 'var(--text)' }}>Готов к новым приключениям?</h2>
+                <h2 className="font-display text-3xl md:text-4xl font-black" style={{ color: 'var(--text)' }}>{t('home.cta.title')}</h2>
                 <p className="font-body text-[17px] max-w-lg mx-auto" style={{ color: 'var(--text-muted)' }}>
-                  Зарегистрируйся, выбери игру и получи ключ мгновенно.
+                  {t('home.cta.desc')}
                 </p>
                 <div className="flex flex-wrap justify-center gap-4 pt-4">
-                  <Link to="/catalog" className="btn-primary px-8 py-4 text-[15px]">Начать покупки <ArrowRight size={18} /></Link>
+                  <Link to="/catalog" className="btn-primary px-8 py-4 text-[15px]">{t('home.cta.btn')} <ArrowRight size={18} /></Link>
                 </div>
               </div>
             </div>

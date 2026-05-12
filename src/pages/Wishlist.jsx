@@ -8,12 +8,14 @@ import { useToast } from '../components/Toast';
 import { PageTransition, Reveal, StaggerContainer, StaggerItem } from '../components/Motion';
 import PosterAccent from '../components/PosterAccent';
 import { usePrice } from '../hooks/usePrice';
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function Wishlist() {
   const { addToCart, isInCart } = useCart();
   const navigate = useNavigate();
   const toast = useToast();
   const { format } = usePrice();
+  const { t } = useI18n();
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ export default function Wishlist() {
     try {
       await api.removeWishlist(gameId);
       setItems(prev => prev.filter(i => i.game_id !== gameId));
-      toast('Удалено из списка желаний', 'success');
+      toast(t('wish.title'), 'success');
     } catch (err) { toast(err.message, 'error'); }
   }
 
@@ -43,7 +45,7 @@ export default function Wishlist() {
   async function handleAddToCart(gameId, name) {
     if (isInCart(gameId)) return navigate('/cart');
     addToCart(gameId);
-    toast(`${name} в корзине`, 'cart');
+    toast(`${name} ${t('wish.inCart')}`, 'cart');
   }
 
   if (loading) return <div className="min-h-[60vh] flex items-center justify-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
@@ -58,10 +60,10 @@ export default function Wishlist() {
         <div className="relative max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 py-10 md:py-14 z-10">
           <Reveal>
             <div className="mb-10">
-              <span className="label block mb-3">Список желаний</span>
-              <h1 className="section-title text-4xl">Wishlist</h1>
+              <span className="label block mb-3">{t('wish.title')}</span>
+              <h1 className="section-title text-4xl">{t('wish.title')}</h1>
               <p className="font-body mt-3 text-[14px]" style={{ color: 'var(--text-faint)' }}>
-                Следите за изменением цен и получайте уведомления о скидках
+                {t('wish.desc')}
               </p>
             </div>
           </Reveal>
@@ -71,11 +73,11 @@ export default function Wishlist() {
               <div className="w-16 h-16 mx-auto rounded-2xl bg-accent/8 flex items-center justify-center mb-4">
                 <Bookmark size={28} className="text-accent" />
               </div>
-              <h3 className="font-display text-lg font-bold mb-2" style={{ color: 'var(--text-muted)' }}>Список пуст</h3>
+              <h3 className="font-display text-lg font-bold mb-2" style={{ color: 'var(--text-muted)' }}>{t('wish.empty')}</h3>
               <p className="font-body text-[14px] mb-6" style={{ color: 'var(--text-faint)' }}>
-                Добавьте игры, чтобы следить за их ценой
+                {t('wish.emptyHint')}
               </p>
-              <Link to="/catalog" className="btn-primary inline-flex">В каталог <ArrowRight size={16} /></Link>
+              <Link to="/catalog" className="btn-primary inline-flex">{t('wish.toCatalog')} <ArrowRight size={16} /></Link>
             </div>
           ) : (
             <StaggerContainer className="space-y-3">
@@ -102,7 +104,7 @@ export default function Wishlist() {
                             </span>
                           )}
                           <span className="font-body text-[10px]" style={{ color: 'var(--text-faint)' }}>
-                            · добавлено по {format(item.price_at_add)}
+                            · {t('wish.addedAt')} {format(item.price_at_add)}
                           </span>
                         </div>
                       </div>
@@ -114,7 +116,7 @@ export default function Wishlist() {
                             background: item.notify ? 'rgba(16,185,129,0.1)' : 'var(--surface)',
                             color: item.notify ? '#10B981' : 'var(--text-faint)',
                           }}
-                          title={item.notify ? 'Уведомления включены' : 'Уведомления выключены'}
+                          title={item.notify ? t('wish.notifyOn') : t('wish.notifyOff')}
                         >
                           {item.notify ? <Bell size={14} /> : <BellOff size={14} />}
                         </button>
@@ -130,7 +132,7 @@ export default function Wishlist() {
                           className={`flex items-center gap-2 px-4 h-9 rounded-xl text-[12px] font-display font-semibold uppercase tracking-wider transition-all ${inCart ? 'bg-accent/15 text-accent border border-accent/20' : 'bg-primary text-white hover:shadow-glow-sm'}`}
                         >
                           {inCart ? <Check size={13} /> : <ShoppingCart size={13} />}
-                          {inCart ? 'В корзине' : 'Купить'}
+                          {inCart ? t('wish.inCart') : t('wish.buy')}
                         </button>
                       </div>
                     </div>

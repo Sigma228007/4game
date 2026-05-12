@@ -5,9 +5,11 @@ import { api } from '../api';
 import { useToast } from '../components/Toast';
 import { PageTransition, Reveal } from '../components/Motion';
 import PosterAccent from '../components/PosterAccent';
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function Referral() {
   const toast = useToast();
+  const { t } = useI18n();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copiedField, setCopiedField] = useState(null);
@@ -25,9 +27,9 @@ export default function Referral() {
   function copy(text, field) {
     navigator.clipboard.writeText(text).then(() => {
       setCopiedField(field);
-      toast('Скопировано в буфер', 'success');
+      toast(t('ref.copied'), 'success');
       setTimeout(() => setCopiedField(null), 2000);
-    }).catch(() => toast('Не удалось скопировать', 'error'));
+    }).catch(() => toast(t('common.cancel'), 'error'));
   }
 
   async function handleApply(e) {
@@ -37,10 +39,10 @@ export default function Referral() {
     setApplyLoading(true);
     try {
       const result = await api.applyReferral(code);
-      toast(result.message || 'Реф-код применён!', 'success');
+      toast(result.message || t('ref.apply'), 'success');
       setApplyDone(true);
     } catch (err) {
-      toast(err.message || 'Ошибка при применении кода', 'error');
+      toast(err.message || t('ref.apply'), 'error');
     }
     setApplyLoading(false);
   }
@@ -50,7 +52,7 @@ export default function Referral() {
     try {
       await navigator.share({
         title: '4Game — магазин игр',
-        text: 'Присоединяйся к 4Game по моей ссылке и получи скидку на первую покупку!',
+        text: t('ref.shareMsg'),
         url: data.link,
       });
     } catch {}
@@ -77,10 +79,10 @@ export default function Referral() {
                   <Users size={24} className="text-secondary-light" />
                 </div>
                 <div className="flex-1">
-                  <span className="label block mb-2">Партнёрская программа</span>
-                  <h1 className="section-title text-4xl">Приглашай друзей</h1>
+                  <span className="label block mb-2">{t('ref.title')}</span>
+                  <h1 className="section-title text-4xl">{t('ref.subtitle')}</h1>
                   <p className="font-body text-[14px] mt-3" style={{ color: 'var(--text-muted)' }}>
-                    За каждого друга, совершившего первую покупку, вы получите <strong className="text-accent">промокод 10%</strong> на следующий заказ
+                    {t('ref.desc')}
                   </p>
                 </div>
               </div>
@@ -91,7 +93,7 @@ export default function Referral() {
           <Reveal delay={0.05}>
             <div className="glass-static p-6 md:p-8 mb-6 space-y-5">
               <div>
-                <span className="label block mb-3">Твой реферальный код</span>
+                <span className="label block mb-3">{t('ref.myCode')}</span>
                 <div className="flex items-center gap-3">
                   <div className="flex-1 px-5 py-4 rounded-xl font-mono text-2xl font-bold tracking-wider text-center" style={{ background: 'var(--surface)', color: 'var(--text)', border: '2px dashed var(--surface-border)' }}>
                     {data.code}
@@ -100,7 +102,7 @@ export default function Referral() {
                     whileTap={{ scale: 0.94 }}
                     onClick={() => copy(data.code, 'code')}
                     className="btn-primary px-4 py-4"
-                    title="Скопировать код"
+                    title={t('ref.copy')}
                   >
                     {copiedField === 'code' ? <Check size={18} /> : <Copy size={18} />}
                   </motion.button>
@@ -108,7 +110,7 @@ export default function Referral() {
               </div>
 
               <div>
-                <span className="label block mb-3">Ссылка для друзей</span>
+                <span className="label block mb-3">{t('ref.link')}</span>
                 <div className="flex items-center gap-3">
                   <input
                     type="text"
@@ -144,17 +146,17 @@ export default function Referral() {
                 <div className="flex items-center gap-2 mb-1">
                   <Ticket size={15} className="text-accent" />
                   <h3 className="font-display text-[14px] font-bold" style={{ color: 'var(--text)' }}>
-                    Ввести код друга
+                    {t('ref.enterCode')}
                   </h3>
                 </div>
                 <p className="font-body text-[12px] mb-4" style={{ color: 'var(--text-faint)' }}>
-                  Если друг прислал вам код вручную — вставьте его сюда. После вашей первой покупки он получит бонус.
+                  {t('ref.enterDesc')}
                 </p>
                 <form onSubmit={handleApply} className="flex gap-3">
                   <input
                     value={applyCode}
                     onChange={e => setApplyCode(e.target.value.toUpperCase())}
-                    placeholder="Например: A1B2C3D4"
+                    placeholder={t('ref.placeholder')}
                     className="input flex-1 font-mono tracking-widest text-[15px]"
                     maxLength={8}
                     spellCheck={false}
@@ -167,7 +169,7 @@ export default function Referral() {
                   >
                     {applyLoading
                       ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      : 'Применить'
+                      : t('ref.apply')
                     }
                   </motion.button>
                 </form>
@@ -181,19 +183,19 @@ export default function Referral() {
               <div className="glass p-5 text-center">
                 <UserPlus size={20} className="text-secondary-light mx-auto mb-2" />
                 <p className="font-display text-2xl font-bold" style={{ color: 'var(--text)' }}>{data.referredUsers.length}</p>
-                <p className="font-body text-[11px] mt-1" style={{ color: 'var(--text-faint)' }}>Приглашённых</p>
+                <p className="font-body text-[11px] mt-1" style={{ color: 'var(--text-faint)' }}>{t('ref.invited')}</p>
               </div>
               <div className="glass p-5 text-center">
                 <Gift size={20} className="text-accent mx-auto mb-2" />
                 <p className="font-display text-2xl font-bold" style={{ color: 'var(--text)' }}>{activeRewards}</p>
-                <p className="font-body text-[11px] mt-1" style={{ color: 'var(--text-faint)' }}>Активных бонусов</p>
+                <p className="font-body text-[11px] mt-1" style={{ color: 'var(--text-faint)' }}>{t('ref.activeBonuses')}</p>
               </div>
               <div className="glass p-5 text-center">
                 <Check size={20} className="text-amber-400 mx-auto mb-2" />
                 <p className="font-display text-2xl font-bold" style={{ color: 'var(--text)' }}>
                   {data.referredUsers.filter(u => u.order_count > 0).length}
                 </p>
-                <p className="font-body text-[11px] mt-1" style={{ color: 'var(--text-faint)' }}>Совершили покупку</p>
+                <p className="font-body text-[11px] mt-1" style={{ color: 'var(--text-faint)' }}>{t('ref.purchased')}</p>
               </div>
             </div>
           </Reveal>
@@ -202,7 +204,7 @@ export default function Referral() {
           {data.rewards.length > 0 && (
             <div className="mb-8">
               <h2 className="font-display text-[12px] font-bold uppercase tracking-wider mb-4" style={{ color: 'var(--text-faint)' }}>
-                Твои бонусы
+                {t('ref.myBonuses')}
               </h2>
               <div className="space-y-2">
                 {data.rewards.map(r => (
@@ -213,12 +215,12 @@ export default function Referral() {
                     <div className="flex-1">
                       <code className="font-mono text-[13px] font-bold text-accent">{r.promo_code}</code>
                       <p className="font-body text-[11px] mt-0.5" style={{ color: 'var(--text-faint)' }}>
-                        −{r.reward_percent}% · {r.claimed ? 'Использовано' : 'Активно'}
+                        −{r.reward_percent}% · {r.claimed ? t('ref.used') : t('ref.active')}
                       </p>
                     </div>
                     {!r.claimed && (
                       <button onClick={() => copy(r.promo_code, `reward-${r.id}`)} className="btn-ghost text-[11px]">
-                        {copiedField === `reward-${r.id}` ? <><Check size={12} /> OK</> : <><Copy size={12} /> Копировать</>}
+                        {copiedField === `reward-${r.id}` ? <><Check size={12} /> OK</> : <><Copy size={12} /> {t('ref.copy')}</>}
                       </button>
                     )}
                   </div>
@@ -230,12 +232,12 @@ export default function Referral() {
           {/* Invited users */}
           <div>
             <h2 className="font-display text-[12px] font-bold uppercase tracking-wider mb-4" style={{ color: 'var(--text-faint)' }}>
-              Приглашённые ({data.referredUsers.length})
+              {t('ref.friends')} ({data.referredUsers.length})
             </h2>
             {data.referredUsers.length === 0 ? (
               <div className="glass-static p-8 text-center">
                 <p className="font-body text-[13px]" style={{ color: 'var(--text-faint)' }}>
-                  Пока никто не зарегистрировался по твоей ссылке. Поделись ей с друзьями!
+                  {t('ref.noFriends')}
                 </p>
               </div>
             ) : (
@@ -248,11 +250,11 @@ export default function Referral() {
                     <div className="flex-1 min-w-0">
                       <p className="font-display font-bold text-[13px]" style={{ color: 'var(--text-secondary)' }}>@{u.username}</p>
                       <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>
-                        Присоединился {new Date(u.created_at).toLocaleDateString('ru-RU')}
+                        {t('ref.joined')} {new Date(u.created_at).toLocaleDateString('ru-RU')}
                       </p>
                     </div>
                     <span className={`badge text-[10px] ${u.order_count > 0 ? 'bg-accent/15 text-accent' : 'bg-white/5'}`} style={u.order_count === 0 ? { color: 'var(--text-faint)' } : {}}>
-                      {u.order_count > 0 ? `${u.order_count} заказов` : 'Ещё не покупал'}
+                      {u.order_count > 0 ? `${u.order_count} ${t('ref.orders')}` : t('ref.notBought')}
                     </span>
                   </div>
                 ))}

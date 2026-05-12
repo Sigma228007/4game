@@ -5,10 +5,12 @@ import { motion } from 'framer-motion';
 import { api } from '../api';
 import { PageTransition } from '../components/Motion';
 import PosterAccent from '../components/PosterAccent';
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const token = searchParams.get('token');
 
   // Два режима: без токена — "забыл пароль" (вводишь email), с токеном — "задаёшь новый"
@@ -30,7 +32,7 @@ export default function ResetPassword() {
   async function handleRequest(e) {
     e.preventDefault();
     setError('');
-    if (!email.trim()) { setError('Введите email'); return; }
+    if (!email.trim()) { setError(t('reset.errEmail')); return; }
     setLoading(true);
     try {
       await api.forgotPassword(email.trim());
@@ -44,8 +46,8 @@ export default function ResetPassword() {
   async function handleReset(e) {
     e.preventDefault();
     setError('');
-    if (newPass.length < 4) { setError('Пароль минимум 4 символа'); return; }
-    if (newPass !== confirmPass) { setError('Пароли не совпадают'); return; }
+    if (newPass.length < 4) { setError(t('reset.errShort')); return; }
+    if (newPass !== confirmPass) { setError(t('reset.errMismatch')); return; }
     setLoading(true);
     try {
       await api.resetPassword(token, newPass);
@@ -74,9 +76,9 @@ export default function ResetPassword() {
                     <Mail size={24} className="text-white" />
                   </div>
                   <div>
-                    <h1 className="font-display text-[22px] font-bold" style={{ color: 'var(--text)' }}>Забыли пароль?</h1>
+                    <h1 className="font-display text-[22px] font-bold" style={{ color: 'var(--text)' }}>{t('reset.title')}</h1>
                     <p className="font-body text-[13px] mt-2" style={{ color: 'var(--text-faint)' }}>
-                      Введите email от аккаунта, и мы отправим ссылку для сброса пароля
+                      {t('reset.desc')}
                     </p>
                   </div>
                 </div>
@@ -89,7 +91,7 @@ export default function ResetPassword() {
 
                 <form onSubmit={handleRequest} className="space-y-4">
                   <div className="space-y-2">
-                    <label className="label">Email</label>
+                    <label className="label">{t('common.email')}</label>
                     <input
                       type="email"
                       value={email}
@@ -100,12 +102,12 @@ export default function ResetPassword() {
                     />
                   </div>
                   <motion.button type="submit" disabled={loading} whileTap={{ scale: 0.97 }} className="btn-primary w-full py-4 text-[15px] disabled:opacity-50">
-                    {loading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <>Отправить ссылку</>}
+                    {loading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <>{t('reset.send')}</>}
                   </motion.button>
                 </form>
 
                 <Link to="/login" className="flex items-center justify-center gap-2 font-body text-[12px] hover:text-white transition-colors" style={{ color: 'var(--text-faint)' }}>
-                  <ArrowLeft size={12} /> Вернуться ко входу
+                  <ArrowLeft size={12} /> {t('reset.back')}
                 </Link>
               </>
             )}
@@ -115,12 +117,12 @@ export default function ResetPassword() {
                 <div className="w-16 h-16 mx-auto rounded-2xl bg-accent/15 flex items-center justify-center">
                   <CheckCircle size={28} className="text-accent" />
                 </div>
-                <h1 className="font-display text-xl font-bold" style={{ color: 'var(--text)' }}>Проверьте почту</h1>
+                <h1 className="font-display text-xl font-bold" style={{ color: 'var(--text)' }}>{t('reset.checkTitle')}</h1>
                 <p className="font-body text-[14px]" style={{ color: 'var(--text-muted)' }}>
-                  Если такой email зарегистрирован, письмо со ссылкой уже в пути. Она действует 30 минут.
+                  {t('reset.checkDesc')}
                 </p>
                 <Link to="/login" className="btn-ghost inline-flex text-[13px]">
-                  <ArrowLeft size={14} /> К входу
+                  <ArrowLeft size={14} /> {t('reset.toLogin')}
                 </Link>
               </motion.div>
             )}
@@ -132,9 +134,9 @@ export default function ResetPassword() {
                     <Key size={24} className="text-white" />
                   </div>
                   <div>
-                    <h1 className="font-display text-[22px] font-bold" style={{ color: 'var(--text)' }}>Новый пароль</h1>
+                    <h1 className="font-display text-[22px] font-bold" style={{ color: 'var(--text)' }}>{t('reset.newTitle')}</h1>
                     <p className="font-body text-[13px] mt-2" style={{ color: 'var(--text-faint)' }}>
-                      Придумайте новый пароль для вашего аккаунта
+                      {t('reset.newDesc')}
                     </p>
                   </div>
                 </div>
@@ -147,13 +149,13 @@ export default function ResetPassword() {
 
                 <form onSubmit={handleReset} className="space-y-4">
                   <div className="space-y-2">
-                    <label className="label">Новый пароль</label>
+                    <label className="label">{t('reset.newPlaceholder')}</label>
                     <div className="relative">
                       <input
                         type={showPass ? 'text' : 'password'}
                         value={newPass}
                         onChange={e => setNewPass(e.target.value)}
-                        placeholder="Минимум 4 символа"
+                        placeholder={t('reset.minChars')}
                         autoComplete="new-password"
                         className="input pr-12"
                       />
@@ -163,17 +165,17 @@ export default function ResetPassword() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="label">Подтвердите пароль</label>
+                    <label className="label">{t('common.confirm')}</label>
                     <input
                       type={showPass ? 'text' : 'password'}
                       value={confirmPass}
                       onChange={e => setConfirmPass(e.target.value)}
-                      placeholder="Повторите пароль"
+                      placeholder={t('reset.confirmPlaceholder')}
                       className="input"
                     />
                   </div>
                   <motion.button type="submit" disabled={loading} whileTap={{ scale: 0.97 }} className="btn-primary w-full py-4 text-[15px] disabled:opacity-50">
-                    {loading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Lock size={16} /> Сохранить новый пароль</>}
+                    {loading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Lock size={16} /> {t('reset.save')}</>}
                   </motion.button>
                 </form>
               </>
@@ -184,9 +186,9 @@ export default function ResetPassword() {
                 <div className="w-16 h-16 mx-auto rounded-2xl bg-accent/15 flex items-center justify-center">
                   <CheckCircle size={28} className="text-accent" />
                 </div>
-                <h1 className="font-display text-xl font-bold" style={{ color: 'var(--text)' }}>Готово!</h1>
+                <h1 className="font-display text-xl font-bold" style={{ color: 'var(--text)' }}>{t('reset.doneTitle')}</h1>
                 <p className="font-body text-[14px]" style={{ color: 'var(--text-muted)' }}>
-                  Пароль изменён. Перенаправляем на страницу входа...
+                  {t('reset.doneDesc')}
                 </p>
               </motion.div>
             )}

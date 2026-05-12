@@ -7,20 +7,22 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 import { PageTransition } from '../components/Motion';
 import PosterAccent from '../components/PosterAccent';
+import { useI18n } from '../utils/i18n.jsx';
 
-const ROLE_LABELS = { admin: 'Админ', support: 'Поддержка', user: 'Пользователь' };
 const ROLE_COLORS = { admin: 'text-primary', support: 'text-accent', user: '' };
-
-const STATUS_LABELS = {
-  open:     { label: 'Открыт',   dot: 'bg-amber-400' },
-  answered: { label: 'Отвечен',  dot: 'bg-accent'    },
-  closed:   { label: 'Закрыт',   dot: 'bg-white/20'  },
-};
 
 export default function TicketChat() {
   const { id } = useParams();
   const { user } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
+
+  const ROLE_LABELS = { admin: t('ticket.roleAdmin'), support: t('ticket.roleSupport'), user: t('ticket.roleUser') };
+  const STATUS_LABELS = {
+    open:     { label: t('ticket.open'),     dot: 'bg-amber-400' },
+    answered: { label: t('ticket.answered'), dot: 'bg-accent'    },
+    closed:   { label: t('ticket.closed'),   dot: 'bg-white/20'  },
+  };
   const navigate = useNavigate();
   const [ticket, setTicket] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -43,7 +45,7 @@ export default function TicketChat() {
       const data = await api.getTicket(id);
       setTicket(data);
       setMessages(data.messages || []);
-    } catch (err) { toast('Тикет не найден', 'error'); navigate('/support'); }
+    } catch (err) { toast(err.message || 'Error', 'error'); navigate('/support'); }
     setLoading(false);
   }
 
@@ -87,7 +89,7 @@ export default function TicketChat() {
     try {
       await api.closeTicket(id);
       setTicket(prev => ({ ...prev, status: 'closed' }));
-      toast('Тикет закрыт', 'success');
+      toast(t('ticket.closed'), 'success');
     } catch (err) { toast(err.message, 'error'); }
   }
 
@@ -150,7 +152,7 @@ export default function TicketChat() {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-display font-semibold uppercase tracking-wider transition-colors hover:bg-white/5"
                 style={{ background: 'var(--surface)', color: 'var(--text-faint)' }}
               >
-                <Lock size={12} /> Закрыть
+                <Lock size={12} /> {t('ticket.close')}
               </button>
             )}
           </div>
@@ -233,7 +235,7 @@ export default function TicketChat() {
               <input
                 value={newMsg}
                 onChange={e => setNewMsg(e.target.value)}
-                placeholder="Введите сообщение..."
+                placeholder={t('ticket.placeholder')}
                 className="input flex-1"
               />
               <motion.button
@@ -249,7 +251,7 @@ export default function TicketChat() {
         ) : (
           <div className="relative text-center py-6 z-10" style={{ background: 'var(--surface)' }}>
             <p className="font-body text-[14px]" style={{ color: 'var(--text-faint)' }}>
-              Тикет закрыт. Создайте новое обращение, если нужна помощь.
+              {t('ticket.closedMsg')}
             </p>
           </div>
         )}

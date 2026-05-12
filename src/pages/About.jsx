@@ -7,20 +7,21 @@ import PosterAccent from '../components/PosterAccent';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../api';
 import { useToast } from '../components/Toast';
-
-// Карточки "ценностей" — цвет иконки + соответствующий тон свечения
-const VALUES = [
-  { icon: Gamepad2,   title: 'Каталог без воды',  desc: 'Только проверенные тайтлы — от инди до AAA.',  color: 'text-primary',         glow: 'rgba(232,16,46,0.16)'  },
-  { icon: Shield,     title: 'Гарантия на ключ',  desc: 'Каждый ключ проверен. Проблема? Заменим.',     color: 'text-accent',          glow: 'rgba(16,185,129,0.16)' },
-  { icon: Clock,      title: 'Без ожидания',      desc: 'Ключ на почту за секунды. Оплатил — играешь.', color: 'text-amber-400',       glow: 'rgba(245,158,11,0.16)' },
-  { icon: Headphones, title: 'Живая поддержка',   desc: 'Чат с поддержкой прямо на сайте.',             color: 'text-secondary-light', glow: 'rgba(147,51,234,0.16)' },
-];
+import { useI18n } from '../utils/i18n.jsx';
 
 export default function About() {
   const { isAuth } = useAuth();
   const toast = useToast();
+  const { t } = useI18n();
   const [form, setForm] = useState({ subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+
+  const VALUES = [
+    { icon: Gamepad2,   title: t('about.f1.title'), desc: t('about.f1.desc'), color: 'text-primary',         glow: 'rgba(232,16,46,0.16)'  },
+    { icon: Shield,     title: t('about.f2.title'), desc: t('about.f2.desc'), color: 'text-accent',          glow: 'rgba(16,185,129,0.16)' },
+    { icon: Clock,      title: t('about.f3.title'), desc: t('about.f3.desc'), color: 'text-amber-400',       glow: 'rgba(245,158,11,0.16)' },
+    { icon: Headphones, title: t('about.f4.title'), desc: t('about.f4.desc'), color: 'text-secondary-light', glow: 'rgba(147,51,234,0.16)' },
+  ];
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -28,8 +29,8 @@ export default function About() {
     try {
       await api.createTicket(form.subject.trim(), form.message.trim());
       setSubmitted(true);
-      toast('Обращение отправлено!', 'success');
-    } catch { toast('Войдите чтобы отправить обращение', 'error'); }
+      toast(t('about.sent'), 'success');
+    } catch { toast(t('about.writeTo'), 'error'); }
   }
 
   return (
@@ -57,10 +58,10 @@ export default function About() {
           {/* HEADER */}
           <Reveal>
             <div className="max-w-3xl mx-auto text-center mb-20 space-y-6">
-              <span className="label block mb-2">О компании</span>
-              <h1 className="section-title text-4xl md:text-5xl">Мы делаем игры доступнее</h1>
+              <span className="label block mb-2">{t('about.title')}</span>
+              <h1 className="section-title text-4xl md:text-5xl">{t('about.subtitle')}</h1>
               <p className="font-body text-[17px] leading-relaxed max-w-2xl mx-auto" style={{ color: 'var(--text-muted)' }}>
-                4Game — пространство, где каждый геймер найдёт нужную игру по честной цене и получит её мгновенно.
+                {t('about.desc')}
               </p>
             </div>
           </Reveal>
@@ -98,18 +99,18 @@ export default function About() {
           <Reveal>
             <div className="relative glass-static p-8 md:p-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center mb-24 overflow-hidden">
               <div className="relative space-y-6 z-10">
-                <span className="label">Почему выбирают нас</span>
+                <span className="label">{t('about.why')}</span>
                 <h2 className="font-display text-2xl md:text-3xl font-bold leading-snug" style={{ color: 'var(--text)' }}>
-                  Простая формула: <span className="text-primary">честная цена</span> + <span className="text-accent">быстрая доставка</span>
+                  {t('about.formula')} <span className="text-primary">{t('about.price')}</span> + <span className="text-accent">{t('about.fast')}</span>
                 </h2>
                 <p className="font-body text-[15px] leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                  Работаем напрямую с дистрибьюторами. Цены ниже Steam, каждый ключ проверен вручную.
+                  {t('about.whyDesc')}
                 </p>
                 <div className="flex gap-8 pt-2">
                   {[
-                    { n: '0',   l: 'Нерабочих ключей' },
-                    { n: '35+', l: 'Тайтлов в каталоге' },
-                    { n: '<1м', l: 'Время выдачи' },
+                    { n: '0',   l: t('about.stat1') },
+                    { n: '35+', l: t('about.stat2') },
+                    { n: '<1м', l: t('about.stat3') },
                   ].map(s => (
                     <div key={s.l}>
                       <div className="font-display font-black text-2xl" style={{ color: 'var(--text-secondary)' }}>{s.n}</div>
@@ -121,10 +122,10 @@ export default function About() {
 
               <div className="relative grid grid-cols-2 gap-3 z-10">
                 {[
-                  { icon: Star,     t: 'Рейтинг 4.8/5',  s: 'По отзывам',      color: 'text-amber-400',       glow: 'rgba(245,158,11,0.14)' },
-                  { icon: Zap,      t: 'Выдача 30 сек',  s: 'Автоматически',   color: 'text-primary',         glow: 'rgba(232,16,46,0.14)'  },
-                  { icon: Shield,   t: '100% лицензия',  s: 'Проверяем лично', color: 'text-accent',          glow: 'rgba(16,185,129,0.14)' },
-                  { icon: Gamepad2, t: '35+ тайтлов',    s: 'Обновляем',       color: 'text-secondary-light', glow: 'rgba(147,51,234,0.14)' },
+                  { icon: Star,     label: t('about.stat4'),    sub: t('about.stat4sub'),  color: 'text-amber-400',       glow: 'rgba(245,158,11,0.14)' },
+                  { icon: Zap,      label: t('about.stat3sub'), sub: t('about.stat3sub2'), color: 'text-primary',         glow: 'rgba(232,16,46,0.14)'  },
+                  { icon: Shield,   label: t('about.license'),  sub: t('about.licenseDesc'), color: 'text-accent',        glow: 'rgba(16,185,129,0.14)' },
+                  { icon: Gamepad2, label: `35+ ${t('about.titles')}`, sub: t('about.update'), color: 'text-secondary-light', glow: 'rgba(147,51,234,0.14)' },
                 ].map(c => (
                   <div
                     key={c.t}
@@ -137,8 +138,8 @@ export default function About() {
                     />
                     <div className="relative z-10 space-y-2">
                       <c.icon size={17} className={c.color} />
-                      <p className="font-display text-[11px] font-bold" style={{ color: 'var(--text-secondary)' }}>{c.t}</p>
-                      <p className="font-body text-[10px]" style={{ color: 'var(--text-faint)' }}>{c.s}</p>
+                      <p className="font-display text-[11px] font-bold" style={{ color: 'var(--text-secondary)' }}>{c.label}</p>
+                      <p className="font-body text-[10px]" style={{ color: 'var(--text-faint)' }}>{c.sub}</p>
                     </div>
                   </div>
                 ))}
@@ -151,14 +152,14 @@ export default function About() {
             <Reveal>
               <div className="space-y-8">
                 <div>
-                  <span className="label block mb-3">Всегда на связи</span>
-                  <h2 className="section-title text-3xl">Свяжитесь с нами</h2>
+                  <span className="label block mb-3">{t('about.online')}</span>
+                  <h2 className="section-title text-3xl">{t('about.contacts')}</h2>
                 </div>
                 <div className="space-y-4">
                   {[
                     { href: 'mailto:support@4game.com',  icon: Mail,   l: 'Email',   v: 'support@4game.com',       c: 'text-primary bg-primary/8' },
-                    { href: 'tel:+79242485393',           icon: Phone,  l: 'Телефон', v: '+7 (924) 248-53-93',      c: 'text-accent bg-accent/8' },
-                    { href: null,                         icon: MapPin, l: 'Адрес',   v: 'г. Владивосток, Россия',  c: 'text-secondary bg-secondary/8' },
+                    { href: 'tel:+79242485393',           icon: Phone,  l: 'Tel',     v: '+7 (924) 248-53-93',      c: 'text-accent bg-accent/8' },
+                    { href: null,                         icon: MapPin, l: 'Addr',    v: t('about.address'),        c: 'text-secondary bg-secondary/8' },
                   ].map(c => {
                     const T = c.href ? 'a' : 'div';
                     return (
@@ -176,8 +177,8 @@ export default function About() {
                   <Link to="/support" className="glass flex items-center gap-4 p-5 hover:border-primary/15">
                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary"><MessageCircle size={18} /></div>
                     <div className="flex-1">
-                      <p className="font-display text-[13px] font-bold" style={{ color: 'var(--text-secondary)' }}>Чат с поддержкой</p>
-                      <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>Напишите нам — ответим в чате</p>
+                      <p className="font-display text-[13px] font-bold" style={{ color: 'var(--text-secondary)' }}>{t('about.chat')}</p>
+                      <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>{t('about.chatDesc')}</p>
                     </div>
                   </Link>
                 )}
@@ -189,24 +190,24 @@ export default function About() {
                 {submitted ? (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center space-y-4 py-8">
                     <CheckCircle size={36} className="text-accent mx-auto" />
-                    <h3 className="font-display text-xl font-bold" style={{ color: 'var(--text)' }}>Отправлено!</h3>
-                    <p className="font-body text-[14px]" style={{ color: 'var(--text-muted)' }}>Мы ответим в разделе «Поддержка»</p>
-                    <Link to="/support" className="btn-primary text-[13px]"><MessageCircle size={15} /> Перейти в чат</Link>
+                    <h3 className="font-display text-xl font-bold" style={{ color: 'var(--text)' }}>{t('about.sent')}</h3>
+                    <p className="font-body text-[14px]" style={{ color: 'var(--text-muted)' }}>{t('about.sentDesc')}</p>
+                    <Link to="/support" className="btn-primary text-[13px]"><MessageCircle size={15} /> {t('about.toChat')}</Link>
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-5">
-                    <h3 className="font-display text-lg font-bold" style={{ color: 'var(--text)' }}>Написать в поддержку</h3>
-                    {!isAuth && <p className="font-body text-[13px] text-primary">Войдите в аккаунт чтобы отправить обращение</p>}
+                    <h3 className="font-display text-lg font-bold" style={{ color: 'var(--text)' }}>{t('about.writeTo')}</h3>
+                    {!isAuth && <p className="font-body text-[13px] text-primary">{t('about.writeTo')}</p>}
                     <div className="space-y-2">
-                      <label className="label">Тема</label>
-                      <input value={form.subject} onChange={e => setForm(p => ({ ...p, subject: e.target.value }))} placeholder="О чём ваш вопрос?" required className="input" disabled={!isAuth} />
+                      <label className="label">{t('support.subject')}</label>
+                      <input value={form.subject} onChange={e => setForm(p => ({ ...p, subject: e.target.value }))} placeholder={t('about.formSubject')} required className="input" disabled={!isAuth} />
                     </div>
                     <div className="space-y-2">
-                      <label className="label">Сообщение</label>
-                      <textarea value={form.message} onChange={e => setForm(p => ({ ...p, message: e.target.value }))} placeholder="Опишите подробно..." rows={4} required className="input resize-none" disabled={!isAuth} />
+                      <label className="label">{t('about.formMsg')}</label>
+                      <textarea value={form.message} onChange={e => setForm(p => ({ ...p, message: e.target.value }))} placeholder={t('about.formPlaceholder')} rows={4} required className="input resize-none" disabled={!isAuth} />
                     </div>
                     <motion.button type="submit" whileTap={{ scale: 0.97 }} className="btn-primary w-full py-4 text-[15px]" disabled={!isAuth}>
-                      <Send size={15} /> Отправить
+                      <Send size={15} /> {t('about.send')}
                     </motion.button>
                   </form>
                 )}
@@ -218,8 +219,8 @@ export default function About() {
           <Reveal>
             <div className="text-center space-y-8">
               <div>
-                <span className="label block mb-3">Медиа</span>
-                <h2 className="section-title text-3xl">Мир игр в одном месте</h2>
+                <span className="label block mb-3">{t('about.media')}</span>
+                <h2 className="section-title text-3xl">{t('about.mediaTitle')}</h2>
               </div>
               <div className="max-w-3xl mx-auto glass-static overflow-hidden">
                 <div className="aspect-video">
@@ -227,7 +228,7 @@ export default function About() {
                     width="100%"
                     height="100%"
                     src="https://www.youtube.com/embed/oUFJJNQGwhk"
-                    title="4Game промо"
+                    title={t('about.mediaAlt')}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
