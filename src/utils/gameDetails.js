@@ -48,11 +48,8 @@ export function getLanguages(game) {
   ];
 }
 
-// Галерея скриншотов — используем обложку + другие игры того же жанра как заглушки
-// (в настоящем магазине тут лежали бы реальные скриншоты из игры)
-export function getGallery(game, allGames) {
-  const sameGenre = allGames.filter(g => g.genre === game.genre && g.id !== game.id).slice(0, 3);
-  return [game.image, ...sameGenre.map(g => g.image)];
+export function getGallery(game) {
+  return [game.image];
 }
 
 // Платформы активации ключа
