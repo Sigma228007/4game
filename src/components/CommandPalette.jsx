@@ -3,6 +3,7 @@ import { Search, X, Command, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { games, searchGames, GENRES } from '../data/games';
+import { usePrice } from '../hooks/usePrice';
 
 /**
  * Глобальный поиск: Ctrl/Cmd+K → overlay → ищет по играм и жанрам.
@@ -15,6 +16,7 @@ export default function CommandPalette() {
   const inputRef = useRef(null);
   const listRef = useRef(null);
   const navigate = useNavigate();
+  const { format } = usePrice();
 
   // Ctrl/Cmd+K
   useEffect(() => {
@@ -158,7 +160,7 @@ export default function CommandPalette() {
                                   {g.name}
                                 </p>
                                 <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>
-                                  {g.year} · <span className="text-accent">{g.price.toLocaleString('ru-RU')} ₽</span>
+                                  {g.year} · <span className="text-accent">{format(g.price)}</span>
                                 </p>
                               </div>
                               {isActive && <ArrowRight size={14} style={{ color: 'var(--text-muted)' }} />}

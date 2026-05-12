@@ -4,11 +4,13 @@ import { motion } from 'framer-motion';
 import { PageTransition } from '../components/Motion';
 import { useState } from 'react';
 import { useToast } from '../components/Toast';
+import { usePrice } from '../hooks/usePrice';
 
 export default function Success() {
   const location = useLocation();
   const orderData = location.state; // { orderId, total, items, createdAt }
   const toast = useToast();
+  const { format } = usePrice();
   const [copiedKey, setCopiedKey] = useState(null);
 
   function copyKey(key) {
@@ -34,7 +36,7 @@ export default function Success() {
           <h1 className="font-display text-3xl font-black" style={{ color: 'var(--text)' }}>Оплата прошла!</h1>
           {orderData && (
             <p className="font-body text-[15px]" style={{ color: 'var(--text-muted)' }}>
-              Заказ #{orderData.orderId} · {orderData.total?.toLocaleString('ru-RU')} ₽
+              Заказ #{orderData.orderId} · {format(orderData.total)}
             </p>
           )}
         </motion.div>

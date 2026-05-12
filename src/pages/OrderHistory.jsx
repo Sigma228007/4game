@@ -6,12 +6,14 @@ import { api } from '../api';
 import { useToast } from '../components/Toast';
 import { PageTransition, Reveal } from '../components/Motion';
 import { generateReceipt } from '../utils/pdfReceipt';
+import { usePrice } from '../hooks/usePrice';
 
 export default function OrderHistory() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copiedKey, setCopiedKey] = useState(null);
   const toast = useToast();
+  const { format } = usePrice();
 
   useEffect(() => {
     api.getOrders().then(setOrders).catch(() => {}).finally(() => setLoading(false));
@@ -75,7 +77,7 @@ export default function OrderHistory() {
                     <Download size={12} /> PDF
                   </motion.button>
                   <div className="text-right">
-                    <p className="price text-[18px]">{order.total?.toLocaleString('ru-RU')}&nbsp;₽</p>
+                    <p className="price text-[18px]">{format(order.total)}</p>
                     <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>{order.items?.length} {order.items?.length === 1 ? 'игра' : 'игр'}</p>
                   </div>
                 </div>
@@ -90,7 +92,7 @@ export default function OrderHistory() {
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-display text-[13px] font-bold truncate" style={{ color: 'var(--text-secondary)' }}>{item.name}</p>
-                      <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>{item.price?.toLocaleString('ru-RU')} ₽</p>
+                      <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>{format(item.price)}</p>
                     </div>
                     {/* Key */}
                     <div className="flex items-center gap-2 flex-shrink-0">

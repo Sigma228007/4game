@@ -5,10 +5,12 @@ import { useCart } from '../context/CartContext';
 import { useToast } from '../components/Toast';
 import { PageTransition, Reveal, StaggerContainer, StaggerItem } from '../components/Motion';
 import PosterAccent from '../components/PosterAccent';
+import { usePrice } from '../hooks/usePrice';
 
 export default function Favorites() {
   const { favItems, removeFromFavorites } = useFavorites();
   const { addToCart, isInCart } = useCart();
+  const { format } = usePrice();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -72,7 +74,7 @@ export default function Favorites() {
                       </Link>
                       <p className="font-body text-[13px] line-clamp-2 flex-1" style={{ color: 'var(--text-muted)' }}>{game.description}</p>
                       <div className="flex items-center justify-between pt-2">
-                        <span className="price text-lg">{game.price.toLocaleString('ru-RU')}&nbsp;₽</span>
+                        <span className="price text-lg">{format(game.price)}</span>
                         <div className="flex gap-2">
                           <button
                             onClick={() => { removeFromFavorites(game.id); toast('Удалено из избранного', 'fav'); }}
