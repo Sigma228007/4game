@@ -220,7 +220,7 @@ export default function About() {
             <div className="space-y-8">
               <div className="text-center">
                 <span className="label block mb-3">{t('about.online')}</span>
-                <h2 className="section-title text-3xl">{t('about.address')}</h2>
+                <h2 className="section-title text-3xl">г. Владивосток, Россия</h2>
               </div>
               <div className="glass-static overflow-hidden" style={{ borderRadius: 16 }}>
                 <div className="grid grid-cols-1 lg:grid-cols-3">
@@ -229,7 +229,7 @@ export default function About() {
                     <div className="space-y-1">
                       <p className="label text-[10px]">{t('about.address')}</p>
                       <p className="font-body text-[15px] leading-snug" style={{ color: 'var(--text-secondary)' }}>
-                        г. Москва, ул. Тверская, д. 7, офис 412
+                        г. Владивосток, ул. Светланская, д. 22, офис 310
                       </p>
                     </div>
                     <div className="space-y-1">
@@ -241,19 +241,29 @@ export default function About() {
                       <a href="tel:+79242485393" className="font-body text-[14px]" style={{ color: 'var(--text-secondary)' }}>+7 (924) 248-53-93</a>
                     </div>
                     <div className="space-y-1">
-                      <p className="label text-[10px]">{t('about.stat3')}</p>
+                      <p className="label text-[10px]">Время работы</p>
                       <p className="font-body text-[13px]" style={{ color: 'var(--text-muted)' }}>Пн–Пт: 10:00 – 20:00</p>
                     </div>
+                    <a
+                      href="https://2gis.ru/vladivostok/search/Светланская%2022?m=131.8854%2C43.1148%2F16"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-display font-semibold transition-colors hover:bg-white/[0.05] w-fit"
+                      style={{ border: '1px solid var(--surface-border)', color: 'var(--text-secondary)' }}
+                    >
+                      <MapPin size={13} className="text-primary" />
+                      Открыть в 2ГИС
+                    </a>
                   </div>
-                  {/* Map */}
+                  {/* Map — OpenStreetMap (no VPN issues) */}
                   <div className="lg:col-span-2 h-72 lg:h-96">
                     <iframe
-                      src="https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A55.7608%2C%22lon%22%3A37.6095%2C%22zoom%22%3A15%7D%2C%22opt%22%3A%7B%22city%22%3A%22moscow%22%7D%7D"
+                      src="https://www.openstreetmap.org/export/embed.html?bbox=131.877%2C43.110%2C131.894%2C43.120&layer=mapnik&marker=43.1148%2C131.8854"
                       width="100%"
                       height="100%"
                       frameBorder="0"
-                      title="4Game Office Map"
-                      style={{ display: 'block' }}
+                      title="4Game Office — Vladivostok"
+                      style={{ display: 'block', filter: 'invert(0.9) hue-rotate(180deg) brightness(0.85) contrast(0.9)' }}
                     />
                   </div>
                 </div>
