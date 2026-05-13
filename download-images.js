@@ -10,44 +10,43 @@ import path from 'path';
 import https from 'https';
 import http from 'http';
 
-// Обложки (id → url) — Steam library_600x900.jpg (официальный портретный формат)
-const STEAM = id => `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${id}/library_600x900.jpg`;
+// Обложки (id → url) — оригинальные обложки
 const COVERS = {
-  1:  STEAM(2215430),  // Ghost of Tsushima Director's Cut
-  2:  STEAM(1174180),  // Red Dead Redemption 2
-  3:  STEAM(2208920),  // Assassin's Creed Valhalla
-  4:  STEAM(2971450),  // Assassin's Creed Shadows
-  5:  STEAM(489830),   // Skyrim Special Edition
-  6:  STEAM(271590),   // Grand Theft Auto V
-  7:  STEAM(1091500),  // Cyberpunk 2077
-  8:  STEAM(460930),   // Ghost Recon Wildlands
-  9:  STEAM(1517290),  // Battlefield 2042
-  10: STEAM(412020),   // Metro Exodus
-  11: STEAM(782330),   // Doom Eternal
-  12: STEAM(2183900),  // Warhammer 40,000: Space Marine 2
-  13: STEAM(552520),   // Far Cry 5
-  14: STEAM(1238810),  // Battlefield V
-  15: STEAM(2344520),  // Diablo IV
-  16: STEAM(292030),   // The Witcher 3: Wild Hunt
-  17: STEAM(1245620),  // Elden Ring
-  18: STEAM(1086940),  // Baldur's Gate 3
-  19: STEAM(374320),   // Dark Souls III
-  20: STEAM(22380),    // Fallout: New Vegas
-  21: STEAM(1850570),  // Death Stranding Director's Cut
-  22: STEAM(394360),   // Hearts of Iron IV
-  23: STEAM(1601580),  // Frostpunk 2
-  24: STEAM(289070),   // Civilization VI
-  25: STEAM(877330),   // Rome: Total War — Remastered
-  26: STEAM(8930),     // Civilization V
-  27: STEAM(214950),   // Total War: Rome II
-  28: STEAM(505460),   // Foxhole
-  29: STEAM(1551360),  // Forza Horizon 5
-  30: STEAM(2195250),  // EA Sports FC 24
-  31: STEAM(1905910),  // NHL 24
-  32: STEAM(2338770),  // NBA 2K24
-  33: STEAM(1899590),  // EA Sports UFC 5
-  34: STEAM(2108330),  // F1 24
-  35: STEAM(2315690),  // WWE 2K24
+  1: 'https://avatars.mds.yandex.net/get-altay/4043748/2a000001756a46f78c00b7fdb979fdb8bbf2/L_height',
+  2: 'https://avatars.mds.yandex.net/i?id=8bb2caaa69e877c1d194ef4ee46ad9ae_l-3788222-images-thumbs&n=13',
+  3: 'https://avatars.mds.yandex.net/i?id=55a11fd49bb3e69a942d9d24596d207e_l-8210619-images-thumbs&n=13',
+  4: 'https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_66450e556da671658f09ad02_66450e5c5046aa1f39e7ea96/scale_1200',
+  5: 'https://yt3.googleusercontent.com/ytc/AIdro_lhetmJH0sONcEeq-3tKfjA9FbVUMV0dnXfsu39kbtA=s900-c-k-c0x00ffffff-no-rj',
+  6: 'https://avatars.mds.yandex.net/i?id=da42c7d09759fffbde3069b45f60f333_l-5294324-images-thumbs&n=13',
+  7: 'https://avatars.mds.yandex.net/i?id=26e89a1761bd142562a803f2c5a16df1_l-7755611-images-thumbs&n=13',
+  8: 'https://avatars.mds.yandex.net/i?id=3ab7ea5b1dd9e8a7248eceb651ba400f40c13331-10638416-images-thumbs&n=13',
+  9: 'https://avatars.mds.yandex.net/i?id=2320a15e3bd40eb0159584361efda0da9b9b4888-10247323-images-thumbs&n=13',
+  10: 'https://avatars.mds.yandex.net/i?id=9cb96d613407fad8be6a3d20cdf5567d_l-8182659-images-thumbs&n=13',
+  11: 'https://avatars.mds.yandex.net/i?id=7f73c1fb761cd385535fc3afdfe221a9_l-6438015-images-thumbs&n=13',
+  12: 'https://avatars.mds.yandex.net/i?id=c4c3bde66d680f7c4bbd8331a8d19c24_l-5130535-images-thumbs&n=13',
+  13: 'https://avatars.mds.yandex.net/get-mpic/1861069/2a00000193653297c6c63b41e4ede5dc9ebc/orig',
+  14: 'https://avatars.mds.yandex.net/i?id=2eafcf0c8f582887a6d7664f21a08773_l-4011233-images-thumbs&n=13',
+  15: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2344520/library_600x900.jpg',
+  16: 'https://avatars.mds.yandex.net/get-marketpic/1710031/pic95e407d7dd04e8356aecf5f27d12a06a/orig',
+  17: 'https://i.pinimg.com/originals/24/40/4d/24404d0281de48c41b737719e4bd9dd1.jpg',
+  18: 'https://avatars.mds.yandex.net/i?id=5dbea2e916ecddbfcce3899269b2295e_l-4408821-images-thumbs&n=13',
+  19: 'https://avatars.mds.yandex.net/i?id=34f249d93707f267e02c0d308d965eb6_l-8982254-images-thumbs&n=13',
+  20: 'https://avatars.mds.yandex.net/i?id=640c3da8953288166f1c1ac3cede3820_l-5235020-images-thumbs&n=13',
+  21: 'https://avatars.mds.yandex.net/get-mpic/5221004/2a00000191be2c424e29f846269dbcaf26d9/orig',
+  22: 'https://steamuserimages-a.akamaihd.net/ugc/2202884666998373284/A679B5647E5C76C6F5E0C13C4BA2E8CE8D6BE3F7/?imw=512&imh=288&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true',
+  23: 'https://avatars.mds.yandex.net/i?id=9ea4178d87f65bdeb259fa9bbab94293_l-5025854-images-thumbs&n=13',
+  24: 'https://avatars.mds.yandex.net/i?id=cf39d2f1d55f4dfd378d75ff3aeb9666_l-5353188-images-thumbs&n=13',
+  25: 'https://img.ixbt.site/live/images/original/31/75/24/2023/09/19/ca3b9a2aca.jpg',
+  26: 'https://digital-basket-01.wbbasket.ru/vol3/835/fc4e838b1ac598c556038b333714533c/1920.jpg',
+  27: 'https://avatars.mds.yandex.net/i?id=3e0ceafc84c292d605f7df18283da5cb_l-4079525-images-thumbs&n=13',
+  28: 'https://i.pinimg.com/originals/fe/a0/e1/fea0e15a3173f15dceb86f17dca5de75.jpg',
+  29: 'https://pic.rutubelist.ru/video/ea/d2/ead2104eac605eb85477aa21bc9d6be7.jpg',
+  30: 'https://foto.haberler.com/haber/2022/12/03/fifa-24-ne-zaman-cikacak-ea-sports-fc-ne-zaman-15469905_2473_amp.jpg',
+  31: 'https://drop-assets.ea.com/images/3xardbzcbQbVnFuvw6GBnh/40901023973a40c55dcae6def227089e/nhl24-std-key-art-16x9.jpg?im=AspectCrop=(16,9),xPosition=0.5,yPosition=0.5',
+  32: 'https://avatars.mds.yandex.net/get-mpic/12554399/2a0000018d024b401274b181aa2514a66f5c/orig',
+  33: 'https://avatars.mds.yandex.net/get-mpic/1525999/2a00000191be8d060e254e84823e837ff383/orig',
+  34: 'https://avatars.mds.yandex.net/get-mpic/7144437/2a00000191ce8f5ddc7a79550d12ce1113db/orig',
+  35: 'https://www.charlieintel.com/cdn-image/wp-content/uploads/2024/01/22/WWE-2K24-all-game-modes-explained.jpg?width=1200&quality=75&format=auto',
 };
 
 const IMAGES_DIR = path.join(process.cwd(), 'public', 'images');
