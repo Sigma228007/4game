@@ -22,10 +22,12 @@ const HARDCODED_PROMOS = {
 async function validatePromo(code, subtotal, userId) {
   const key = code.trim().toUpperCase();
 
-  // Check referral codes from DB
+  // Check referral codes from DB (search both referrer and referred code columns)
   if (key.startsWith('REF')) {
     const { rows } = await pool.query(
-      'SELECT * FROM referral_rewards WHERE promo_code = $1 AND claimed = false',
+      `SELECT * FROM referral_rewards
+       WHERE (promo_code = $1 AND claimed = false)
+          OR (referred_promo_code = $1 AND referred_claimed = false)`,
       [key]
     );
     if (rows.length === 0) return { valid: false, error: 'Промокод не найден или уже использован' };
@@ -104,8 +106,12 @@ async function fulfillOrder(pending) {
     // Mark promo as used (inside transaction so it's atomic with order creation)
     if (pending.promo_code) {
       if (pending.promo_code.startsWith('REF')) {
+        // Update whichever column holds this code
         await client.query(
-          'UPDATE referral_rewards SET claimed = true WHERE promo_code = $1',
+          `UPDATE referral_rewards SET
+            claimed         = CASE WHEN promo_code          = $1 THEN true ELSE claimed          END,
+            referred_claimed = CASE WHEN referred_promo_code = $1 THEN true ELSE referred_claimed END
+           WHERE promo_code = $1 OR referred_promo_code = $1`,
           [pending.promo_code]
         );
       } else {
@@ -137,10 +143,11 @@ async function fulfillOrder(pending) {
       if (!referrerId) return;
       const { rows: cnt } = await pool.query('SELECT COUNT(*)::int AS n FROM orders WHERE user_id = $1', [pending.user_id]);
       if (cnt[0].n === 1) {
-        const promoCode = 'REF' + crypto.randomBytes(4).toString('hex').toUpperCase();
+        const promoCodeReferrer = 'REF' + crypto.randomBytes(4).toString('hex').toUpperCase();
+        const promoCodeReferred = 'REF' + crypto.randomBytes(4).toString('hex').toUpperCase();
         await pool.query(
-          'INSERT INTO referral_rewards (referrer_id, referred_id, reward_percent, promo_code) VALUES ($1, $2, 10, $3) ON CONFLICT DO NOTHING',
-          [referrerId, pending.user_id, promoCode]
+          'INSERT INTO referral_rewards (referrer_id, referred_id, reward_percent, promo_code, referred_promo_code) VALUES ($1, $2, 10, $3, $4) ON CONFLICT DO NOTHING',
+          [referrerId, pending.user_id, promoCodeReferrer, promoCodeReferred]
         );
         checkAchievements(referrerId).catch(() => {});
       }

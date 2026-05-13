@@ -91,12 +91,14 @@ router.get('/referral', auth, async (req, res) => {
     );
     const referredByUsername = referredByResult.rows[0]?.username || null;
 
-    // REF-код, созданный после первой покупки текущего пользователя (бонус пригласившему, но виден и приглашённому)
+    // REF-код приглашённого (referred_promo_code), созданный после первой покупки
     const myRewardResult = await pool.query(
-      'SELECT * FROM referral_rewards WHERE referred_id = $1 ORDER BY created_at DESC LIMIT 1',
+      'SELECT referred_promo_code, referred_claimed, reward_percent FROM referral_rewards WHERE referred_id = $1 AND referred_promo_code IS NOT NULL ORDER BY created_at DESC LIMIT 1',
       [req.user.id]
     );
-    const myReward = myRewardResult.rows[0] || null;
+    const myReward = myRewardResult.rows[0]
+      ? { promo_code: myRewardResult.rows[0].referred_promo_code, claimed: myRewardResult.rows[0].referred_claimed, reward_percent: myRewardResult.rows[0].reward_percent }
+      : null;
 
     res.json({
       code,
