@@ -7,6 +7,7 @@ import { useToast } from '../components/Toast';
 import { usePrice } from '../hooks/usePrice';
 import { useI18n } from '../utils/i18n.jsx';
 import { api } from '../api';
+import { useCart } from '../context/CartContext';
 
 const POLL_INTERVAL = 2000;
 const POLL_TIMEOUT = 60000;
@@ -17,6 +18,7 @@ export default function Success() {
   const { format } = usePrice();
   const { t } = useI18n();
   const [copiedKey, setCopiedKey] = useState(null);
+  const { reload: reloadCart } = useCart();
 
   // Payment polling state
   const [orderData, setOrderData] = useState(null);   // { orderId, total, items, createdAt }
@@ -44,6 +46,7 @@ export default function Success() {
         if (status === 'succeeded' && order) {
           setOrderData(order);
           setPollStatus('succeeded');
+          reloadCart();
           return;
         }
         if (status === 'canceled') {

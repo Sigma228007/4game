@@ -69,10 +69,10 @@ async function fulfillOrder(pending) {
       if (email) {
         emailService.sendOrderReceipt({
           to: email, username,
-          order: { id: order.id, total: pending.amount, items: orderItems.map(i => ({ name: i.name, game_key: i.gameKey, price: i.price })) },
+          order: { id: order.id, total: Math.round(parseFloat(pending.amount)), items: orderItems.map(i => ({ name: i.name, game_key: i.gameKey, price: i.price })) },
         }).catch(err => console.error('Receipt email failed:', err.message));
       }
-    });
+    }).catch(err => console.error('Email user query failed:', err.message));
 
     checkAchievements(pending.user_id).catch(() => {});
 

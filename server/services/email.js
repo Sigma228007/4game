@@ -106,7 +106,7 @@ export async function sendOrderReceipt({ to, order, username }) {
     <div style="margin-top:32px;padding:16px;background:rgba(232,16,46,0.08);border-left:3px solid #E8102E;border-radius:4px;color:rgba(255,255,255,0.7);font-size:13px;line-height:1.6">
       <strong style="color:#fff">Как активировать:</strong> скопируй ключ → открой Steam / Epic / GOG → «Активировать продукт» → вставь ключ. Всё.
     </div>
-    <p style="margin-top:24px;color:rgba(255,255,255,0.5);font-size:13px">Посмотреть все заказы: <a href="${FRONTEND_URL}/orders" style="color:#E8102E">4game-blush.vercel.app/orders</a></p>`;
+    <p style="margin-top:24px;color:rgba(255,255,255,0.5);font-size:13px">Посмотреть все заказы: <a href="${FRONTEND_URL}/orders" style="color:#E8102E">${FRONTEND_URL}/orders</a></p>`;
 
   return send({
     to,
