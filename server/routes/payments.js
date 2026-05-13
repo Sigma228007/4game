@@ -127,12 +127,16 @@ async function fulfillOrder(pending) {
     // Email receipt (async, don't block)
     pool.query('SELECT email, username FROM users WHERE id = $1', [pending.user_id]).then(({ rows }) => {
       const { email, username } = rows[0] || {};
-      if (email) {
-        emailService.sendOrderReceipt({
-          to: email, username,
-          order: { id: order.id, total: Math.round(parseFloat(pending.amount)), items: orderItems.map(i => ({ name: i.name, game_key: i.gameKey, price: i.price })) },
-        }).catch(err => console.error('Receipt email failed:', err.message));
+      if (!email) {
+        console.warn(`⚠️ Receipt skipped: user ${pending.user_id} has no email set`);
+        return;
       }
+      console.log(`📧 Sending receipt to ${email} for order #${order.id}`);
+      emailService.sendOrderReceipt({
+        to: email, username,
+        order: { id: order.id, total: Math.round(parseFloat(pending.amount)), items: orderItems.map(i => ({ name: i.name, game_key: i.gameKey, price: i.price })) },
+      }).then(r => console.log(`📧 Receipt result:`, JSON.stringify(r)))
+        .catch(err => console.error('Receipt email failed:', err.message));
     }).catch(err => console.error('Email user query failed:', err.message));
 
     checkAchievements(pending.user_id).catch(() => {});

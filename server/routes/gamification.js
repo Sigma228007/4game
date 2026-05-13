@@ -91,14 +91,22 @@ router.get('/referral', auth, async (req, res) => {
     );
     const referredByUsername = referredByResult.rows[0]?.username || null;
 
-    // REF-код приглашённого (referred_promo_code), созданный после первой покупки
-    const myRewardResult = await pool.query(
-      'SELECT referred_promo_code, referred_claimed, reward_percent FROM referral_rewards WHERE referred_id = $1 AND referred_promo_code IS NOT NULL ORDER BY created_at DESC LIMIT 1',
+    // REF-код приглашённого — если строка есть но код не сгенерирован (старые заказы), создаём сейчас
+    const myRewardRow = await pool.query(
+      'SELECT id, referred_promo_code, referred_claimed, reward_percent FROM referral_rewards WHERE referred_id = $1 ORDER BY created_at DESC LIMIT 1',
       [req.user.id]
     );
-    const myReward = myRewardResult.rows[0]
-      ? { promo_code: myRewardResult.rows[0].referred_promo_code, claimed: myRewardResult.rows[0].referred_claimed, reward_percent: myRewardResult.rows[0].reward_percent }
-      : null;
+    let myReward = null;
+    if (myRewardRow.rows.length > 0) {
+      const row = myRewardRow.rows[0];
+      if (!row.referred_promo_code) {
+        const newCode = 'REF' + crypto.randomBytes(4).toString('hex').toUpperCase();
+        await pool.query('UPDATE referral_rewards SET referred_promo_code = $1 WHERE id = $2', [newCode, row.id]);
+        row.referred_promo_code = newCode;
+        row.referred_claimed = false;
+      }
+      myReward = { promo_code: row.referred_promo_code, claimed: row.referred_claimed, reward_percent: row.reward_percent };
+    }
 
     res.json({
       code,
