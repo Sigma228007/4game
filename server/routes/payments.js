@@ -41,7 +41,7 @@ async function fulfillOrder(pending) {
 
     const orderResult = await client.query(
       'INSERT INTO orders (user_id, total) VALUES ($1, $2) RETURNING id, created_at',
-      [pending.user_id, pending.amount]
+      [pending.user_id, Math.round(parseFloat(pending.amount))]
     );
     const order = orderResult.rows[0];
 
@@ -50,7 +50,7 @@ async function fulfillOrder(pending) {
       const gameKey = generateKey();
       await client.query(
         'INSERT INTO order_items (order_id, game_id, price, game_key) VALUES ($1, $2, $3, $4)',
-        [order.id, item.id, item.price, gameKey]
+        [order.id, item.id, Math.round(parseFloat(item.price)), gameKey]
       );
       orderItems.push({ gameId: item.id, name: item.name, price: item.price, image: item.image, gameKey });
     }
