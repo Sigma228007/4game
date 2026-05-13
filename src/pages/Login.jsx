@@ -124,6 +124,7 @@ export default function Login() {
                 <label className="label">{t('login.username')}</label>
                 <input
                   type="text"
+                  name="username"
                   value={username}
                   onChange={e => setUsername(e.target.value)}
                   placeholder={t('login.usernamePlaceholder')}
@@ -169,6 +170,7 @@ export default function Login() {
                 <div className="relative">
                   <input
                     type={showPass ? 'text' : 'password'}
+                    name="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder={mode === 'register' ? t('login.passwordPlaceholderNew') : t('login.passwordPlaceholder')}
