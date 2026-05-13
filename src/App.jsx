@@ -57,7 +57,7 @@ export default function App() {
                 <div className="grain min-h-screen flex flex-col">
                   <ScrollToTop />
                   <Header />
-                  <main className="flex-1 pt-[72px]">
+                  <main className="flex-1" style={{ paddingTop: 'calc(72px + env(safe-area-inset-top))' }}>
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/catalog" element={<Catalog />} />
