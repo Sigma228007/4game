@@ -283,7 +283,7 @@ export default function Profile() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-display text-[12px] font-bold truncate" style={{ color: 'var(--text-secondary)' }}>
-                            {t('profile.orderLabel')} #{o.id} · {o.items?.length} {t('profile.gamesLabel')}
+                            {t('profile.orderLabel')} #{o.displayNumber ?? o.id} · {o.items?.length} {t('profile.gamesLabel')}
                           </p>
                           <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>
                             {new Date(o.created_at).toLocaleDateString('ru-RU')}

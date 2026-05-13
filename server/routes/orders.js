@@ -101,25 +101,30 @@ router.post('/checkout', auth, async (req, res) => {
   } finally { client.release(); }
 });
 
-// GET /api/orders — история заказов с ключами
+// GET /api/orders — история заказов с ключами + последовательный displayNumber
 router.get('/', auth, async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT o.id, o.total, o.status, o.created_at,
+      `WITH numbered AS (
+         SELECT id, ROW_NUMBER() OVER (ORDER BY created_at ASC) AS display_number
+         FROM orders WHERE user_id = $1
+       )
+       SELECT o.id, o.total, o.status, o.created_at, n.display_number AS "displayNumber",
               json_agg(json_build_object(
                 'gameId', oi.game_id, 'price', oi.price, 'gameKey', oi.game_key,
                 'name', g.name, 'image', g.image
               ) ORDER BY oi.id) as items
        FROM orders o
+       JOIN numbered n ON n.id = o.id
        JOIN order_items oi ON oi.order_id = o.id
        LEFT JOIN games g ON oi.game_id = g.id
        WHERE o.user_id = $1
-       GROUP BY o.id
+       GROUP BY o.id, n.display_number
        ORDER BY o.created_at DESC`,
       [req.user.id]
     );
     res.json(result.rows);
-  } catch (err) { res.status(500).json({ error: 'Ошибка сервера' }); }
+  } catch (err) { console.error('orders list error:', err); res.status(500).json({ error: 'Ошибка сервера' }); }
 });
 
 // GET /api/orders/:id — один заказ с ключами
@@ -127,6 +132,7 @@ router.get('/:id', auth, async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT o.id, o.total, o.status, o.created_at,
+              (SELECT COUNT(*)::int FROM orders WHERE user_id = $2 AND created_at <= o.created_at) AS "displayNumber",
               json_agg(json_build_object(
                 'gameId', oi.game_id, 'price', oi.price, 'gameKey', oi.game_key,
                 'name', g.name, 'image', g.image

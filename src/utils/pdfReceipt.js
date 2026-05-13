@@ -61,7 +61,7 @@ export async function generateReceipt(order) {
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100, 100, 100);
-  doc.text(tr(`Zakaz #${order.id}`), margin, y);
+  doc.text(tr(`Zakaz #${order.displayNumber ?? order.id}`), margin, y);
   doc.text(
     tr(new Date(order.created_at).toLocaleString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })),
     W - margin, y, { align: 'right' }
@@ -124,5 +124,5 @@ export async function generateReceipt(order) {
   y += 4;
   doc.text(tr('4Game Digital Store · g. Vladivostok, Rossiya'), margin, y);
 
-  doc.save(`4game-order-${order.id}.pdf`);
+  doc.save(`4game-order-${order.displayNumber ?? order.id}.pdf`);
 }

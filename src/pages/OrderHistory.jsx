@@ -58,7 +58,7 @@ export default function OrderHistory() {
                   </div>
                   <div>
                     <p className="font-display text-[13px] font-bold" style={{ color: 'var(--text)' }}>
-                      {t('order.number')} #{order.id}
+                      {t('order.number')} #{order.displayNumber ?? order.id}
                     </p>
                     <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>
                       {new Date(order.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}

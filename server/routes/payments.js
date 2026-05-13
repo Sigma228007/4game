@@ -125,16 +125,19 @@ async function fulfillOrder(pending) {
     await client.query('COMMIT');
 
     // Email receipt (async, don't block)
-    pool.query('SELECT email, username FROM users WHERE id = $1', [pending.user_id]).then(({ rows }) => {
+    pool.query('SELECT email, username FROM users WHERE id = $1', [pending.user_id]).then(async ({ rows }) => {
       const { email, username } = rows[0] || {};
       if (!email) {
         console.warn(`⚠️ Receipt skipped: user ${pending.user_id} has no email set`);
         return;
       }
-      console.log(`📧 Sending receipt to ${email} for order #${order.id}`);
+      // Sequential display number per user (count of all their orders)
+      const { rows: cnt } = await pool.query('SELECT COUNT(*)::int AS n FROM orders WHERE user_id = $1', [pending.user_id]);
+      const displayNumber = cnt[0].n;
+      console.log(`📧 Sending receipt to ${email} for order #${displayNumber}`);
       emailService.sendOrderReceipt({
         to: email, username,
-        order: { id: order.id, total: Math.round(parseFloat(pending.amount)), items: orderItems.map(i => ({ name: i.name, game_key: i.gameKey, price: i.price })) },
+        order: { id: displayNumber, total: Math.round(parseFloat(pending.amount)), items: orderItems.map(i => ({ name: i.name, game_key: i.gameKey, price: i.price })) },
       }).then(r => console.log(`📧 Receipt result:`, JSON.stringify(r)))
         .catch(err => console.error('Receipt email failed:', err.message));
     }).catch(err => console.error('Email user query failed:', err.message));
@@ -289,9 +292,10 @@ router.get('/status/:paymentId', auth, async (req, res) => {
       return res.json({ status: pending.status, order: null });
     }
 
-    // Return order with keys
+    // Return order with keys + sequential displayNumber per user
     const orderResult = await pool.query(
       `SELECT o.id, o.total, o.created_at,
+              (SELECT COUNT(*)::int FROM orders WHERE user_id = o.user_id AND created_at <= o.created_at) AS display_number,
               json_agg(json_build_object(
                 'gameId', oi.game_id, 'price', oi.price, 'gameKey', oi.game_key,
                 'name', g.name, 'image', g.image
@@ -308,7 +312,7 @@ router.get('/status/:paymentId', auth, async (req, res) => {
     res.json({
       status: 'succeeded',
       order: {
-        orderId: order.id,
+        orderId: order.display_number,
         total: parseFloat(order.total),
         items: order.items,
         createdAt: order.created_at,
