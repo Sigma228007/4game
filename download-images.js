@@ -1,11 +1,8 @@
 /**
  * Скрипт для скачивания всех картинок игр в папку public/images/
- * 
- * Как запустить:
- * 1. Открой терминал в папке 4game
- * 2. Выполни: node download-images.js
- * 3. Подожди пока скачается (35 картинок)
- * 4. Готово — картинки в public/images/, пути в games.js обновлены
+ * Скачивает: обложки (game-N.jpg) + скриншоты (game-N-shot-1.jpg, ...)
+ *
+ * Запуск: node download-images.js
  */
 
 import fs from 'fs';
@@ -13,8 +10,8 @@ import path from 'path';
 import https from 'https';
 import http from 'http';
 
-// Все картинки из games.js (id → url)
-const IMAGES = {
+// Обложки (id → url)
+const COVERS = {
   1: 'https://avatars.mds.yandex.net/get-altay/4043748/2a000001756a46f78c00b7fdb979fdb8bbf2/L_height',
   2: 'https://avatars.mds.yandex.net/i?id=8bb2caaa69e877c1d194ef4ee46ad9ae_l-3788222-images-thumbs&n=13',
   3: 'https://avatars.mds.yandex.net/i?id=55a11fd49bb3e69a942d9d24596d207e_l-8210619-images-thumbs&n=13',
@@ -53,99 +50,98 @@ const IMAGES = {
 };
 
 const IMAGES_DIR = path.join(process.cwd(), 'public', 'images');
+const SHOTS_DIR  = path.join(IMAGES_DIR, 'screenshots');
 
-// Создаём папку
-if (!fs.existsSync(IMAGES_DIR)) {
-  fs.mkdirSync(IMAGES_DIR, { recursive: true });
-}
+[IMAGES_DIR, SHOTS_DIR].forEach(d => { if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }); });
 
 function download(url, filepath) {
   return new Promise((resolve, reject) => {
-    const protocol = url.startsWith('https') ? https : http;
-    
-    const request = (currentUrl) => {
-      protocol.get(currentUrl, { 
-        headers: { 'User-Agent': 'Mozilla/5.0' }
-      }, (res) => {
-        // Обработка редиректов
+    const attempt = (currentUrl, redirects = 0) => {
+      if (redirects > 5) return reject(new Error('Too many redirects'));
+      const proto = currentUrl.startsWith('https') ? https : http;
+      proto.get(currentUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          request(res.headers.location);
-          return;
+          return attempt(res.headers.location, redirects + 1);
         }
-        
-        if (res.statusCode !== 200) {
-          reject(new Error(`HTTP ${res.statusCode} for ${url}`));
-          return;
-        }
-
+        if (res.statusCode !== 200) return reject(new Error(`HTTP ${res.statusCode}`));
         const file = fs.createWriteStream(filepath);
         res.pipe(file);
         file.on('finish', () => { file.close(); resolve(); });
         file.on('error', reject);
       }).on('error', reject);
     };
-
-    request(url);
+    attempt(url);
   });
 }
 
+async function downloadOne(url, filepath, label) {
+  if (fs.existsSync(filepath)) {
+    console.log(`  ✅ ${label} — уже есть`);
+    return true;
+  }
+  try {
+    process.stdout.write(`  ⏳ ${label}...`);
+    await download(url, filepath);
+    const size = (fs.statSync(filepath).size / 1024).toFixed(0);
+    console.log(` ✅ (${size} KB)`);
+    return true;
+  } catch (err) {
+    console.log(` ❌ ${err.message}`);
+    return false;
+  }
+}
+
 async function main() {
-  const ids = Object.keys(IMAGES);
-  console.log(`\n🎮 Скачиваю ${ids.length} картинок...\n`);
-
-  let success = 0;
-  let failed = 0;
-
-  for (const id of ids) {
-    const url = IMAGES[id];
-    const filename = `game-${id}.jpg`;
-    const filepath = path.join(IMAGES_DIR, filename);
-
-    // Пропускаем если уже скачано
-    if (fs.existsSync(filepath)) {
-      console.log(`  ✅ ${filename} — уже есть`);
-      success++;
-      continue;
-    }
-
-    try {
-      process.stdout.write(`  ⏳ ${filename}...`);
-      await download(url, filepath);
-      const size = (fs.statSync(filepath).size / 1024).toFixed(0);
-      console.log(` ✅ (${size} KB)`);
-      success++;
-    } catch (err) {
-      console.log(` ❌ ${err.message}`);
-      failed++;
-    }
-
-    // Небольшая пауза между запросами
-    await new Promise(r => setTimeout(r, 200));
+  // ── 1. Обложки ──────────────────────────────────────────
+  console.log(`\n🎮 Обложки (${Object.keys(COVERS).length} шт.)...\n`);
+  let ok = 0, fail = 0;
+  for (const [id, url] of Object.entries(COVERS)) {
+    const fp = path.join(IMAGES_DIR, `game-${id}.jpg`);
+    (await downloadOne(url, fp, `game-${id}.jpg`)) ? ok++ : fail++;
+    await new Promise(r => setTimeout(r, 150));
   }
+  console.log(`\n  Обложки: ${ok} ок, ${fail} ошибок\n`);
 
-  console.log(`\n📊 Результат: ${success} скачано, ${failed} ошибок`);
-
-  if (failed > 0) {
-    console.log('⚠️  Для неудачных картинок можно скачать вручную и положить в public/images/game-{id}.jpg');
-  }
-
-  // Обновляем games.js
-  console.log('\n📝 Обновляю пути в src/data/games.js...');
-  
+  // ── 2. Скриншоты из games.js ────────────────────────────
   const gamesPath = path.join(process.cwd(), 'src', 'data', 'games.js');
   let gamesContent = fs.readFileSync(gamesPath, 'utf-8');
-  
-  for (const id of ids) {
-    const url = IMAGES[id];
-    const localPath = `/images/game-${id}.jpg`;
-    // Экранируем спецсимволы для regex
-    const escaped = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    gamesContent = gamesContent.replace(new RegExp(escaped, 'g'), localPath);
+
+  // Вытаскиваем все внешние URL из массивов screenshots
+  const urlRegex = /screenshots:\s*\[([\s\S]*?)\]/g;
+  const allShots = []; // { gameId, shotIdx, url }
+
+  // Парсим id + screenshots блоки
+  const gameBlocks = [...gamesContent.matchAll(/id:\s*(\d+),[\s\S]*?screenshots:\s*\[([\s\S]*?)\]/g)];
+  for (const match of gameBlocks) {
+    const gameId = match[1];
+    const block = match[2];
+    const urls = [...block.matchAll(/'([^']+)'/g)].map(m => m[1]).filter(u => u.startsWith('http'));
+    urls.forEach((url, i) => allShots.push({ gameId, shotIdx: i + 1, url }));
   }
 
+  console.log(`🖼️  Скриншоты (${allShots.length} шт.)...\n`);
+  ok = 0; fail = 0;
+  const urlToLocal = {};
+
+  for (const { gameId, shotIdx, url } of allShots) {
+    const filename = `game-${gameId}-shot-${shotIdx}.jpg`;
+    const fp = path.join(SHOTS_DIR, filename);
+    const localPath = `/images/screenshots/${filename}`;
+    urlToLocal[url] = localPath;
+    (await downloadOne(url, fp, filename)) ? ok++ : fail++;
+    await new Promise(r => setTimeout(r, 150));
+  }
+  console.log(`\n  Скриншоты: ${ok} ок, ${fail} ошибок\n`);
+
+  // ── 3. Обновляем games.js ───────────────────────────────
+  console.log('📝 Обновляю пути в games.js...');
+  for (const [url, local] of Object.entries(urlToLocal)) {
+    const escaped = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    gamesContent = gamesContent.replace(new RegExp(escaped, 'g'), local);
+  }
   fs.writeFileSync(gamesPath, gamesContent, 'utf-8');
-  console.log('✅ games.js обновлён — все пути теперь локальные!\n');
-  console.log('🚀 Перезапусти npm run dev и проверь результат.\n');
+  console.log('✅ games.js обновлён — все скриншоты локальные!\n');
+  console.log('🚀 Запусти: git add -A && git commit -m "chore: download screenshots locally" && git push\n');
 }
 
 main().catch(console.error);
