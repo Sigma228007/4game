@@ -22,7 +22,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5173', /\.vercel\.app$/, /\.onrender\.com$/],
+  origin: ['http://localhost:3000', 'http://localhost:5173', /\.vercel\.app$/, /\.onrender\.com$/, 'https://4game.store', 'https://www.4game.store'],
   credentials: true,
 }));
 app.use(express.json());
