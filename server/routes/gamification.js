@@ -84,11 +84,27 @@ router.get('/referral', auth, async (req, res) => {
       [req.user.id]
     );
 
+    // Кто пригласил текущего пользователя
+    const referredByResult = await pool.query(
+      'SELECT u.username FROM users me LEFT JOIN users u ON u.id = me.referred_by WHERE me.id = $1',
+      [req.user.id]
+    );
+    const referredByUsername = referredByResult.rows[0]?.username || null;
+
+    // REF-код, созданный после первой покупки текущего пользователя (бонус пригласившему, но виден и приглашённому)
+    const myRewardResult = await pool.query(
+      'SELECT * FROM referral_rewards WHERE referred_id = $1 ORDER BY created_at DESC LIMIT 1',
+      [req.user.id]
+    );
+    const myReward = myRewardResult.rows[0] || null;
+
     res.json({
       code,
       link: `${process.env.FRONTEND_URL || 'https://4game-blush.vercel.app'}/?ref=${code}`,
       referredUsers: referred.rows,
       rewards: rewards.rows,
+      referredByUsername,
+      myReward,
     });
   } catch (err) { console.error('referral error:', err); res.status(500).json({ error: 'Ошибка сервера' }); }
 });

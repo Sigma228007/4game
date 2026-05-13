@@ -13,7 +13,7 @@ export default function Login() {
   const [searchParams] = useSearchParams();
   const { t } = useI18n();
 
-  const [refCode] = useState(() => {
+  const [refCode, setRefCode] = useState(() => {
     const urlRef = searchParams.get('ref');
     if (urlRef) { try { sessionStorage.setItem('pendingRefCode', urlRef); } catch {} return urlRef; }
     try { return sessionStorage.getItem('pendingRefCode') || ''; } catch { return ''; }
@@ -144,6 +144,23 @@ export default function Login() {
                     placeholder="your@email.com"
                     autoComplete="email"
                     className="input"
+                  />
+                </div>
+              )}
+              {mode === 'register' && (
+                <div className="space-y-2">
+                  <label className="label">
+                    Реферальный код{' '}
+                    <span style={{ color: 'var(--text-faint)' }}>(необязательно)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={refCode}
+                    onChange={e => setRefCode(e.target.value.toUpperCase())}
+                    placeholder="ABCD1234"
+                    maxLength={8}
+                    spellCheck={false}
+                    className="input font-mono tracking-widest"
                   />
                 </div>
               )}

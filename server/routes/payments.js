@@ -30,8 +30,6 @@ async function validatePromo(code, subtotal, userId) {
     );
     if (rows.length === 0) return { valid: false, error: 'Промокод не найден или уже использован' };
     const rr = rows[0];
-    // Can't use your own referral code
-    if (rr.referrer_id === userId) return { valid: false, error: 'Нельзя использовать свой реферальный код' };
     const discount = Math.min(Math.floor(subtotal * rr.reward_percent / 100), 2500);
     return { valid: true, discount, label: `Реферальный бонус −${rr.reward_percent}%`, code: key, type: 'referral' };
   }

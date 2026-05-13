@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Users, Copy, Check, Gift, Share2, UserPlus, Ticket } from 'lucide-react';
+import { Users, Copy, Check, Gift, Share2, UserPlus, Ticket, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { api } from '../api';
 import { useToast } from '../components/Toast';
@@ -139,8 +139,55 @@ export default function Referral() {
             </div>
           </Reveal>
 
+          {/* Блок "ты приглашён пользователем X" */}
+          {data.referredByUsername && (
+            <Reveal delay={0.06}>
+              <div className="glass-static p-5 md:p-6 mb-6 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+                  <Heart size={16} className="text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-display text-[13px] font-bold mb-0.5" style={{ color: 'var(--text)' }}>
+                    Ты был приглашён пользователем{' '}
+                    <span className="text-primary">@{data.referredByUsername}</span>
+                  </p>
+                  {data.myReward ? (
+                    <>
+                      <p className="font-body text-[12px] mb-3" style={{ color: 'var(--text-faint)' }}>
+                        После твоей первой покупки был создан бонусный промокод — ты тоже можешь им воспользоваться в корзине
+                      </p>
+                      <div className="flex items-center gap-3">
+                        <code className="font-mono text-[15px] font-bold text-accent bg-accent/10 px-4 py-2 rounded-xl tracking-wider">
+                          {data.myReward.promo_code}
+                        </code>
+                        <span className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>
+                          −{data.myReward.reward_percent}%
+                        </span>
+                        {!data.myReward.claimed && (
+                          <button
+                            onClick={() => copy(data.myReward.promo_code, 'myreward')}
+                            className="btn-ghost text-[11px]"
+                          >
+                            {copiedField === 'myreward' ? <><Check size={12} /> OK</> : <><Copy size={12} /> Копировать</>}
+                          </button>
+                        )}
+                        {data.myReward.claimed && (
+                          <span className="badge bg-white/5 text-[10px]" style={{ color: 'var(--text-faint)' }}>Использован</span>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="font-body text-[12px]" style={{ color: 'var(--text-faint)' }}>
+                      Сделай первую покупку — и для тебя появится промокод на скидку
+                    </p>
+                  )}
+                </div>
+              </div>
+            </Reveal>
+          )}
+
           {/* Apply friend's referral code */}
-          {!applyDone && (
+          {!applyDone && !data.referredByUsername && (
             <Reveal delay={0.08}>
               <div className="glass-static p-6 md:p-7 mb-6">
                 <div className="flex items-center gap-2 mb-1">
