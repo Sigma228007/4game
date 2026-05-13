@@ -87,7 +87,7 @@ export default function Favorites() {
                             <Trash2 size={14} />
                           </button>
                           <button
-                            onClick={() => { if (inCart) return navigate('/cart'); addToCart(game.id); toast('Добавлено в корзину', 'cart'); }}
+                            onClick={() => { if (inCart) return navigate('/cart'); addToCart(game.id); removeFromFavorites(game.id); toast('Добавлено в корзину', 'cart'); }}
                             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[12px] font-display font-semibold uppercase tracking-wider transition-all ${inCart ? 'bg-accent/15 text-accent border border-accent/20' : 'bg-primary text-white hover:shadow-glow-sm'}`}
                           >
                             {inCart ? <Check size={13} /> : <ShoppingCart size={13} />}

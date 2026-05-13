@@ -13,7 +13,7 @@ import { useI18n } from '../utils/i18n.jsx';
 export default function GameCard({ game }) {
   const { isAuth } = useAuth();
   const { addToCart, isInCart } = useCart();
-  const { toggleFavorite, isFavorite } = useFavorites();
+  const { toggleFavorite, isFavorite, removeFromFavorites } = useFavorites();
   const navigate = useNavigate();
   const toast = useToast();
   const flyTo = useFlyTo();
@@ -47,6 +47,7 @@ export default function GameCard({ game }) {
     if (!isAuth) return navigate('/login');
     if (inCart) return navigate('/cart');
     addToCart(game.id);
+    if (fav) removeFromFavorites(game.id);
     // Летим в корзину
     if (imgRef.current) {
       flyTo({

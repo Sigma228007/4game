@@ -27,7 +27,7 @@ export default function GameDetail() {
   const navigate = useNavigate();
   const { isAuth } = useAuth();
   const { addToCart, isInCart } = useCart();
-  const { toggleFavorite, isFavorite } = useFavorites();
+  const { toggleFavorite, isFavorite, removeFromFavorites } = useFavorites();
   const toast = useToast();
   const flyTo = useFlyTo();
   const heroImgRef = useRef(null);
@@ -90,6 +90,7 @@ export default function GameDetail() {
     if (!isAuth) return navigate('/login');
     if (inCart) return navigate('/cart');
     addToCart(game.id);
+    if (fav) removeFromFavorites(game.id);
     if (heroImgRef.current) {
       flyTo({ image: game.image, from: heroImgRef.current.getBoundingClientRect(), target: 'cart' });
     }
