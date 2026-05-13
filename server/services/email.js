@@ -110,11 +110,11 @@ function wrap(title, content) {
 export async function sendOrderReceipt({ to, order, username }) {
   const itemsHtml = (order.items || []).map(i => `
     <tr>
-      <td style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+      <td style="padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
         <div style="color:#fff;font-weight:bold;font-size:14px">${escapeHtml(i.name)}</div>
-        <code style="display:inline-block;margin-top:6px;padding:6px 10px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:6px;color:#10B981;font-size:12px;font-family:monospace">${escapeHtml(i.game_key || i.gameKey || '—')}</code>
+        <code style="display:inline-block;margin-top:8px;padding:8px 12px;background:#10B981;border-radius:6px;color:#fff;font-size:13px;font-weight:bold;letter-spacing:1px;font-family:'SF Mono',Menlo,Monaco,Consolas,monospace">${escapeHtml(i.game_key || i.gameKey || '—')}</code>
       </td>
-      <td align="right" style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);color:#10B981;font-weight:bold">
+      <td align="right" style="padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.05);color:#FBBF24;font-weight:bold;font-size:15px;white-space:nowrap">
         ${(i.price || 0).toLocaleString('ru-RU')}&nbsp;₽
       </td>
     </tr>`).join('');
@@ -125,7 +125,7 @@ export async function sendOrderReceipt({ to, order, username }) {
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;padding-top:20px;border-top:2px solid rgba(255,255,255,0.08)">
       <tr>
         <td style="color:#fff;font-size:16px;font-weight:bold">Итого</td>
-        <td align="right" style="color:#10B981;font-size:22px;font-weight:900">${(order.total || 0).toLocaleString('ru-RU')}&nbsp;₽</td>
+        <td align="right" style="color:#FBBF24;font-size:24px;font-weight:900">${(order.total || 0).toLocaleString('ru-RU')}&nbsp;₽</td>
       </tr>
     </table>
     <div style="margin-top:32px;padding:16px;background:rgba(232,16,46,0.08);border-left:3px solid #E8102E;border-radius:4px;color:rgba(255,255,255,0.7);font-size:13px;line-height:1.6">
