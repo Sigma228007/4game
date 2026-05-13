@@ -18,14 +18,8 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Читаем персонализацию аватара из localStorage (обновляется из Profile)
-  const [avatarIcon, setAvatarIcon] = useState(() => {
-    const v = typeof localStorage !== 'undefined' ? localStorage.getItem('avatarIcon') : null;
-    return v && v !== 'null' ? v : null;
-  });
-  const [avatarColorIdx, setAvatarColorIdx] = useState(() => {
-    return typeof localStorage !== 'undefined' ? parseInt(localStorage.getItem('avatarColor') || '0') : 0;
-  });
+  const [avatarIcon, setAvatarIcon] = useState(null);
+  const [avatarColorIdx, setAvatarColorIdx] = useState(0);
   const AVATAR_PALETTE = [
     ['#E8102E','#B50D24'], ['#9333EA','#6B21A8'], ['#10B981','#047857'],
     ['#F59E0B','#D97706'], ['#3B82F6','#1D4ED8'], ['#EC4899','#BE185D'],
@@ -33,21 +27,22 @@ export default function Header() {
   ];
   const avatarGrad = AVATAR_PALETTE[avatarColorIdx] || AVATAR_PALETTE[0];
 
-  // Слушаем изменения (когда меняешь аватар в /profile на той же вкладке)
+  // Загружаем аватар из localStorage с ключом по user.id
   useEffect(() => {
-    const handler = () => {
-      const v = localStorage.getItem('avatarIcon');
+    const uid = user?.id;
+    const load = () => {
+      const v = localStorage.getItem(`avatarIcon_${uid}`);
       setAvatarIcon(v && v !== 'null' ? v : null);
-      setAvatarColorIdx(parseInt(localStorage.getItem('avatarColor') || '0'));
+      setAvatarColorIdx(parseInt(localStorage.getItem(`avatarColor_${uid}`) || '0'));
     };
-    window.addEventListener('storage', handler);
-    window.addEventListener('avatar-change', handler);
-    handler();
+    load();
+    window.addEventListener('storage', load);
+    window.addEventListener('avatar-change', load);
     return () => {
-      window.removeEventListener('storage', handler);
-      window.removeEventListener('avatar-change', handler);
+      window.removeEventListener('storage', load);
+      window.removeEventListener('avatar-change', load);
     };
-  }, [location.pathname]);
+  }, [user?.id, location.pathname]);
 
   // Пульс fly-target при прилёте
   useEffect(() => {

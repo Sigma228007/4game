@@ -69,9 +69,10 @@ export default function Profile() {
   const [emailInput, setEmailInput] = useState('');
   const [emailSaving, setEmailSaving] = useState(false);
 
-  const [avatarIdx, setAvatarIdx] = useState(() => parseInt(localStorage.getItem('avatarColor') || '0'));
+  const uid = user?.id;
+  const [avatarIdx, setAvatarIdx] = useState(() => parseInt(localStorage.getItem(`avatarColor_${user?.id}`) || '0'));
   const [avatarIcon, setAvatarIcon] = useState(() => {
-    const v = localStorage.getItem('avatarIcon');
+    const v = localStorage.getItem(`avatarIcon_${user?.id}`);
     return v && v !== 'null' ? v : null;
   });
   const avatarGrad = AVATAR_COLORS[avatarIdx] || AVATAR_COLORS[0];
@@ -103,7 +104,7 @@ export default function Profile() {
 
   function pickAvatarColor(idx) {
     setAvatarIdx(idx);
-    localStorage.setItem('avatarColor', String(idx));
+    localStorage.setItem(`avatarColor_${uid}`, String(idx));
     window.dispatchEvent(new Event('avatar-change'));
     api.updateAvatar(idx).catch(() => {});
     toast('Цвет аватара обновлён', 'success');
@@ -111,7 +112,7 @@ export default function Profile() {
 
   function pickAvatarIcon(icon) {
     setAvatarIcon(icon);
-    localStorage.setItem('avatarIcon', icon === null ? 'null' : icon);
+    localStorage.setItem(`avatarIcon_${uid}`, icon === null ? 'null' : icon);
     window.dispatchEvent(new Event('avatar-change'));
     toast('Иконка аватара обновлена', 'success');
   }
