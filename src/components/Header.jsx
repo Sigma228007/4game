@@ -90,7 +90,7 @@ export default function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 transition-all duration-500 backdrop-blur-2xl"
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 backdrop-blur-2xl"
       style={{
         backgroundColor: scrolled
           ? (isDark ? 'rgba(7,7,14,0.92)' : 'rgba(240,240,245,0.92)')

@@ -57,7 +57,7 @@ export default function App() {
                 <div className="grain min-h-screen flex flex-col">
                   <ScrollToTop />
                   <Header />
-                  <main className="flex-1">
+                  <main className="flex-1 pt-[72px]">
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/catalog" element={<Catalog />} />
