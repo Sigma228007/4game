@@ -92,7 +92,6 @@ export default function Header() {
     <header
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
-        paddingTop: 'env(safe-area-inset-top)',
         backgroundColor: isDark ? '#07070E' : '#F0F0F5',
         borderBottom: scrolled ? '1px solid var(--surface-border)' : '1px solid transparent',
         boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.15)' : 'none',
