@@ -101,6 +101,11 @@ export default function Header() {
         willChange: 'transform',
       }}
     >
+      {/* Непрозрачный слой строго под статус-баром, чтобы страница не просвечивала */}
+      <div
+        className="absolute inset-x-0 top-0 pointer-events-none"
+        style={{ height: 'env(safe-area-inset-top)', background: isDark ? '#07070E' : '#F0F0F5' }}
+      />
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[72px]">
           {/* Logo */}

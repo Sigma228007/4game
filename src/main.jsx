@@ -9,13 +9,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>
 );
 
-// Service Worker отключён временно для сброса кэша на устройствах.
-// Регистрируем sw.js один раз чтобы он сам себя удалил, потом перестаём.
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then((regs) => {
-    regs.forEach((reg) => reg.unregister());
+// Регистрация Service Worker для PWA (в production)
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then(() => console.log('4Game: Service Worker registered'))
+      .catch((err) => console.warn('4Game: SW registration failed', err));
   });
-  if ('caches' in window) {
-    caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
-  }
 }

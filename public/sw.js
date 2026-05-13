@@ -1,23 +1,67 @@
-// Service Worker — режим самоуничтожения.
-// Удаляет все кэши, отписывает себя, перезагружает клиентов.
-// После этого браузер работает напрямую с сервером.
+// Service Worker для 4Game PWA.
 
-self.addEventListener('install', () => {
+const CACHE_VERSION = 'v2.0.0';
+const CACHE_NAME = `4game-${CACHE_VERSION}`;
+const IMAGE_CACHE = `4game-images-${CACHE_VERSION}`;
+
+const PRECACHE_URLS = ['/', '/manifest.json', '/favicon.png'];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS).catch(() => {}))
+  );
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    (async () => {
-      const keys = await caches.keys();
-      await Promise.all(keys.map((k) => caches.delete(k)));
-      await self.registration.unregister();
-      const clients = await self.clients.matchAll({ type: 'window' });
-      clients.forEach((client) => client.navigate(client.url));
-    })()
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys.filter((k) => k !== CACHE_NAME && k !== IMAGE_CACHE).map((k) => caches.delete(k))
+      )
+    ).then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', (event) => {
-  event.respondWith(fetch(event.request));
+  const { request } = event;
+  if (request.method !== 'GET') return;
+  const url = new URL(request.url);
+  if (url.pathname.startsWith('/api/') || url.hostname.includes('onrender.com')) return;
+
+  if (request.destination === 'image' || url.pathname.match(/\.(png|jpg|jpeg|svg|gif|webp|ico)$/i)) {
+    event.respondWith(staleWhileRevalidate(request, IMAGE_CACHE));
+    return;
+  }
+
+  if (request.mode === 'navigate' || request.destination === 'document') {
+    event.respondWith(networkFirst(request, CACHE_NAME));
+    return;
+  }
+
+  event.respondWith(staleWhileRevalidate(request, CACHE_NAME));
 });
+
+async function networkFirst(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  try {
+    const response = await fetch(request);
+    if (response && response.ok) cache.put(request, response.clone());
+    return response;
+  } catch {
+    const cached = await cache.match(request);
+    return cached || cache.match('/');
+  }
+}
+
+async function staleWhileRevalidate(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  const cached = await cache.match(request);
+  const fetchPromise = fetch(request)
+    .then((response) => {
+      if (response && response.ok) cache.put(request, response.clone());
+      return response;
+    })
+    .catch(() => cached);
+  return cached || fetchPromise;
+}
