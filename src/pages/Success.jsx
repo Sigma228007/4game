@@ -23,10 +23,8 @@ export default function Success() {
   const [pollStatus, setPollStatus] = useState('idle'); // idle | polling | succeeded | canceled | timeout
 
   useEffect(() => {
-    const paymentId = sessionStorage.getItem('pendingPaymentId');
+    const paymentId = localStorage.getItem('pendingPaymentId');
     if (!paymentId) {
-      // Old flow: order data passed via location.state (shouldn't happen with YooKassa,
-      // but kept as fallback)
       if (location.state) {
         setOrderData(location.state);
         setPollStatus('succeeded');
@@ -34,7 +32,7 @@ export default function Success() {
       return;
     }
 
-    sessionStorage.removeItem('pendingPaymentId');
+    localStorage.removeItem('pendingPaymentId');
     setPollStatus('polling');
 
     let elapsed = 0;

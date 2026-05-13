@@ -167,17 +167,28 @@ router.get('/status/:paymentId', auth, async (req, res) => {
 
     // If still pending, ask YooKassa directly (fallback if webhook hasn't fired)
     if (pending.status === 'pending') {
+      let ykPayment;
       try {
-        const ykPayment = await ykRequest('GET', `/payments/${pending.id}`);
-        if (ykPayment.status === 'succeeded') {
+        ykPayment = await ykRequest('GET', `/payments/${pending.id}`);
+        console.log(`YK status for ${pending.id}: ${ykPayment.status}`);
+      } catch (ykErr) {
+        console.error('YooKassa API call failed:', ykErr.message);
+        return res.json({ status: 'pending', order: null });
+      }
+
+      if (ykPayment.status === 'succeeded' || ykPayment.status === 'waiting_for_capture') {
+        try {
           await fulfillOrder(pending);
           pending = (await pool.query('SELECT * FROM pending_payments WHERE id = $1', [pending.id])).rows[0];
           console.log(`✅ Payment ${pending.id} fulfilled via status poll`);
-        } else if (ykPayment.status === 'canceled') {
-          await pool.query('UPDATE pending_payments SET status = $1 WHERE id = $2', ['canceled', pending.id]);
-          pending.status = 'canceled';
+        } catch (fulfillErr) {
+          console.error('fulfillOrder failed:', fulfillErr.message, fulfillErr.stack);
+          return res.status(500).json({ error: 'Ошибка создания заказа' });
         }
-      } catch (_) { /* YooKassa unreachable, return current status */ }
+      } else if (ykPayment.status === 'canceled') {
+        await pool.query('UPDATE pending_payments SET status = $1 WHERE id = $2', ['canceled', pending.id]);
+        pending.status = 'canceled';
+      }
     }
 
     if (pending.status !== 'succeeded') {

@@ -50,7 +50,7 @@ export default function Cart() {
     setChecking(true);
     try {
       const { paymentId, confirmationUrl } = await api.createPayment();
-      sessionStorage.setItem('pendingPaymentId', paymentId);
+      localStorage.setItem('pendingPaymentId', paymentId);
       window.location.href = confirmationUrl;
     } catch (err) {
       toast('Ошибка создания платежа. Попробуйте снова.', 'error');
