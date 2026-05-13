@@ -277,7 +277,7 @@ export const games = [
     rating: 4.4,
     year: 2023,
     featured: true,
-    image: 'https://i.playground.ru/e/ukCxTW-oecluKTYugdf9hA.webp',
+    image: '/images/game-15.jpg',
     screenshots: [
       '/images/screenshots/game-15-shot-1.jpg',
       '/images/screenshots/game-15-shot-2.jpg',
