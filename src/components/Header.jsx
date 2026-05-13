@@ -90,11 +90,15 @@ export default function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+      className="sticky top-0 z-50 transition-all duration-500 backdrop-blur-2xl"
       style={{
-        backgroundColor: isDark ? '#07070E' : '#F0F0F5',
+        paddingTop: 'env(safe-area-inset-top)',
+        backgroundColor: scrolled
+          ? (isDark ? 'rgba(7,7,14,0.92)' : 'rgba(240,240,245,0.92)')
+          : (isDark ? 'rgba(7,7,14,0.4)'  : 'rgba(240,240,245,0.4)'),
         borderBottom: scrolled ? '1px solid var(--surface-border)' : '1px solid transparent',
         boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.15)' : 'none',
+        willChange: 'transform',
       }}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
