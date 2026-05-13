@@ -11,7 +11,7 @@ import https from 'https';
 import http from 'http';
 
 // Обложки (id → url) — Steam library_600x900.jpg (официальный портретный формат)
-const STEAM = id => `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${id}/library_hero.jpg`;
+const STEAM = id => `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${id}/library_600x900.jpg`;
 const COVERS = {
   1:  STEAM(2215430),  // Ghost of Tsushima Director's Cut
   2:  STEAM(1174180),  // Red Dead Redemption 2
