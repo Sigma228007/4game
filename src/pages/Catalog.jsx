@@ -174,97 +174,69 @@ export default function Catalog() {
                 transition={{ duration: 0.25 }}
                 className="overflow-hidden mb-6"
               >
-                <div className="glass-static p-5 md:p-6 space-y-5">
-                  {/* Price */}
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Wallet size={14} style={{ color: 'var(--text-faint)' }} />
-                      <span className="label text-[10px]">{t('catalog.price')}</span>
-                      <span className="font-body text-[12px] ml-auto" style={{ color: 'var(--text-secondary)' }}>
-                        {priceRange[0].toLocaleString('ru-RU')} — {priceRange[1].toLocaleString('ru-RU')} ₽
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>{t('catalog.from')}</label>
-                        <input
-                          type="range"
-                          min={PRICE_MIN}
-                          max={PRICE_MAX}
-                          step={100}
-                          value={priceRange[0]}
+                <div className="glass-static p-4 md:p-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+
+                    {/* Price */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <Wallet size={12} style={{ color: 'var(--text-faint)' }} />
+                          <span className="label text-[10px]">{t('catalog.price')}</span>
+                        </div>
+                        <span className="font-body text-[11px] px-2 py-0.5 rounded-md" style={{ background: 'var(--surface)', color: 'var(--text-secondary)', border: '1px solid var(--surface-border)' }}>
+                          {priceRange[0].toLocaleString('ru-RU')} — {priceRange[1].toLocaleString('ru-RU')} ₽
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-body text-[10px] shrink-0" style={{ color: 'var(--text-faint)' }}>{t('catalog.from')}</span>
+                        <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={100} value={priceRange[0]}
                           onChange={e => setPriceRange([Math.min(+e.target.value, priceRange[1]), priceRange[1]])}
-                          className="w-full accent-primary"
-                        />
+                          className="flex-1 accent-primary h-1 cursor-pointer" style={{ maxWidth: 180 }} />
                       </div>
-                      <div>
-                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>{t('catalog.to')}</label>
-                        <input
-                          type="range"
-                          min={PRICE_MIN}
-                          max={PRICE_MAX}
-                          step={100}
-                          value={priceRange[1]}
+                      <div className="flex items-center gap-2">
+                        <span className="font-body text-[10px] shrink-0" style={{ color: 'var(--text-faint)' }}>{t('catalog.to')}</span>
+                        <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={100} value={priceRange[1]}
                           onChange={e => setPriceRange([priceRange[0], Math.max(+e.target.value, priceRange[0])])}
-                          className="w-full accent-primary"
-                        />
+                          className="flex-1 accent-primary h-1 cursor-pointer" style={{ maxWidth: 180 }} />
                       </div>
                     </div>
-                  </div>
 
-                  {/* Year */}
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Calendar size={14} style={{ color: 'var(--text-faint)' }} />
-                      <span className="label text-[10px]">{t('catalog.year')}</span>
-                      <span className="font-body text-[12px] ml-auto" style={{ color: 'var(--text-secondary)' }}>
-                        {yearRange[0]} — {yearRange[1]}
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>{t('catalog.from')}</label>
-                        <input
-                          type="range"
-                          min={YEAR_MIN}
-                          max={YEAR_MAX}
-                          value={yearRange[0]}
+                    {/* Year */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <Calendar size={12} style={{ color: 'var(--text-faint)' }} />
+                          <span className="label text-[10px]">{t('catalog.year')}</span>
+                        </div>
+                        <span className="font-body text-[11px] px-2 py-0.5 rounded-md" style={{ background: 'var(--surface)', color: 'var(--text-secondary)', border: '1px solid var(--surface-border)' }}>
+                          {yearRange[0]} — {yearRange[1]}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-body text-[10px] shrink-0" style={{ color: 'var(--text-faint)' }}>{t('catalog.from')}</span>
+                        <input type="range" min={YEAR_MIN} max={YEAR_MAX} value={yearRange[0]}
                           onChange={e => setYearRange([Math.min(+e.target.value, yearRange[1]), yearRange[1]])}
-                          className="w-full accent-primary"
-                        />
+                          className="flex-1 accent-primary h-1 cursor-pointer" style={{ maxWidth: 180 }} />
                       </div>
-                      <div>
-                        <label className="font-body text-[10px] block mb-1" style={{ color: 'var(--text-faint)' }}>{t('catalog.to')}</label>
-                        <input
-                          type="range"
-                          min={YEAR_MIN}
-                          max={YEAR_MAX}
-                          value={yearRange[1]}
+                      <div className="flex items-center gap-2">
+                        <span className="font-body text-[10px] shrink-0" style={{ color: 'var(--text-faint)' }}>{t('catalog.to')}</span>
+                        <input type="range" min={YEAR_MIN} max={YEAR_MAX} value={yearRange[1]}
                           onChange={e => setYearRange([yearRange[0], Math.max(+e.target.value, yearRange[0])])}
-                          className="w-full accent-primary"
-                        />
+                          className="flex-1 accent-primary h-1 cursor-pointer" style={{ maxWidth: 180 }} />
                       </div>
                     </div>
                   </div>
 
-                  {/* Sale only + Reset */}
-                  <div className="flex items-center justify-between flex-wrap gap-3 pt-2">
-                    <label className="flex items-center gap-2.5 cursor-pointer select-none">
-                      <input
-                        type="checkbox"
-                        checked={onSaleOnly}
-                        onChange={e => setOnSaleOnly(e.target.checked)}
-                        className="w-4 h-4 accent-primary cursor-pointer"
-                      />
-                      <Percent size={14} className="text-amber-400" />
+                  {/* Sale + Reset */}
+                  <div className="flex items-center justify-between flex-wrap gap-3 mt-4 pt-4" style={{ borderTop: '1px solid var(--surface-border)' }}>
+                    <label className="flex items-center gap-2 cursor-pointer select-none">
+                      <input type="checkbox" checked={onSaleOnly} onChange={e => setOnSaleOnly(e.target.checked)} className="w-3.5 h-3.5 accent-primary cursor-pointer" />
+                      <Percent size={13} className="text-amber-400" />
                       <span className="font-body text-[13px]" style={{ color: 'var(--text-secondary)' }}>{t('catalog.onSale')}</span>
                     </label>
                     {hasActiveFilters && (
-                      <button
-                        onClick={resetAll}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-display font-semibold uppercase tracking-wider transition-colors hover:bg-white/[0.05]"
-                        style={{ color: 'var(--text-faint)' }}
-                      >
+                      <button onClick={resetAll} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-display font-semibold uppercase tracking-wider transition-colors hover:bg-white/[0.05]" style={{ color: 'var(--text-faint)' }}>
                         <RotateCcw size={11} /> {t('catalog.resetAll')}
                       </button>
                     )}

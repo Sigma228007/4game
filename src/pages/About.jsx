@@ -215,25 +215,47 @@ export default function About() {
             </Reveal>
           </div>
 
-          {/* VIDEO */}
+          {/* MAP */}
           <Reveal>
-            <div className="text-center space-y-8">
-              <div>
-                <span className="label block mb-3">{t('about.media')}</span>
-                <h2 className="section-title text-3xl">{t('about.mediaTitle')}</h2>
+            <div className="space-y-8">
+              <div className="text-center">
+                <span className="label block mb-3">{t('about.online')}</span>
+                <h2 className="section-title text-3xl">{t('about.address')}</h2>
               </div>
-              <div className="max-w-3xl mx-auto glass-static overflow-hidden">
-                <div className="aspect-video">
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src="https://www.youtube.com/embed/oUFJJNQGwhk"
-                    title={t('about.mediaAlt')}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full"
-                  />
+              <div className="glass-static overflow-hidden" style={{ borderRadius: 16 }}>
+                <div className="grid grid-cols-1 lg:grid-cols-3">
+                  {/* Info panel */}
+                  <div className="p-6 md:p-8 space-y-5 flex flex-col justify-center" style={{ borderRight: '1px solid var(--surface-border)' }}>
+                    <div className="space-y-1">
+                      <p className="label text-[10px]">{t('about.address')}</p>
+                      <p className="font-body text-[15px] leading-snug" style={{ color: 'var(--text-secondary)' }}>
+                        г. Москва, ул. Тверская, д. 7, офис 412
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="label text-[10px]">Email</p>
+                      <a href="mailto:support@4game.com" className="font-body text-[14px] text-primary hover:underline">support@4game.com</a>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="label text-[10px]">Tel</p>
+                      <a href="tel:+79242485393" className="font-body text-[14px]" style={{ color: 'var(--text-secondary)' }}>+7 (924) 248-53-93</a>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="label text-[10px]">{t('about.stat3')}</p>
+                      <p className="font-body text-[13px]" style={{ color: 'var(--text-muted)' }}>Пн–Пт: 10:00 – 20:00</p>
+                    </div>
+                  </div>
+                  {/* Map */}
+                  <div className="lg:col-span-2 h-72 lg:h-96">
+                    <iframe
+                      src="https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A55.7608%2C%22lon%22%3A37.6095%2C%22zoom%22%3A15%7D%2C%22opt%22%3A%7B%22city%22%3A%22moscow%22%7D%7D"
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      title="4Game Office Map"
+                      style={{ display: 'block' }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
