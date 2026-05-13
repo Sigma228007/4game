@@ -12,9 +12,10 @@ import nodemailer from 'nodemailer';
 //   FRONTEND_URL=https://4game-blush.vercel.app
 
 const isConfigured = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+const useResendApi = process.env.SMTP_HOST === 'smtp.resend.com';
 
 let transporter = null;
-if (isConfigured) {
+if (isConfigured && !useResendApi) {
   transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT) || 587,
@@ -28,8 +29,24 @@ if (isConfigured) {
     socketTimeout: 15000,
   });
   console.log(`📧 Email-сервис готов (SMTP ${process.env.SMTP_HOST}:${process.env.SMTP_PORT})`);
+} else if (isConfigured && useResendApi) {
+  console.log('📧 Email-сервис готов (Resend HTTPS API)');
 } else {
   console.log('📧 Email-сервис в dev-режиме (SMTP не настроен — письма в консоль)');
+}
+
+async function sendViaResend({ to, from, subject, html, text }) {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.SMTP_PASS}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ from, to, subject, html, text }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || data.error?.message || data.name || `Resend ${res.status}`);
+  return data;
 }
 
 const FROM = process.env.EMAIL_FROM || '4Game <noreply@4game.com>';
@@ -48,6 +65,11 @@ async function send({ to, subject, html, text }) {
   }
 
   try {
+    if (useResendApi) {
+      const data = await sendViaResend({ to, from: FROM, subject, html, text });
+      console.log(`📧 Письмо отправлено → ${to} (${subject}) [Resend API]`);
+      return { queued: true, messageId: data.id };
+    }
     const info = await transporter.sendMail({ from: FROM, to, subject, html, text });
     console.log(`📧 Письмо отправлено → ${to} (${subject})`);
     return { queued: true, messageId: info.messageId };
