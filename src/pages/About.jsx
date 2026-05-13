@@ -227,7 +227,7 @@ export default function About() {
                   {/* Info panel */}
                   <div className="p-6 md:p-8 space-y-5 flex flex-col justify-center" style={{ borderRight: '1px solid var(--surface-border)' }}>
                     <div className="space-y-1">
-                      <p className="label text-[10px]">{t('about.address')}</p>
+                      <p className="label text-[10px]">Адрес компании</p>
                       <p className="font-body text-[15px] leading-snug" style={{ color: 'var(--text-secondary)' }}>
                         г. Владивосток, ул. Светланская, д. 22, офис 310
                       </p>
