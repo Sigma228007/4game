@@ -3,7 +3,7 @@
 //  - Статика (html, js, css, images) → cache-first с сетевым фолбэком
 //  - API запросы → только сеть (свежие данные важнее кэша)
 
-const CACHE_VERSION = 'v1.0.0';
+const CACHE_VERSION = 'v1.0.2';
 const CACHE_NAME = `4game-${CACHE_VERSION}`;
 const IMAGE_CACHE = `4game-images-${CACHE_VERSION}`;
 
@@ -48,9 +48,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Изображения — cache-first, отдельный кэш
+  // Изображения — stale-while-revalidate: отдаём кэш сразу, но обновляем в фоне
   if (request.destination === 'image' || url.pathname.match(/\.(png|jpg|jpeg|svg|gif|webp|ico)$/i)) {
-    event.respondWith(cacheFirst(request, IMAGE_CACHE));
+    event.respondWith(staleWhileRevalidate(request, IMAGE_CACHE));
     return;
   }
 
