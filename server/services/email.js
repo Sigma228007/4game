@@ -23,8 +23,11 @@ if (isConfigured) {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
-  console.log('📧 Email-сервис готов (SMTP настроен)');
+  console.log(`📧 Email-сервис готов (SMTP ${process.env.SMTP_HOST}:${process.env.SMTP_PORT})`);
 } else {
   console.log('📧 Email-сервис в dev-режиме (SMTP не настроен — письма в консоль)');
 }
