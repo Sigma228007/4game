@@ -11,6 +11,48 @@ const SHOP_ID = process.env.YOOKASSA_SHOP_ID;
 const SECRET_KEY = process.env.YOOKASSA_SECRET_KEY;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://4game-blush.vercel.app';
 
+// Hardcoded promo codes (same as client-side)
+const HARDCODED_PROMOS = {
+  WELCOME10:  { type: 'percent', value: 10,  minOrder: 0,    maxDiscount: 1000, label: 'Скидка 10%' },
+  GAMER25:    { type: 'percent', value: 25,  minOrder: 3000, maxDiscount: 2500, label: '25% от суммы 3000 ₽' },
+  NEWBIE500:  { type: 'fixed',   value: 500, minOrder: 1500, maxDiscount: 500,  label: '−500 ₽ от 1500 ₽' },
+  SUMMER2026: { type: 'percent', value: 15,  minOrder: 2000, maxDiscount: 1500, label: '15% на лето' },
+};
+
+async function validatePromo(code, subtotal, userId) {
+  const key = code.trim().toUpperCase();
+
+  // Check referral codes from DB
+  if (key.startsWith('REF')) {
+    const { rows } = await pool.query(
+      'SELECT * FROM referral_rewards WHERE promo_code = $1 AND claimed = false',
+      [key]
+    );
+    if (rows.length === 0) return { valid: false, error: 'Промокод не найден или уже использован' };
+    const rr = rows[0];
+    // Can't use your own referral code
+    if (rr.referrer_id === userId) return { valid: false, error: 'Нельзя использовать свой реферальный код' };
+    const discount = Math.min(Math.floor(subtotal * rr.reward_percent / 100), 2500);
+    return { valid: true, discount, label: `Реферальный бонус −${rr.reward_percent}%`, code: key, type: 'referral' };
+  }
+
+  // Hardcoded codes
+  const promo = HARDCODED_PROMOS[key];
+  if (!promo) return { valid: false, error: 'Промокод не найден' };
+  if (subtotal < promo.minOrder) return { valid: false, error: `Минимальная сумма: ${promo.minOrder.toLocaleString('ru-RU')} ₽` };
+
+  // Check single-use
+  const { rows: used } = await pool.query(
+    'SELECT 1 FROM used_promos WHERE user_id = $1 AND code = $2',
+    [userId, key]
+  );
+  if (used.length > 0) return { valid: false, error: 'Промокод уже был использован' };
+
+  const raw = promo.type === 'percent' ? Math.floor(subtotal * promo.value / 100) : promo.value;
+  const discount = Math.min(raw, promo.maxDiscount);
+  return { valid: true, discount, label: promo.label, code: key, type: 'hardcoded' };
+}
+
 function generateKey() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   const segment = () => Array.from({ length: 5 }, () => chars[crypto.randomInt(chars.length)]).join('');
@@ -61,6 +103,21 @@ async function fulfillOrder(pending) {
       ['succeeded', order.id, pending.id]
     );
 
+    // Mark promo as used (inside transaction so it's atomic with order creation)
+    if (pending.promo_code) {
+      if (pending.promo_code.startsWith('REF')) {
+        await client.query(
+          'UPDATE referral_rewards SET claimed = true WHERE promo_code = $1',
+          [pending.promo_code]
+        );
+      } else {
+        await client.query(
+          'INSERT INTO used_promos (user_id, code) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+          [pending.user_id, pending.promo_code]
+        );
+      }
+    }
+
     await client.query('COMMIT');
 
     // Email receipt (async, don't block)
@@ -100,9 +157,25 @@ async function fulfillOrder(pending) {
   }
 }
 
+// POST /api/payments/validate-promo
+router.post('/validate-promo', auth, async (req, res) => {
+  try {
+    const { code, subtotal } = req.body || {};
+    if (!code || subtotal == null) return res.status(400).json({ error: 'Укажите код и сумму' });
+    const result = await validatePromo(code, Number(subtotal), req.user.id);
+    if (!result.valid) return res.status(400).json({ error: result.error });
+    res.json({ discount: result.discount, label: result.label, code: result.code, type: result.type });
+  } catch (err) {
+    console.error('Promo validate error:', err);
+    res.status(500).json({ error: 'Ошибка проверки промокода' });
+  }
+});
+
 // POST /api/payments/create
 router.post('/create', auth, async (req, res) => {
   try {
+    const { promoCode } = req.body || {};
+
     const cartResult = await pool.query(
       'SELECT g.id, g.name, g.price, g.image FROM cart c JOIN games g ON c.game_id = g.id WHERE c.user_id = $1',
       [req.user.id]
@@ -110,11 +183,23 @@ router.post('/create', auth, async (req, res) => {
     if (cartResult.rows.length === 0) return res.status(400).json({ error: 'Корзина пуста' });
 
     const items = cartResult.rows;
-    const total = items.reduce((s, g) => s + parseFloat(g.price), 0);
+    const subtotal = items.reduce((s, g) => s + parseFloat(g.price), 0);
+
+    let promoDiscount = 0;
+    let appliedPromoCode = null;
+    if (promoCode) {
+      const promoResult = await validatePromo(promoCode, subtotal, req.user.id);
+      if (promoResult.valid) {
+        promoDiscount = promoResult.discount;
+        appliedPromoCode = promoResult.code;
+      }
+    }
+
+    const finalTotal = Math.max(1, subtotal - promoDiscount);
     const description = `4Game: ${items.map(g => g.name).join(', ')}`.slice(0, 128);
 
     const payment = await ykRequest('POST', '/payments', {
-      amount: { value: total.toFixed(2), currency: 'RUB' },
+      amount: { value: finalTotal.toFixed(2), currency: 'RUB' },
       confirmation: { type: 'redirect', return_url: `${FRONTEND_URL}/success` },
       capture: true,
       description,
@@ -122,8 +207,8 @@ router.post('/create', auth, async (req, res) => {
     });
 
     await pool.query(
-      'INSERT INTO pending_payments (id, user_id, amount, cart_snapshot) VALUES ($1, $2, $3, $4)',
-      [payment.id, req.user.id, total, JSON.stringify(items)]
+      'INSERT INTO pending_payments (id, user_id, amount, cart_snapshot, promo_code, promo_discount) VALUES ($1, $2, $3, $4, $5, $6)',
+      [payment.id, req.user.id, finalTotal, JSON.stringify(items), appliedPromoCode, promoDiscount]
     );
 
     res.json({ paymentId: payment.id, confirmationUrl: payment.confirmation.confirmation_url });

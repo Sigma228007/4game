@@ -49,8 +49,9 @@ export const api = {
   getOrder: (id) => request(`/orders/${id}`),
 
   // Payments (YooKassa)
-  createPayment: () => request('/payments/create', { method: 'POST' }),
+  createPayment: (promoCode) => request('/payments/create', { method: 'POST', body: JSON.stringify({ promoCode: promoCode || null }) }),
   getPaymentStatus: (paymentId) => request(`/payments/status/${paymentId}`),
+  validatePromo: (code, subtotal) => request('/payments/validate-promo', { method: 'POST', body: JSON.stringify({ code, subtotal }) }),
 
   // Support Tickets
   createTicket: (subject, message) => request('/tickets', { method: 'POST', body: JSON.stringify({ subject, message }) }),

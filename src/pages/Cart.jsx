@@ -7,7 +7,6 @@ import { PageTransition, Reveal } from '../components/Motion';
 import PosterAccent from '../components/PosterAccent';
 import { api } from '../api';
 import { useState } from 'react';
-import { applyPromo } from '../utils/promoCodes';
 import { usePrice } from '../hooks/usePrice';
 import { useI18n } from '../utils/i18n.jsx';
 
@@ -22,19 +21,24 @@ export default function Cart() {
 
   // Промокод
   const [promoInput, setPromoInput] = useState('');
-  const [promoApplied, setPromoApplied] = useState(null); // { code, discount, promo }
+  const [promoApplied, setPromoApplied] = useState(null); // { code, discount, label }
   const [promoError, setPromoError] = useState('');
+  const [promoLoading, setPromoLoading] = useState(false);
 
-  function handleApplyPromo() {
-    const result = applyPromo(promoInput, total);
-    if (result.valid) {
-      setPromoApplied({ code: result.code, discount: result.discount, promo: result.promo });
-      setPromoError('');
+  async function handleApplyPromo() {
+    if (!promoInput.trim()) return;
+    setPromoLoading(true);
+    setPromoError('');
+    try {
+      const result = await api.validatePromo(promoInput, total);
+      setPromoApplied({ code: result.code, discount: result.discount, label: result.label });
       setPromoInput('');
       toast(`Промокод применён: −${format(result.discount)}`, 'success');
-    } else {
-      setPromoError(result.error);
+    } catch (err) {
+      setPromoError(err.message || 'Промокод не найден');
       setPromoApplied(null);
+    } finally {
+      setPromoLoading(false);
     }
   }
 
@@ -49,7 +53,7 @@ export default function Cart() {
   async function handleCheckout() {
     setChecking(true);
     try {
-      const { paymentId, confirmationUrl } = await api.createPayment();
+      const { paymentId, confirmationUrl } = await api.createPayment(promoApplied?.code);
       localStorage.setItem('pendingPaymentId', paymentId);
       window.location.href = confirmationUrl;
     } catch (err) {
@@ -184,7 +188,7 @@ export default function Cart() {
                                 {promoApplied.code}
                               </p>
                               <p className="font-body text-[11px]" style={{ color: 'var(--text-faint)' }}>
-                                {promoApplied.promo.label}
+                                {promoApplied.label}
                               </p>
                             </div>
                             <button
@@ -217,7 +221,7 @@ export default function Cart() {
                               />
                               <button
                                 onClick={handleApplyPromo}
-                                disabled={!promoInput.trim()}
+                                disabled={!promoInput.trim() || promoLoading}
                                 className="px-4 rounded-xl text-[12px] font-display font-semibold uppercase tracking-wider disabled:opacity-40 transition-colors"
                                 style={{
                                   background: 'var(--surface)',
@@ -225,7 +229,7 @@ export default function Cart() {
                                   border: '1px solid var(--surface-border)',
                                 }}
                               >
-                                OK
+                                {promoLoading ? <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" /> : 'OK'}
                               </button>
                             </div>
                             {promoError && (
