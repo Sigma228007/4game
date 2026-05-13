@@ -33,6 +33,7 @@ import Wishlist from './pages/Wishlist';
 import Achievements from './pages/Achievements';
 import Referral from './pages/Referral';
 import TwoFactorSetup from './pages/TwoFactorSetup';
+import NotFound from './pages/NotFound';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -77,15 +78,7 @@ export default function App() {
                       <Route path="/referral" element={<ProtectedRoute><Referral /></ProtectedRoute>} />
                       <Route path="/2fa" element={<ProtectedRoute><TwoFactorSetup /></ProtectedRoute>} />
                       <Route path="/admin" element={<ProtectedRoute role="admin"><Admin /></ProtectedRoute>} />
-                      <Route path="*" element={
-                        <div className="min-h-[65vh] flex items-center justify-center">
-                          <div className="text-center space-y-4">
-                            <h1 className="font-display text-[120px] font-black leading-none" style={{ color: 'var(--text-faint)' }}>404</h1>
-                            <p className="font-display text-xl -mt-10" style={{ color: 'var(--text-muted)' }}>Страница не найдена</p>
-                            <a href="/" className="btn-primary inline-flex mt-4">На главную</a>
-                          </div>
-                        </div>
-                      } />
+                      <Route path="*" element={<NotFound />} />
                     </Routes>
                   </main>
                   <Footer />
