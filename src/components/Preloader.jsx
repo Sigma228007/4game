@@ -45,9 +45,7 @@ export default function Preloader() {
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="relative"
           >
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center shadow-glow-md">
-              <Gamepad2 size={36} className="text-white" strokeWidth={2.5} />
-            </div>
+            <img src="/favicon.png" alt="4Game" className="w-20 h-20 rounded-2xl object-cover shadow-glow-md" />
             <motion.span
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}

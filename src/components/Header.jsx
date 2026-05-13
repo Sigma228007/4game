@@ -106,9 +106,7 @@ export default function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center shadow-glow-sm group-hover:shadow-glow-md transition-shadow duration-500">
-                <Gamepad2 size={18} className="text-white" strokeWidth={2.5} />
-              </div>
+              <img src="/favicon.png" alt="4Game" className="w-10 h-10 rounded-xl object-cover shadow-glow-sm group-hover:shadow-glow-md transition-shadow duration-500" />
               <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-accent rounded-full border-2" style={{ borderColor: 'var(--bg)' }} />
             </div>
             <div className="hidden sm:block">

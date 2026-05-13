@@ -82,9 +82,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div className="space-y-4">
             <Link to="/" className="inline-flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center">
-                <Gamepad2 size={14} className="text-white" />
-              </div>
+              <img src="/favicon.png" alt="4Game" className="w-8 h-8 rounded-lg object-cover" />
               <span className="font-display font-black text-lg"><span className="text-primary">4</span><span style={{ color: 'var(--text)' }}>Game</span></span>
             </Link>
             <p className="font-body text-[13px] leading-relaxed max-w-[240px]" style={{ color: 'var(--text-faint)' }}>

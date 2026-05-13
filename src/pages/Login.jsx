@@ -74,9 +74,7 @@ export default function Login() {
         <div className="relative w-full max-w-[420px] z-10">
           <div className="glass-static p-8 md:p-10 space-y-7">
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center shadow-glow-sm">
-                <Gamepad2 size={26} className="text-white" />
-              </div>
+              <img src="/favicon.png" alt="4Game" className="w-16 h-16 mx-auto rounded-2xl object-cover shadow-glow-sm" />
               <h1 className="font-display text-[22px] font-bold" style={{ color: 'var(--text)' }}>
                 {mode === 'login' ? t('login.title') : t('login.titleRegister')}
               </h1>
