@@ -219,7 +219,7 @@ export default function About() {
           <Reveal>
             <div className="space-y-8">
               <div className="text-center">
-                <span className="label block mb-3">{t('about.online')}</span>
+                <span className="label block mb-3">Адрес компании</span>
                 <h2 className="section-title text-3xl">г. Владивосток, ул. Светланская, д. 22</h2>
               </div>
               <div className="glass-static overflow-hidden" style={{ borderRadius: 16 }}>
