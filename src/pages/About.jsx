@@ -220,7 +220,7 @@ export default function About() {
             <div className="space-y-8">
               <div className="text-center">
                 <span className="label block mb-3">{t('about.online')}</span>
-                <h2 className="section-title text-3xl">г. Владивосток, Россия</h2>
+                <h2 className="section-title text-3xl">г. Владивосток, ул. Светланская, д. 22</h2>
               </div>
               <div className="glass-static overflow-hidden" style={{ borderRadius: 16 }}>
                 <div className="grid grid-cols-1 lg:grid-cols-3">
