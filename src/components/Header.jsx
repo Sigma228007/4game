@@ -92,7 +92,6 @@ export default function Header() {
     <header
       className="sticky top-0 z-50 transition-all duration-500 backdrop-blur-2xl"
       style={{
-        paddingTop: 'env(safe-area-inset-top)',
         backgroundColor: scrolled
           ? (isDark ? 'rgba(7,7,14,0.92)' : 'rgba(240,240,245,0.92)')
           : (isDark ? 'rgba(7,7,14,0.4)'  : 'rgba(240,240,245,0.4)'),
