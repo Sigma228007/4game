@@ -49,14 +49,13 @@ export default function Cart() {
   async function handleCheckout() {
     setChecking(true);
     try {
-      const orderData = await api.checkout();
-      await reload();
-      navigate('/success', { state: orderData });
+      const { paymentId, confirmationUrl } = await api.createPayment();
+      sessionStorage.setItem('pendingPaymentId', paymentId);
+      window.location.href = confirmationUrl;
     } catch (err) {
-      clearCart();
-      navigate('/success');
+      toast('Ошибка создания платежа. Попробуйте снова.', 'error');
+      setChecking(false);
     }
-    setChecking(false);
   }
 
   if (cartItems.length === 0) {

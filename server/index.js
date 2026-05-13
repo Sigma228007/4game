@@ -13,6 +13,7 @@ import adminRoutes from './routes/admin.js';
 import reviewsRoutes from './routes/reviews.js';
 import wishlistRoutes from './routes/wishlist.js';
 import gamificationRoutes from './routes/gamification.js';
+import paymentsRoutes from './routes/payments.js';
 import pool from './db.js';
 
 dotenv.config();
@@ -47,6 +48,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/reviews', reviewsRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/gamification', gamificationRoutes);
+app.use('/api/payments', paymentsRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

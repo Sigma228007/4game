@@ -48,6 +48,10 @@ export const api = {
   getOrders: () => request('/orders'),
   getOrder: (id) => request(`/orders/${id}`),
 
+  // Payments (YooKassa)
+  createPayment: () => request('/payments/create', { method: 'POST' }),
+  getPaymentStatus: (paymentId) => request(`/payments/status/${paymentId}`),
+
   // Support Tickets
   createTicket: (subject, message) => request('/tickets', { method: 'POST', body: JSON.stringify({ subject, message }) }),
   getTickets: () => request('/tickets'),
