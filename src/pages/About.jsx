@@ -8,8 +8,14 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../api';
 import { useToast } from '../components/Toast';
 import { useI18n } from '../utils/i18n.jsx';
+import { useSEO } from '../hooks/useSEO';
 
 export default function About() {
+  useSEO({
+    title: 'О магазине и контакты',
+    description: 'О магазине 4Game — лицензионные ключи для PC, контакты, гарантии, поддержка 24/7. Свяжитесь с нами — мы во Владивостоке.',
+    path: '/about',
+  });
   const { isAuth } = useAuth();
   const toast = useToast();
   const { t } = useI18n();

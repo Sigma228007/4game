@@ -8,6 +8,7 @@ import Select from '../components/Select';
 import PosterAccent from '../components/PosterAccent';
 import { games, GENRES, searchGames } from '../data/games';
 import { useI18n } from '../utils/i18n.jsx';
+import { useSEO } from '../hooks/useSEO';
 
 // Вычисляем границы цен/годов по данным
 const PRICE_MIN = Math.min(...games.map(g => g.price));
@@ -16,6 +17,11 @@ const YEAR_MIN  = Math.min(...games.map(g => g.year));
 const YEAR_MAX  = Math.max(...games.map(g => g.year));
 
 export default function Catalog() {
+  useSEO({
+    title: 'Каталог игр',
+    description: 'Полный каталог цифровых игр для PC. Action, RPG, шутеры, стратегии, симуляторы. Лицензионные ключи Steam, Epic, GOG с мгновенной выдачей.',
+    path: '/catalog',
+  });
   const { t } = useI18n();
 
   const SORT_OPTIONS = [

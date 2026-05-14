@@ -8,6 +8,7 @@ import { PageTransition, Reveal, StaggerContainer, StaggerItem } from '../compon
 import { getFeaturedGames, games, GENRES, getGameById } from '../data/games';
 import { getRecentlyViewed } from '../utils/recentlyViewed';
 import { useI18n } from '../utils/i18n.jsx';
+import { useSEO } from '../hooks/useSEO';
 
 // Иконки + фоновые постеры для жанров (берём из уже имеющихся артов)
 const GENRE_META = {
@@ -26,6 +27,7 @@ const HERO_POSTERS = [
 ];
 
 export default function Home() {
+  useSEO({ path: '/' });
   const { t } = useI18n();
   const { format } = usePrice();
   const featured = getFeaturedGames().slice(0, 8);

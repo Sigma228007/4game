@@ -1,10 +1,26 @@
 User-agent: *
 Allow: /
+Allow: /catalog
+Allow: /about
+Allow: /game/
+
 Disallow: /admin
+Disallow: /admin/*
 Disallow: /profile
 Disallow: /cart
 Disallow: /favorites
 Disallow: /orders
+Disallow: /wishlist
+Disallow: /achievements
+Disallow: /referral
 Disallow: /support
+Disallow: /support/*
+Disallow: /login
+Disallow: /reset-password
+Disallow: /2fa-setup
+Disallow: /success
+Disallow: /api/
 
-Sitemap: https://4game-blush.vercel.app/sitemap.xml
+Host: https://4game.store
+
+Sitemap: https://4game.store/sitemap.xml

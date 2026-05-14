@@ -15,6 +15,7 @@ import ReviewsBlock from '../components/ReviewsBlock';
 import { pushRecentlyViewed } from '../utils/recentlyViewed';
 import { getSystemRequirements, getLanguages, getGallery, getPlatforms } from '../utils/gameDetails';
 import { useI18n } from '../utils/i18n.jsx';
+import { useSEO } from '../hooks/useSEO';
 
 const LANG_CELL = {
   full: { symbol: '✓', color: 'text-accent',      bg: 'bg-accent/10' },
@@ -40,6 +41,12 @@ export default function GameDetail() {
 
   useEffect(() => { if (game) pushRecentlyViewed(game.id); }, [game?.id]);
   useEffect(() => { setActiveShot(0); setTab('req'); }, [id]);
+
+  useSEO({
+    title: game?.name ? `${game.name} — купить ключ` : 'Игра',
+    description: game ? `${game.name} — лицензионный ключ за ${game.price} ₽. Мгновенная выдача на email. Steam / Epic / GOG. Цены ниже официальных.` : undefined,
+    path: `/game/${id}`,
+  });
 
   // Auto-slideshow every 3 seconds
   useEffect(() => {

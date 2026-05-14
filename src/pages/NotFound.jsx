@@ -3,8 +3,10 @@ import { motion } from 'framer-motion';
 import { Home, Search, ArrowRight } from 'lucide-react';
 import { PageTransition } from '../components/Motion';
 import PosterAccent from '../components/PosterAccent';
+import { useSEO } from '../hooks/useSEO';
 
 export default function NotFound() {
+  useSEO({ title: 'Страница не найдена', description: 'Запрошенная страница не существует. Вернитесь на главную или в каталог 4Game.' });
   const location = useLocation();
 
   return (
