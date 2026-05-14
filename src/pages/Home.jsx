@@ -77,7 +77,7 @@ export default function Home() {
                 boxShadow: '0 30px 60px -15px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)',
               }}
             >
-              <img src={p.src} alt="" className="w-full h-full object-cover" />
+              <img src={p.src} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
               <div className="absolute inset-0" style={{
                 background: 'linear-gradient(160deg, rgba(7,7,14,0.1) 0%, rgba(7,7,14,0.4) 55%, rgba(7,7,14,0.85) 100%)',
               }} />
