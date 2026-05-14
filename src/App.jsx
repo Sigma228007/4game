@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { FavoritesProvider } from './context/FavoritesContext';
@@ -15,25 +15,36 @@ import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 
+// Home — eager (landing page, нужен сразу)
 import Home from './pages/Home';
-import Catalog from './pages/Catalog';
-import GameDetail from './pages/GameDetail';
-import Favorites from './pages/Favorites';
-import Cart from './pages/Cart';
-import Login from './pages/Login';
-import ResetPassword from './pages/ResetPassword';
-import Success from './pages/Success';
-import About from './pages/About';
-import Profile from './pages/Profile';
-import Support from './pages/Support';
-import TicketChat from './pages/TicketChat';
-import OrderHistory from './pages/OrderHistory';
-import Admin from './pages/Admin';
-import Wishlist from './pages/Wishlist';
-import Achievements from './pages/Achievements';
-import Referral from './pages/Referral';
-import TwoFactorSetup from './pages/TwoFactorSetup';
-import NotFound from './pages/NotFound';
+
+// Остальные страницы — lazy (загружаются по требованию)
+const Catalog          = lazy(() => import('./pages/Catalog'));
+const GameDetail       = lazy(() => import('./pages/GameDetail'));
+const Favorites        = lazy(() => import('./pages/Favorites'));
+const Cart             = lazy(() => import('./pages/Cart'));
+const Login            = lazy(() => import('./pages/Login'));
+const ResetPassword    = lazy(() => import('./pages/ResetPassword'));
+const Success          = lazy(() => import('./pages/Success'));
+const About            = lazy(() => import('./pages/About'));
+const Profile          = lazy(() => import('./pages/Profile'));
+const Support          = lazy(() => import('./pages/Support'));
+const TicketChat       = lazy(() => import('./pages/TicketChat'));
+const OrderHistory     = lazy(() => import('./pages/OrderHistory'));
+const Admin            = lazy(() => import('./pages/Admin'));
+const Wishlist         = lazy(() => import('./pages/Wishlist'));
+const Achievements     = lazy(() => import('./pages/Achievements'));
+const Referral         = lazy(() => import('./pages/Referral'));
+const TwoFactorSetup   = lazy(() => import('./pages/TwoFactorSetup'));
+const NotFound         = lazy(() => import('./pages/NotFound'));
+
+function RouteFallback() {
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -59,27 +70,29 @@ export default function App() {
                   <ScrollToTop />
                   <Header />
                   <main className="flex-1">
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/catalog" element={<Catalog />} />
-                      <Route path="/game/:id" element={<GameDetail />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/reset-password" element={<ResetPassword />} />
-                      <Route path="/success" element={<Success />} />
-                      <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
-                      <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-                      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                      <Route path="/orders" element={<ProtectedRoute><OrderHistory /></ProtectedRoute>} />
-                      <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
-                      <Route path="/support/:id" element={<ProtectedRoute><TicketChat /></ProtectedRoute>} />
-                      <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
-                      <Route path="/achievements" element={<ProtectedRoute><Achievements /></ProtectedRoute>} />
-                      <Route path="/referral" element={<ProtectedRoute><Referral /></ProtectedRoute>} />
-                      <Route path="/2fa" element={<ProtectedRoute><TwoFactorSetup /></ProtectedRoute>} />
-                      <Route path="/admin" element={<ProtectedRoute role="admin"><Admin /></ProtectedRoute>} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
+                    <Suspense fallback={<RouteFallback />}>
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/catalog" element={<Catalog />} />
+                        <Route path="/game/:id" element={<GameDetail />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/reset-password" element={<ResetPassword />} />
+                        <Route path="/success" element={<Success />} />
+                        <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+                        <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+                        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                        <Route path="/orders" element={<ProtectedRoute><OrderHistory /></ProtectedRoute>} />
+                        <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
+                        <Route path="/support/:id" element={<ProtectedRoute><TicketChat /></ProtectedRoute>} />
+                        <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
+                        <Route path="/achievements" element={<ProtectedRoute><Achievements /></ProtectedRoute>} />
+                        <Route path="/referral" element={<ProtectedRoute><Referral /></ProtectedRoute>} />
+                        <Route path="/2fa" element={<ProtectedRoute><TwoFactorSetup /></ProtectedRoute>} />
+                        <Route path="/admin" element={<ProtectedRoute role="admin"><Admin /></ProtectedRoute>} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </Suspense>
                   </main>
                   <Footer />
                 </div>

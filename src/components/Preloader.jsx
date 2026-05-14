@@ -18,7 +18,7 @@ export default function Preloader() {
     const t = setTimeout(() => {
       sessionStorage.setItem('splashShown', '1');
       setVisible(false);
-    }, 1600);
+    }, 700);
     return () => clearTimeout(t);
   }, [visible]);
 
@@ -83,7 +83,7 @@ export default function Preloader() {
               className="h-full bg-primary"
               initial={{ width: '0%' }}
               animate={{ width: '100%' }}
-              transition={{ duration: 1.3, ease: [0.4, 0.05, 0.25, 1] }}
+              transition={{ duration: 0.6, ease: [0.4, 0.05, 0.25, 1] }}
             />
           </motion.div>
         </div>
