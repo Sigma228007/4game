@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 
@@ -21,11 +22,21 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Render использует обратный прокси — нужно доверять X-Forwarded-For для корректного rate-limit
+app.set('trust proxy', 1);
+
+// Security headers (X-Frame-Options, X-Content-Type-Options, HSTS, etc.)
+// CSP отключен, т.к. API отвечает JSON, не HTML — мешать нечему
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+}));
+
 app.use(cors({
   origin: ['http://localhost:3000', 'http://localhost:5173', /\.vercel\.app$/, /\.onrender\.com$/, 'https://4game.store', 'https://www.4game.store'],
   credentials: true,
 }));
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 
 // Логирование
 app.use((req, res, next) => {
