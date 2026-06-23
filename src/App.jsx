@@ -9,6 +9,7 @@ import { I18nProvider } from './utils/i18n.jsx';
 import { FlyToProvider } from './components/FlyToTarget';
 import CommandPalette from './components/CommandPalette';
 import FAQWidget from './components/FAQWidget';
+import CookieConsent from './components/CookieConsent';
 import Preloader from './components/Preloader';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -37,6 +38,7 @@ const Achievements     = lazy(() => import('./pages/Achievements'));
 const Referral         = lazy(() => import('./pages/Referral'));
 const TwoFactorSetup   = lazy(() => import('./pages/TwoFactorSetup'));
 const NotFound         = lazy(() => import('./pages/NotFound'));
+const Privacy = lazy(() => import('./pages/Privacy'));
 
 function RouteFallback() {
   return (
@@ -66,6 +68,7 @@ export default function App() {
                 <FlyToProvider>
                 <CommandPalette />
                 <FAQWidget />
+                <CookieConsent />
                 <div className="grain min-h-screen flex flex-col">
                   <ScrollToTop />
                   <Header />
@@ -75,6 +78,7 @@ export default function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/catalog" element={<Catalog />} />
                         <Route path="/game/:id" element={<GameDetail />} />
+                        <Route path="/privacy" element={<Privacy />} />
                         <Route path="/about" element={<About />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/reset-password" element={<ResetPassword />} />
